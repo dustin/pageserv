@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.2 1997/03/30 05:59:53 dustin Exp $
+ * $Id: queue.c,v 1.3 1997/03/31 23:12:06 dustin Exp $
  */
 
 #include <stdio.h>
@@ -39,6 +39,18 @@ char *newtmp(void)
     return tmp;
 }
 
+/* This is a dummy until I decide to do something with it. */
+
+int readytodeliver(struct queuent q)
+{
+    return(1);
+}
+
+void getqueueinfo( struct queuent *q )
+{
+    q->u=getuser(q->to);
+}
+
 char *newqfile(void)
 {
    int pid;
@@ -60,6 +72,9 @@ int storequeue(int s, struct queuent q, int flags)
 {
     char buf[BUFLEN], *fn;
     FILE *qf;
+
+    if(conf.debug>3)
+        puts("Running storequeue()");
 
     if(check_time(q.priority, q.to))
     {

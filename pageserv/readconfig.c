@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.2 1997/03/30 05:59:54 dustin Exp $
+ * $Id: readconfig.c,v 1.3 1997/03/31 23:12:07 dustin Exp $
  */
 
 #include <stdio.h>
@@ -111,13 +111,14 @@ void showusage(char *cmd)
 {
     showversion();
 
-    printf("Usage:  %s -b{d|r} [-dx] or\n", cmd);
-    printf("        %s -p{l|q} [-dx] or\n", cmd);
+    printf("Usage:  %s -b{d|r|q} [-dx] or\n", cmd);
+    printf("        %s -p{l|q} [-dx]   or\n", cmd);
     printf("        %s -v [-dx]\n", cmd);
 
     puts("\n-b is run modes, can be one of the following:");
     puts("\td: starts a pager server");
     puts("\tr: rehashes databases");
+    puts("\tq: runs the queue");
 
     puts("\n-p is print modes");
     puts("\tl: lists databases");
@@ -146,6 +147,8 @@ void getoptions(int argc, char **argv)
 			conf.mode=MODE_DAEMON; break;
 		    case 'r':
 			conf.mode=MODE_REHASH; break;
+		    case 'q':
+			conf.mode=MODE_RUNQ; break;
                     default:
 			printf("Unknown run mode %c\n", optarg[0]);
 			exit(1); break;

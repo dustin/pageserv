@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.2 1997/03/30 05:59:57 dustin Exp $
+ * $Id: userdb.c,v 1.3 1997/03/31 23:12:09 dustin Exp $
  */
 
 #include <stdio.h>
@@ -173,7 +173,11 @@ int u_exists(char *name)
     datum d, k;
     DBM *db;
 
-    db=dbm_open(conf.userdb, O_RDONLY, 0644);
+    if( (db=dbm_open(conf.userdb, O_RDONLY, 0644)) ==NULL)
+    {
+	perror(conf.userdb);
+	return(0);
+    }
 
     k.dptr=name;
     k.dsize=strlen(name);

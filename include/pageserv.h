@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.3 1997/03/30 06:38:33 dustin Exp $
+ * $Id: pageserv.h,v 1.4 1997/03/31 23:12:02 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -75,6 +75,7 @@
 #define MODE_LDB    2    /* list databases */
 #define MODE_PQ     3    /* print queue */
 #define MODE_VERS   4    /* print version info */
+#define MODE_RUNQ   5    /* print version info */
 
 #ifdef IWANT_MODENAMES
 static char *modenames[]={
@@ -92,18 +93,19 @@ static char *modenames[]={
 
 /* type defs */
 
-struct queuent {
-    int priority;
-    char to[TOLEN];
-    char message[BUFLEN];
-    char qid[FNSIZE];
-};
-
 struct user {
     char name[NAMELEN];
     char pageid[IDLEN];
     char statid[STATLEN];
     int  times;
+};
+
+struct queuent {
+    int priority;
+    char to[TOLEN];
+    char message[BUFLEN];
+    char qid[FNSIZE];
+    struct user u;
 };
 
 struct terminal {
@@ -143,10 +145,12 @@ int initialize(void);
 int parseterms(void);
 int parseusers(void);
 int queuedepth(void);
+int readytodeliver(struct queuent q);
 int set_bit(int bmap, int which);
 int storequeue(int s, struct queuent q, int flags);
 int t_exists(char *number);
 int u_exists(char *name);
+struct queuent *listqueue(char *number);
 struct queuent dofarkle();
 struct terminal getterm(char *key);
 struct terminal open_getterm(DBM *db, char *key);
@@ -156,6 +160,7 @@ void childmain(int s);
 void cleanconfig(void);
 void getnormtimes(int times, int *ret);
 void getoptions(int argc, char **argv);
+void getqueueinfo( struct queuent *q );
 void printqueue(void);
 void printterm(struct terminal t);
 void printterms(void);
@@ -165,6 +170,7 @@ void process(int s, char *cmd);
 void quit(int s);
 void readconfig(char *file);
 void reaper(void);
+void runqueue(void);
 void showconfig(void);
 void showversion(void);
 void storeterm(DBM *db, struct terminal t);
