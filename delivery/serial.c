@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: serial.c,v 2.19 1999/06/08 07:44:44 dustin Exp $
+ * $Id: serial.c,v 2.20 2000/09/12 17:16:34 dustin Exp $
  */
 
 /*
@@ -177,7 +177,11 @@ p_openport(char *port)
 		_ndebug(2, ("p_openport():  Resource is locked.\n"));
 		return (-1);
 	}
+#ifdef O_NONBLOCK
+	s = open(port, O_RDWR | O_NOCTTY | O_NONBLOCK, 0);
+#else
 	s = open(port, O_RDWR | O_NOCTTY, 0);
+#endif
 
 	if (s < 0) {
 		_ndebug(2, ("Error opening device:  errno: %d\n", errno));
