@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: protocol.c,v 1.5 1997/03/12 06:49:56 dustin Exp $
+ * $Id: protocol.c,v 1.6 1997/03/12 17:49:48 dustin Exp $
  */
 
 #include <stdio.h>
@@ -24,6 +24,37 @@ int gettext(int s, char *buf)
     {
 	/* Pipe breaking bastard */
 	exit(0);
+    }
+}
+
+void p_epage(int s)
+{
+    char buf1[BUFLEN], buf2[BUFLEN], buf3[BUFLEN];
+    int priority;
+
+    puttext(s, PROMPT_ID);
+    gettext(s, buf1);
+    puttext(s, PROMPT_PRI);
+    gettext(s, buf2);
+    puttext(s, PROMPT_MESS);
+    gettext(s, buf3);
+
+    if(tolower(buf2[0])=='h')
+    {
+	priority=PR_HIGH;
+    }
+    else
+    {
+	priority=PR_NORMAL;
+    }
+
+    if(u_exists(buf1))
+    {
+        storequeue(s, priority, buf1, buf3);
+    }
+    else
+    {
+	puttext(s, MESG_NOUSER);
     }
 }
 
@@ -78,9 +109,9 @@ void p_farkle(int s)
 
 void process(int s, char *cmd)
 {
-    static char *commands[4]={
+    static char *commands[P_MAX+1]={
 	"mash", "farkle",
-	"depth", "quit"
+	"depth", "quit", "epage"
     };
 
     char buf[BUFLEN];
@@ -116,6 +147,9 @@ void process(int s, char *cmd)
 
 	case P_FARKLE:
 	    p_farkle(s); break;
+
+	case P_EPAGE:
+	    p_epage(s); break;
 
         case P_QUIT:
 	    quit(s);

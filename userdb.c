@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.6 1997/03/12 16:44:04 dustin Exp $
+ * $Id: userdb.c,v 1.7 1997/03/12 17:49:49 dustin Exp $
  */
 
 #include <stdio.h>
@@ -25,13 +25,23 @@ int check_time(int priority, char *whom)
     struct tm *t;
     struct user u;
     time_t clock;
+    int ret;
 
-    time(&clock);
-    t=localtime(&clock);
+    if(priority==PR_HIGH)
+    {
+	ret=1;
+    }
+    else
+    {
+        time(&clock);
+        t=localtime(&clock);
+        u=getuser(whom);
 
-    u=getuser(whom);
+        ret=bit_set(u.times, t->tm_hour);
+    }
 
-    return(bit_set(u.times, t->tm_hour));
+    return(ret);
+
 }
 
 void storeuser(DBM *db, struct user u)
