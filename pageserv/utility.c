@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: utility.c,v 1.24 1998/07/23 15:42:48 dustin Exp $
+ * $Id: utility.c,v 1.25 1998/08/03 22:05:46 dustin Exp $
  */
 
 #include <config.h>
@@ -29,6 +29,8 @@ extern struct config conf;
 /* Static declarations */
 static int set_bit(int map, int bit);
 
+#if !defined(HAVE_SNPRINTF)
+
 /*
  * snprintf for those that don't have it.
  * More that likely, it'll overrun buffers, because they
@@ -41,6 +43,8 @@ int snprintf(char *s, size_t n, const char *format, ...)
     vsnprintf(s, n-1, format, ap);
     va_end(ap);
 }
+
+#endif
 
 /*
  * Each main module will have its own logging that does essentially the

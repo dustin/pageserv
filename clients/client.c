@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: client.c,v 2.9 1998/07/23 15:42:41 dustin Exp $
+ * $Id: client.c,v 2.10 1998/08/03 22:05:42 dustin Exp $
  */
 
 /*
@@ -27,6 +27,7 @@
 
 #include <snppclient.h>
 
+#if !defined(HAVE_SNPRINTF)
 /*
  * snprintf for those that don't have it.
  * More that likely, it'll overrun buffers, because they
@@ -39,6 +40,7 @@ int snprintf(char *s, size_t n, const char *format, ...)
     vsnprintf(s, n-1, format, ap);
     va_end(ap);
 }
+#endif
 
 static void _snpp_destroy_struct(struct snpp_client *snpp)
 {
