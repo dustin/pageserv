@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpparse.c,v 1.5 1997/04/17 20:31:14 dustin Exp $
+ * $Id: httpparse.c,v 1.6 1997/04/18 20:27:32 dustin Exp $
  */
 
 #define IWANTMETHODNAMES 1
@@ -69,9 +69,9 @@ struct http_request http_parserequest(int s)
                 strcpy(r.request, buf+start);
 
                 if(buf2!=NULL)
-                    strcpy(r.args, buf2);
+		    r.args=strdup(buf2);
                 else
-                    r.args[0]=NULL;
+                    r.args=NULL;
 
                 break;
             }

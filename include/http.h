@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * "$Id: http.h,v 1.9 1997/04/17 20:31:18 dustin Exp $"
+ * "$Id: http.h,v 1.10 1997/04/18 20:27:38 dustin Exp $"
  */
 
 #ifndef HTTP_H
@@ -9,6 +9,7 @@
 
 /* for NULL */
 #include <stdio.h>
+#include <module.h>
 
 /* macros */
 #define REQUESTSIZE 1024
@@ -47,6 +48,40 @@ static char *miscnames[]={
 
 #define HTTP_CONTENTLENGTH 0
 
+struct http_list {
+    char *name;
+    char *value;
+    struct http_list *next;
+};
+
+struct http_request {
+    char request[REQUESTSIZE];
+    char *args;
+    struct http_list *largs;
+    int length;
+    int version;
+    int docnum;
+    int special;
+    int method;
+};
+
+/* functions */
+
+char *_http_getcgiinfo(struct http_request r, char *what);
+int  _http_socket(void);
+struct http_request http_parserequest(int s);
+void _http_init(void);
+void _http_main(modpass p);
+void _http_parseargs(int s, struct http_request *r);
+void _http_sendpage(int s, struct http_request r);
+void _http_usermod(int s, struct http_request r);
+void _http_error(int s, struct http_request r);
+void _http_footer(int s);
+void _http_header_notfound(int s, struct http_request r);
+void _http_header_ok(int s, int size);
+void http_process(int s, struct http_request r);
+void http_process_get(int s, struct http_request r);
+
 #ifdef IWANTDOCINFO
 
 static char *docnames[]={
@@ -61,35 +96,5 @@ static char *docnames[]={
 #define NOTADOC  NDOCS
 
 #endif /* IWANTDOCINFO */
-
-struct http_list {
-    char *name;
-    char *value;
-    struct http_list *next;
-};
-
-struct http_request {
-    char request[REQUESTSIZE];
-    char args[REQUESTSIZE];
-    struct http_list *largs;
-    int length;
-    int version;
-    int docnum;
-    int special;
-    int method;
-};
-
-/* functions */
-
-int  _http_socket(void);
-struct http_request http_parserequest(int s);
-void _http_init(void);
-void _http_main(modpass p);
-void http_error(int s, struct http_request r);
-void http_footer(int s);
-void http_header_notfound(int s, struct http_request r);
-void http_header_ok(int s);
-void http_process(int s, struct http_request r);
-void http_process_get(int s, struct http_request r);
 
 #endif /* HTTP_H */

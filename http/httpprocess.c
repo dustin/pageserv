@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpprocess.c,v 1.7 1997/04/16 19:44:19 dustin Exp $
+ * $Id: httpprocess.c,v 1.8 1997/04/18 20:27:34 dustin Exp $
  */
 
 #define IWANTDOCINFO 1
@@ -36,9 +36,7 @@ void http_senddoc(int s, struct http_request r)
     if(r.version>0)
     {
         stat(buf, &st);
-        sprintf(buf2, "Content-Length: %d\n\n",
-	    (int)st.st_size+strlen(HTTP_FOOTER)+1);
-        puttext(s, buf2);
+	_http_header_ok(s, (int)st.st_size+strlen(HTTP_FOOTER)+1);
     }
 
     f=fopen(buf, "r");
@@ -52,19 +50,16 @@ void http_senddoc(int s, struct http_request r)
 
 void http_process_get(int s, struct http_request r)
 {
-    if(r.version>0)
-        http_header_ok(s);
+    struct http_list *tmp;
 
     if(r.special==1)
     {
-        puttext(s, "\n<html><head><title>OK</title></head>");
-        puttext(s, "<body bgcolor=\"ffffff\">");
-        puttext(s, "Your special request was ");
-        puttext(s, r.request);
-	if( strlen(r.args))
+	_http_parseargs(s, &r);
+
+        switch(r.docnum)
 	{
-	    puttext(s, "<br>Arguments:  ");
-	    puttext(s, r.args);
+	    case DOC_USERMOD: break;
+	    case DOC_SENDPAGE: _http_sendpage(s, r); break;
 	}
     }
     else
@@ -72,7 +67,7 @@ void http_process_get(int s, struct http_request r)
         http_senddoc(s, r);
     }
 
-    http_footer(s);
+    _http_footer(s);
 }
 
 int http_verifydoc(int s, struct http_request *r)
@@ -118,7 +113,7 @@ void http_process(int s, struct http_request r)
 {
     if(http_verifydoc(s, &r)!=0)
     {
-        http_header_notfound(s, r);
+        _http_header_notfound(s, r);
     }
 
     if(conf.debug)
@@ -136,6 +131,6 @@ void http_process(int s, struct http_request r)
             http_process_get(s, r); break;
 
         default:
-            http_error(s, r);
+            _http_error(s, r);
     }
 }

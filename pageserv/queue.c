@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.16 1997/04/10 04:16:15 dustin Exp $
+ * $Id: queue.c,v 1.17 1997/04/18 20:27:40 dustin Exp $
  * $State: Exp $
  */
 
@@ -368,6 +368,7 @@ char *fntoqid(char *fn)
 int storequeue(int s, struct queuent q, int flags)
 {
     char buf[BUFLEN], *fn;
+    int ret=0;
     FILE *qf;
 
     if(conf.debug>3)
@@ -400,12 +401,14 @@ int storequeue(int s, struct queuent q, int flags)
 
 	if(conf.debug>1)
 	    printf("Attempted to page %s, bad time\n", q.to);
+
+	ret=1;
     }
 
     if(! (flags & STORE_QUIET))
         puttext(s, buf);
 
-    return(0);
+    return(ret);
 }
 
 int queuedepth(void)

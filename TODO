@@ -11,6 +11,8 @@ Overall:
 
 Delivery:
 
+    * Some sort of delivery locking, or file locking, or something so running
+      -bq twice at the same time won't give you two copies of your pages.
     * check time at delivery time in case a message has been stuck
     * have timeouts actually time out
     * Local modem support
@@ -21,8 +23,8 @@ Clients:
     * Cleaner client stuff
     * Add more options to clients: remote host, options to parsemail,
       etc...
-    * Enhance web listener
+    * Enhance web listener (password auth for logins)
 
 ----------------------------------------
 Copyright (c) 1997  Dustin Sallings
-$Id: TODO,v 2.17 1997/04/17 20:31:10 dustin Exp $
+$Id: TODO,v 2.18 1997/04/18 20:27:27 dustin Exp $
