@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.18 1997/07/31 01:28:31 dustin Exp $
+ * $Id: main.c,v 1.19 1997/07/31 03:28:48 dustin Exp $
  * $State: Exp $
  */
 
@@ -32,10 +32,20 @@ struct config conf;
 void writepid(int pid)
 {
     FILE *f;
+    int r;
 
-    if(access(conf.pidfile, F_OK)==0)
+    r=checkpidfile(conf.pidfile);
+
+    switch(r)
     {
-	puts("PID file found, what's up with that?  I'll overwrite it.");
+        case PID_NOFILE:
+            break;
+        case PID_STALE:
+            puts("Stale PID file found, overwriting.");
+            break;
+        case PID_ACTIVE:
+            puts("Active PID file found, exiting...");
+            exit(1);
     }
 
     if(NULL ==(f=fopen(conf.pidfile, "w")) )
