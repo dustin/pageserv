@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.30 1997/06/20 09:13:35 dustin Exp $
+ * $Id: pageserv.h,v 1.31 1997/06/22 07:43:25 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -203,6 +203,7 @@ char *fntoqid(char *fn);
 char *kw(char *in);
 char *newqfile(void);
 int _pageserv_socket(void);
+int any_closeterm(int s, struct terminal t);
 int any_openterm(struct terminal t);
 int bit_set(int bmap, int which);
 int check_time(int priority, char *whom);
@@ -264,6 +265,7 @@ void showconfig(void);
 void showversion(void);
 void storeterm(DBM *db, struct terminal t);
 void storeuser(struct user u);
+void checklocks();
 
 /* client stuff */
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: modem.c,v 2.8 1997/06/20 13:46:21 dustin Exp $
+ * $Id: modem.c,v 2.9 1997/06/22 07:43:18 dustin Exp $
  * $State: Exp $
  */
 
@@ -14,6 +14,14 @@
 #include <pageserv.h>
 
 extern struct config conf;
+
+int any_closeterm(int s, struct terminal t)
+{
+    puttext(s, "+++atz\n");
+    close(s);
+    sleep(5);
+    p_unlock(t.ts);
+}
 
 int any_openterm(struct terminal term)
 {
@@ -33,6 +41,9 @@ int any_openterm(struct terminal term)
 	default:
 	    printf("Unkown con type:  %d\n", term.contype);
     }
+
+    if(conf.debug>2)
+	printf("Looks like the modem for today will be %d\n", s);
 
     return(s);
 }

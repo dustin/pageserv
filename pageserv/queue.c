@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.23 1997/06/20 13:54:39 dustin Exp $
+ * $Id: queue.c,v 1.24 1997/06/22 07:43:30 dustin Exp $
  * $State: Exp $
  */
 
@@ -53,6 +53,8 @@ void cleanmylocks()
         }
     }
     closedir(dir);
+
+    checklocks(); /* this is for serial locks */
 }
 
 void runqueue(void)
@@ -80,48 +82,59 @@ void runqueue(void)
         {
             term=getterm(termlist[t]);
 
-            s=any_openterm(term);
-            s_tap_init(s);
-
-	    /* Keep looping through queue stuff until there are no more
-	       requests, in case any where queued while we're already
-	       delivering.  */
-
-            while(q[0].to[0] != NULL)
+            if( (s=any_openterm(term))>=0)
             {
+		/* Inside this if is executed if I got the port */
 
-                for(i=0; q[i].to[0] != NULL; i++)
+                s_tap_init(s);
+
+                /* Keep looping through queue stuff until there are no more
+                   requests, in case any where queued while we're already
+                   delivering.  */
+
+                while(q[0].to[0] != NULL)
                 {
-                    getqueueinfo(&q[i]);
 
-                    if( (s_tap_send(s, q[i].u.pageid, q[i].message)) == 0)
+                    for(i=0; q[i].to[0] != NULL; i++)
                     {
-                        if(conf.debug>0)
-                            printf("Delivery of %s successful\n", q[i].qid);
-                        logqueue(q[i], SUC_LOG, NULL);
-                        dequeue(q[i].qid);
-                    }
-                    else
-                    {
-                        if(conf.debug>0)
-                            printf("Delivery of %s unsuccessful\n", q[i].qid);
-                        logqueue(q[i], FAIL_LOG, MESG_TAPFAIL);
-                        q_unlock(q[i]);
-                    }
-                    if(conf.debug>2)
-                        printf("\t%d to %s  ``%s''\n", i, q[i].to,
-				q[i].message);
-                } /* for loop */
+                        getqueueinfo(&q[i]);
 
-                cleanqueuelist(q);
-                q=listqueue(termlist[t]);
+                        if( (s_tap_send(s, q[i].u.pageid, q[i].message)) == 0)
+                        {
+                            if(conf.debug>0)
+                                printf("Delivery of %s successful\n",
+					q[i].qid);
+                            logqueue(q[i], SUC_LOG, NULL);
+                            dequeue(q[i].qid);
+                        }
+                        else
+                        {
+                            if(conf.debug>0)
+                                printf("Delivery of %s unsuccessful\n",
+					q[i].qid);
+                            logqueue(q[i], FAIL_LOG, MESG_TAPFAIL);
+                            q_unlock(q[i]);
+                        }
+                        if(conf.debug>2)
+                            printf("\t%d to %s  ``%s''\n", i, q[i].to,
+                                    q[i].message);
+                    } /* for loop */
 
-	    } /* while loop */
+                    cleanqueuelist(q);
+                    q=listqueue(termlist[t]);
 
-            s_tap_end(s);
-	    puttext(s, "+++atz\n");
-            close(s);
-            sleep(5); /* sleep it off */
+                } /* while loop */
+
+                s_tap_end(s);
+                puttext(s, "+++atz\n");
+		any_closeterm(s, term);
+                sleep(5); /* sleep it off */
+            } /* got port */
+	    else
+	    {
+		if(conf.debug>2)
+		    puts("Didn't get the port");
+	    }
         }
 
         cleanqueuelist(q);
