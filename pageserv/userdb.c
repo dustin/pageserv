@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.12 1997/08/11 03:55:01 dustin Exp $
+ * $Id: userdb.c,v 1.13 1997/08/11 04:28:53 dustin Exp $
  */
 
 #include <stdio.h>
@@ -33,7 +33,7 @@ void cleanuserlist(char **list)
     free(list);
 }
 
-char **listusers(char *term)
+char **dbm_listusers(char *term)
 {
     datum d, val;
     DBM *db;
@@ -111,7 +111,7 @@ void getnormtimes(int times, int *ret)
     }
 }
 
-void eraseuserdb(void)
+void dbm_eraseuserdb(void)
 {
     datum d;
     DBM *db;
@@ -132,7 +132,28 @@ void eraseuserdb(void)
     dbm_close(db);
 }
 
-int deleteuser(char *name)
+int dbm_u_exists(char *name)
+{
+    datum d, k;
+    DBM *db;
+
+    if( (db=dbm_open(conf.userdb, O_RDONLY, 0644)) ==NULL)
+    {
+	perror(conf.userdb);
+	return(0);
+    }
+
+    k.dptr=name;
+    k.dsize=strlen(name);
+
+    d=dbm_fetch(db, k);
+
+    dbm_close(db);
+
+    return(d.dptr!=NULL);
+}
+
+int dbm_deleteuser(char *name)
 {
     datum d;
     DBM *db;
@@ -149,7 +170,7 @@ int deleteuser(char *name)
     dbm_close(db);
 
     /* do a lookup and return the result */
-    return(!u_exists(name));
+    return(!dbm_u_exists(name));
 }
 
 void printuser(struct user u)
@@ -162,6 +183,25 @@ void printuser(struct user u)
 
     getnormtimes(u.times, times);
     printf("Normal:    %d to %d\n", times[0], times[1]);
+}
+
+struct user dbm_open_getuser(DBM *db, char *name)
+{
+    datum d, k;
+    struct user u;
+
+    memset((void *)&u, 0x00, sizeof(u));
+
+    k.dptr=name;
+    k.dsize=strlen(name);
+    d=dbm_fetch(db, k);
+
+    if(d.dptr!=NULL)
+    {
+        memcpy( (void *)&u, (void *)d.dptr, sizeof(u));
+    }
+
+    return(u);
 }
 
 void printusers(void)
@@ -181,7 +221,7 @@ void printusers(void)
     {
         strncpy(buf, d.dptr, d.dsize);
         buf[d.dsize]=0x00;
-        u=open_getuser(db, buf);
+        u=dbm_open_getuser(db, buf);
         printuser(u);
         puts("--------");
     }
@@ -214,22 +254,7 @@ int check_time(struct queuent q)
 
 }
 
-void storeuser(struct user u)
-{
-    DBM *db;
-
-    if( (db=dbm_open(conf.userdb, O_RDWR, 0644)) == NULL)
-    {
-        perror(conf.userdb);
-        exit(1);
-    }
-
-    open_storeuser(db, u);
-
-    dbm_close(db);
-}
-
-void open_storeuser(DBM *db, struct user u)
+void dbm_open_storeuser(DBM *db, struct user u)
 {
     datum k, d;
     k.dptr=u.name;
@@ -241,7 +266,22 @@ void open_storeuser(DBM *db, struct user u)
     dbm_store(db, k, d, DBM_REPLACE);
 }
 
-struct user getuser(char *name)
+void dbm_storeuser(struct user u)
+{
+    DBM *db;
+
+    if( (db=dbm_open(conf.userdb, O_RDWR, 0644)) == NULL)
+    {
+        perror(conf.userdb);
+        exit(1);
+    }
+
+    dbm_open_storeuser(db, u);
+
+    dbm_close(db);
+}
+
+struct user dbm_getuser(char *name)
 {
     DBM *db;
     struct user u;
@@ -252,59 +292,19 @@ struct user getuser(char *name)
         exit(1);
     }
 
-    u=open_getuser(db, name);
+    u=dbm_open_getuser(db, name);
 
     dbm_close(db);
 
     return(u);
-}
-
-struct user open_getuser(DBM *db, char *name)
-{
-    datum d, k;
-    struct user u;
-
-    memset((void *)&u, 0x00, sizeof(u));
-
-    k.dptr=name;
-    k.dsize=strlen(name);
-    d=dbm_fetch(db, k);
-
-    if(d.dptr!=NULL)
-    {
-        memcpy( (void *)&u, (void *)d.dptr, sizeof(u));
-    }
-
-    return(u);
-}
-
-int u_exists(char *name)
-{
-    datum d, k;
-    DBM *db;
-
-    if( (db=dbm_open(conf.userdb, O_RDONLY, 0644)) ==NULL)
-    {
-	perror(conf.userdb);
-	return(0);
-    }
-
-    k.dptr=name;
-    k.dsize=strlen(name);
-
-    d=dbm_fetch(db, k);
-
-    dbm_close(db);
-
-    return(d.dptr!=NULL);
 }
 
 void dbm_userdbInit(void)
 {
-    conf.udb.listusers=listusers;
-    conf.udb.eraseuserdb=eraseuserdb;
-    conf.udb.deleteuser=deleteuser;
-    conf.udb.storeuser=storeuser;
-    conf.udb.getuser=getuser;
-    conf.udb.u_exists=u_exists;
+    conf.udb.listusers=dbm_listusers;
+    conf.udb.eraseuserdb=dbm_eraseuserdb;
+    conf.udb.deleteuser=dbm_deleteuser;
+    conf.udb.storeuser=dbm_storeuser;
+    conf.udb.getuser=dbm_getuser;
+    conf.udb.u_exists=dbm_u_exists;
 }

@@ -27,7 +27,11 @@
 /* Define if you have the <rpcsvc/ypclnt.h> header file.  */
 #undef HAVE_RPCSVC_YPCLNT_H
 
-#if defined(HAVE_RPCSVC_YP_PROT_H) || defined(HAVE_RPCSVC_YPCLNT_H)
+/* Define for the yp_match function */
+#undef HAVE_YP_MATCH
+
+#if defined(HAVE_RPCSVC_YP_PROT_H) || defined(HAVE_RPCSVC_YPCLNT_H) || \
+    defined(HAVE_YP_MATCH)
 #define HAVE_NIS
 #endif
 

@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.45 1997/08/11 03:54:53 dustin Exp $
+ * $Id: pageserv.h,v 1.46 1997/08/11 04:28:47 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -235,7 +235,6 @@ struct config {
 RETSIGTYPE serv_sighup(int sig);
 RETSIGTYPE serv_sigint(int sig);
 char **listterms(void);
-char **listusers(char *term);
 char *addtostr(int *size, char *dest, char *str);
 char *fntoqid(char *fn);
 char *getHostName(unsigned int addr);
@@ -248,7 +247,6 @@ int bit_set(int bmap, int which);
 int checkIPAccess(struct sockaddr_in addr, module *m);
 int check_time(struct queuent q);
 int checkpidfile(char *filename);
-int deleteuser(char *name);
 int execnamedfunc(char *name, struct namedfunc *f);
 int f_exists(char *file);
 int getservsocket(int port);
@@ -270,14 +268,11 @@ int s_openterm(struct terminal t);
 int set_bit(int bmap, int which);
 int storequeue(int s, struct queuent q, int flags);
 int t_exists(char *number);
-int u_exists(char *name);
 struct queuent *listqueue(char *number);
 struct queuent dofarkle(void);
 struct queuent readqueuefile(char *fn);
 struct terminal getterm(char *key);
 struct terminal open_getterm(DBM *db, char *key);
-struct user getuser(char *key);
-struct user open_getuser(DBM *db, char *key);
 struct user setpasswd(struct user u, char *passwd);
 void _pageserv_init(void);
 void _pageserv_main(modpass p);
@@ -291,14 +286,12 @@ void dbm_userdbInit(void);
 void dequeue(char *qid);
 void displayq(struct queuent q);
 void erasetermdb(void);
-void eraseuserdb(void);
 void getnormtimes(int times, int *ret);
 void getoptions(int argc, char **argv);
 void getqueueinfo( struct queuent *q );
 void initmodules(void);
 void logConnect(struct sockaddr_in fsin, module *m);
 void logqueue(struct queuent q, int type, char *reason);
-void open_storeuser(DBM *db, struct user u);
 void p_getpasswd(int s, char *to);
 void p_login(int s);
 void printqueue(void);
@@ -316,7 +309,6 @@ void runqueue(void);
 void showconfig(void);
 void showversion(void);
 void storeterm(DBM *db, struct terminal t);
-void storeuser(struct user u);
 void stringListSort(char **list);
 
 /* client stuff */

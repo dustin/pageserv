@@ -1,8 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parseusers.c,v 1.9 1997/07/10 06:55:49 dustin Exp $
- * $State: Exp $
+ * $Id: parseusers.c,v 1.10 1997/08/11 04:28:53 dustin Exp $
  */
 
 #include <stdio.h>
@@ -49,11 +48,13 @@ int parseusers(void)
         exit(1);
     }
 
+    /* just initialize the database */
     if( (db=dbm_open(conf.userdb, O_CREAT|O_RDWR, 0644)) ==NULL)
     {
         perror(conf.userdb);
         exit(1);
     }
+    dbm_close(db);
 
     while(fgets(buf, BUFLEN, f))
     {
@@ -65,13 +66,12 @@ int parseusers(void)
 		printuser(u);
 		puts("--");
 	    }
-            open_storeuser(db, u);
+            conf.udb.storeuser(u);
             i++;
         }
     }
 
     fclose(f);
-    dbm_close(db);
 
     return(i);
 }
