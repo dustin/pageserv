@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: urlparse.c,v 1.5 1997/07/07 08:47:52 dustin Exp $
+ * $Id: urlparse.c,v 1.6 1997/07/08 06:40:08 dustin Exp $
  */
 
 #include <pageserv.h>
@@ -45,6 +45,11 @@ void _http_addtolist(struct http_request *r, char *n, char *v)
     list->next=NULL;
     list->name=strdup(n);
     list->value=strdup(v);
+
+    if(conf.debug>3)
+	printf("Adding %s = %s\n", n, v);
+
+    r->nargs++;
 
     if(r->largs==NULL)
     {

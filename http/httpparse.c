@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpparse.c,v 1.9 1997/07/07 08:47:50 dustin Exp $
+ * $Id: httpparse.c,v 1.10 1997/07/08 06:40:05 dustin Exp $
  */
 
 #define IWANTMETHODNAMES 1
@@ -47,6 +47,7 @@ void _http_authdecode(struct http_request *r)
 
     /* This is overkill, but I don't care */
     dest=(char *)malloc(strlen(string));
+    memset(dest, 0x00, strlen(string));
 
     i=0;
     for(; *string; string+=4)
@@ -57,19 +58,26 @@ void _http_authdecode(struct http_request *r)
         string[3]=_http_authdecode_match(string[3]);
 
         dest[i]=string[0]<<2;
-        dest[i++]|= (string[1] & 0x30) >>4;
+	if(string[1]!=64)
+	{
+            dest[i++]|= (string[1] & 0x30) >>4;
 
-        dest[i]=(string[1]&0x0f) << 4;
-        dest[i++]|= (string[2]&0x3c) >> 2;
+            dest[i]=(string[1]&0x0f) << 4;
+	    if(string[2]!=64)
+	    {
+                dest[i++]|= (string[2]&0x3c) >> 2;
 
-        dest[i]= (string[2]&0x03) << 6;
-        dest[i++]|= string[3];
+                dest[i]= (string[2]&0x03) << 6;
+
+		if(string[3]!=64)
+                    dest[i++]|= string[3];
+	    }
+	}
     }
 
     for(i=0; dest[i]!=':'; i++);
     dest[i]=0x00;
-
-    r->auth.name=strdup(dest);
+r->auth.name=strdup(dest);
     r->auth.pass=strdup(dest+i+1);
 
     if(conf.debug>2)

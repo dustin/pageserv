@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * "$Id: http.h,v 1.11 1997/07/07 08:48:00 dustin Exp $"
+ * "$Id: http.h,v 1.12 1997/07/08 06:40:13 dustin Exp $"
  */
 
 #ifndef HTTP_H
@@ -70,6 +70,7 @@ struct http_request {
     struct http_authinfo auth;
     char *args;
     struct http_list *largs;
+    int nargs;
     int length;
     int version;
     int docnum;
@@ -82,6 +83,7 @@ struct http_request {
 char *_http_getcgiinfo(struct http_request r, char *what);
 int  _http_socket(void);
 struct http_request http_parserequest(int s);
+void _http_auth_require(int s, struct http_request r, char *authname);
 void _http_error(int s, struct http_request r);
 void _http_footer(int s);
 void _http_free_request(struct http_request r);
@@ -91,20 +93,21 @@ void _http_header_ok(int s, int size);
 void _http_init(void);
 void _http_init_request(struct http_request *r);
 void _http_main(modpass p);
+void _http_moduser(int s, struct http_request r);
 void _http_parseargs(int s, struct http_request *r);
+void _http_process_get(int s, struct http_request r);
 void _http_sendpage(int s, struct http_request r);
-void _http_usermod(int s, struct http_request r);
+void http_checkauth(int s, struct http_request r, char *path);
 void http_process(int s, struct http_request r);
-void http_process_get(int s, struct http_request r);
 
 #ifdef IWANTDOCINFO
 
 static char *docnames[]={
-    "/usermod",
+    "/moduser",
     "/sendpage"
 };
 
-#define DOC_USERMOD 0
+#define DOC_MODUSER 0
 #define DOC_SENDPAGE 1
 
 #define NDOCS    2
