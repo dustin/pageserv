@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.28 1997/08/27 07:09:22 dustin Exp $
+ * $Id: readconfig.c,v 1.29 1997/10/10 08:24:21 dustin Exp $
  */
 
 #include <readconfig.h>
@@ -32,6 +32,9 @@ void setdefaults(void)
 	{ "nis", nis_userdbInit },
 #endif /* have NIS */
 	{ "dbm", dbm_userdbInit },
+#ifdef HAVE_SQL
+        { "sql", sql_userdbInit },
+#endif /* have SQL */
 	{ NULL, NULL }
     };
     char *userdb;

@@ -39,6 +39,10 @@
 #define HAVE_NIS
 #endif
 
+#if defined(HAVE_POSTGRES)
+# define HAVE_SQL
+#endif
+
 /* Define if your processor stores words with the most significant
    byte first (like Motorola and SPARC, unlike Intel and VAX).  */
 #undef WORDS_BIGENDIAN

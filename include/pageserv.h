@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.51 1997/09/12 05:30:50 dustin Exp $
+ * $Id: pageserv.h,v 1.52 1997/10/10 08:24:16 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -306,6 +306,7 @@ void resetservtraps(void);
 void runqueue(void);
 void showconfig(void);
 void showversion(void);
+void sql_userdbInit(void);
 void storeterm(DBM *db, struct terminal t);
 void stringListSort(char **list);
 
