@@ -10,7 +10,6 @@ Overall:
 Delivery:
 
     * multiple modems on a port
-    * have timeouts actually time out
     * clean stuff
     * need queue status flags
 
@@ -30,4 +29,4 @@ Technical:
 
 ----------------------------------------
 Copyright (c) 1997  Dustin Sallings
-$Id: TODO,v 2.32 1998/01/22 07:38:28 dustin Exp $
+$Id: TODO,v 2.33 1998/02/27 07:46:53 dustin Exp $
