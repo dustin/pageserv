@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: checksum.c,v 1.1 1997/03/29 19:21:28 dustin Exp $
+ * $Id: checksum.c,v 1.2 1997/03/29 19:29:54 dustin Exp $
  */
 
 #include <stdio.h>
@@ -26,31 +26,15 @@ char *sent_checksum(int sum)
 {
     static char charsum[4]={0,0,0,0};
 
-    charsum[0]=48+ sum - (int)(sum/16) * 16;
+    charsum[2]=48+ sum - (int)(sum/16) * 16;
     sum = (int)(sum/16);
     charsum[1]=48+ sum - (int)(sum/16) * 16;
     sum = (int)(sum/16);
-    charsum[2]=48+ sum - (int)(sum/16) * 16;
+    charsum[0]=48+ sum - (int)(sum/16) * 16;
 
     revstring(charsum);
 
     return(charsum);
-}
-
-void revstring(char *string)
-{
-    char a, b;
-    int i, j;
-
-    i=0; j=strlen(string)-1;
-
-    while(i<j)
-    {
-	a=string[i];
-	b=string[j];
-	string[i++]=b;
-	string[j--]=a;
-    }
 }
 
 void main(void)
