@@ -1,13 +1,15 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: modem.c,v 2.1 1997/03/30 06:16:57 dustin Exp $
+ * $Id: modem.c,v 2.2 1997/04/01 20:15:53 dustin Exp $
  */
 
 #include <stdio.h>
 
 #include <tap.h>
 #include <pageserv.h>
+
+extern struct config conf;
 
 int s_modem_waitfor(int s, char *what, int timeout)
 {
@@ -18,7 +20,10 @@ int s_modem_waitfor(int s, char *what, int timeout)
     for(;;)
     {
         gettext(s, buf);
-	puts(buf);
+
+	if(conf.debug>2)
+	    puts(buf);
+
         if( (strstr(what, buf)!=NULL))
         {
 	    /* printf("Got %s\n", what); */

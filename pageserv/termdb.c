@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: termdb.c,v 1.2 1997/03/30 05:59:56 dustin Exp $
+ * $Id: termdb.c,v 1.3 1997/04/01 20:16:10 dustin Exp $
  */
 
 #include <stdio.h>
@@ -25,12 +25,14 @@ void printterm(struct terminal t)
     printf("Protocol:   %d\n", t.prot);
 }
 
-void printterms(void)
+char **listterms(void)
 {
-    char buf[BUFLEN];
-    struct terminal t;
     datum d;
     DBM *db;
+    char **ret;
+    int size=4, index=0;
+
+    ret=malloc(size * sizeof(char *));
 
     if( (db=dbm_open(conf.termdb, O_RDONLY, 0644)) ==NULL)
     {
@@ -40,14 +42,55 @@ void printterms(void)
 
     for(d=dbm_firstkey(db); d.dptr!=NULL; d=dbm_nextkey(db))
     {
-        strncpy(buf, d.dptr, d.dsize);
-        buf[d.dsize]=0x00;
-        t=open_getterm(db, buf);
-        printterm(t);
-        puts("--------");
+        ret[index]=malloc(d.dsize+1);
+        strncpy(ret[index], d.dptr, d.dsize);
+        ret[index++][d.dsize]=0x00;
+
+        if(index == size-1)
+        {
+           size<<=1;
+
+            if(conf.debug>2)
+            {
+                printf("Reallocating, now need %d bytes for %d\n",
+                    size*sizeof(char *), size);
+            }
+
+            ret=realloc(ret, size*sizeof(char *));
+        }
     }
+    ret[index]=NULL;
 
     dbm_close(db);
+    return(ret);
+}
+
+void cleantermlist(char **list)
+{
+    int i;
+    for(i=0; list[i]!=NULL; i++)
+    {
+	free(list[i]);
+    }
+    free(list);
+}
+
+void printterms(void)
+{
+    struct terminal t;
+    int i;
+    char **list;
+
+    list=listterms();
+    for(i=0; list[i]!=NULL; i++)
+    {
+        t=getterm(list[i]);
+        printterm(t);
+        puts("--------");
+	/* printf("%d:  %s\n", i, list[i]); */
+    }
+
+    cleantermlist(list);
 }
 
 void storeterm(DBM *db, struct terminal t)

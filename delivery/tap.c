@@ -1,13 +1,15 @@
 /*
  * Copyright (c) 1997  SPY Internetworking
  *
- * $Id: tap.c,v 2.2 1997/04/01 05:41:36 dustin Exp $
+ * $Id: tap.c,v 2.3 1997/04/01 20:15:58 dustin Exp $
  */
 
 #include <stdio.h>
 
 #include <pageserv.h>
 #include <tap.h>
+
+extern struct config conf;
 
 int tap_checksum(char *string)
 {
@@ -111,7 +113,15 @@ int s_tap_send(int s, char *id, char *message)
     {
 	i=recv(s, buf, BUFLEN, 0);
 	buf[i]=0x00;
+	if(conf.debug>2)
+	{
+	    printf("Received %d bytes\n", i);
+	    fputs(buf, stdout);
+	    puts("");
+	}
     }
+
+    usleep(1300);
 
     if(c==C_ACK)
     {

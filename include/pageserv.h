@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.9 1997/04/01 06:56:47 dustin Exp $
+ * $Id: pageserv.h,v 1.10 1997/04/01 20:16:06 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -143,6 +143,7 @@ struct config {
 
 RETSIGTYPE serv_sighup(int sig);
 RETSIGTYPE serv_sigint(int sig);
+char **listterms(void);
 char *kw(char *in);
 char *newqfile(void);
 int bit_set(int bmap, int which);
@@ -155,6 +156,7 @@ int parseterms(void);
 int parseusers(void);
 int queuedepth(void);
 int readytodeliver(struct queuent q);
+int s_openterm(struct terminal t);
 int set_bit(int bmap, int which);
 int storequeue(int s, struct queuent q, int flags);
 int t_exists(char *number);
@@ -169,6 +171,7 @@ struct user open_getuser(DBM *db, char *key);
 void childmain(int s);
 void cleanconfig(void);
 void cleanqueuelist(struct queuent *list);
+void cleantermlist(char **list);
 void displayq(struct queuent q);
 void getnormtimes(int times, int *ret);
 void getoptions(int argc, char **argv);

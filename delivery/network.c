@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: network.c,v 2.0 1997/03/30 05:58:17 dustin Exp $
+ * $Id: network.c,v 2.1 1997/04/01 20:15:56 dustin Exp $
  */
 
 /*
@@ -17,6 +17,18 @@
 #include <netdb.h>
 
 #include <pageserv.h>
+
+int s_openterm(struct terminal t)
+{
+    char buf[BUFLEN];
+    int s;
+
+    strcpy(buf, t.predial);
+    strcat(buf, t.number);
+    s=openhost(t.ts, t.port);
+    s_modem_connect(s, buf);
+    return(s);
+}
 
 void net_timeout(void)
 {

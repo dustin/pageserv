@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.7 1997/04/01 06:57:07 dustin Exp $
+ * $Id: queue.c,v 1.8 1997/04/01 20:16:09 dustin Exp $
  */
 
 #include <stdio.h>
@@ -21,16 +21,49 @@ extern struct config conf;
 void runqueue(void)
 {
     struct queuent *q;
-    int i;
+    char **termlist;
+    struct terminal term;
+    int t, i, s;
 
-    q=listqueue("219.1805");
+    termlist=listterms();
 
-    for(i=0; q[i].to[0] != 0x00 ; i++)
+    for(t=0; termlist[t]!=NULL; t++)
     {
-	printf("%d to %s  ``%s''\n", i, q[i].to, q[i].message);
-    }
+	printf("Queue for %s:\n", termlist[t]);
+        q=listqueue(termlist[t]);
 
-    cleanqueuelist(q);
+        for(i=0; q[i].to[0] != NULL; i++);
+
+	if(i>0)
+	{
+	    term=getterm(termlist[t]);
+
+            s=s_openterm(term);
+	    s_tap_init(s);
+
+            for(i=0; q[i].to[0] != NULL; i++)
+	    {
+		getqueueinfo(&q[i]);
+		if( (s_tap_send(s, q[i].u.pageid, q[i].message)) == 0)
+		{
+		    if(conf.debug>0)
+			printf("Delivery of %s successful\n", q[i].qid);
+		    unlink(q[i].qid);
+		}
+		else
+		{
+		    if(conf.debug>0)
+			printf("Delivery of %s unsuccessful\n", q[i].qid);
+		}
+                printf("\t%d to %s  ``%s''\n", i, q[i].to, q[i].message);
+            }
+	    s_tap_end(s);
+	    sleep(1); /* sleep it off */
+	}
+
+        cleanqueuelist(q);
+    }
+    cleantermlist(termlist);
 }
 
 int gq_checkit(struct queuent q, char *number)
@@ -52,14 +85,34 @@ int gq_checkit(struct queuent q, char *number)
     return(1);
 }
 
-int queuecompare(const struct queuent *a, const struct queuent *b)
-{
-    return( a->submitted >= b->submitted );
-}
-
 void cleanqueuelist(struct queuent *list)
 {
     free(list);
+}
+
+/* quicksort to sort the queuelist */
+
+void queuesort(struct queuent *q, int l, int r)
+{
+    int i, j;
+    struct queuent v, t;
+
+    if(r>l)
+    {
+	v=q[r]; i=l-1; j=r;
+
+	do
+	{
+	    do{ i++; } while(q[i].submitted<v.submitted);
+	    do{ j--; } while(q[j].submitted>v.submitted);
+	    t=q[i]; q[i]=q[j]; q[j]=t;
+	} while(j>i);
+
+	q[j]=q[i]; q[i]=q[r]; q[r]=t;
+
+	queuesort(q, l, i-1);
+	queuesort(q, i+1, r);
+    }
 }
 
 struct queuent *listqueue(char *number)
@@ -103,11 +156,13 @@ struct queuent *listqueue(char *number)
 	    }
         }
     }
-    list[index].to[0]==0x00;
     closedir(dir);
+    list[index].to[0]=NULL;
 
     /* sort the list */
-    qsort(list, index, sizeof(struct queuent), queuecompare);
+    if(index>0)
+        queuesort(list, 0, index-1);
+
     return(list);
 }
 
@@ -266,11 +321,15 @@ void displayq(struct queuent q)
 void printqueue(void)
 {
     struct queuent *q;
-    int i;
+    int i, j;
 
     q=listqueue("*");
 
-    for(i=0; q[i].to[0] != 0x00; i++)
+    for(j=0; q[j].to[0] != 0x00; j++);
+
+    printf("There are %d items in the queue\n\n", j);
+
+    for(i=0; i<j; i++)
 	displayq(q[i]);
 
     cleanqueuelist(q);
