@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: protocol.c,v 1.4 1997/04/04 22:21:07 dustin Exp $
+ * $Id: protocol.c,v 1.5 1997/04/10 06:23:48 dustin Exp $
  * $State: Exp $
  */
 
@@ -163,8 +163,8 @@ void p_quit(int s)
 void process(int s, char *cmd)
 {
     static char *commands[P_MAX+1]={
-        "mash", "farkle",
-        "depth", "quit", "epage", "apage"
+        "mash", "farkle", "depth", "quit",
+	"epage", "apage", "login"
     };
 
     char buf[BUFLEN];
@@ -213,6 +213,9 @@ void process(int s, char *cmd)
 
         case P_APAGE:
             p_apage(s); break;
+
+        case P_LOGIN:
+            p_login(s); break;
 
         case P_QUIT:
             p_quit(s);

@@ -1,14 +1,15 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.6 1997/04/04 22:21:03 dustin Stab $
- * $State: Stab $
+ * $Id: main.c,v 1.7 1997/04/10 06:23:46 dustin Exp $
+ * $State: Exp $
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <signal.h>
 #include <sys/types.h>
 #include <sys/time.h>
 #include <sys/socket.h>
@@ -21,6 +22,11 @@ struct config conf;
 void writepid(int pid)
 {
     FILE *f;
+
+    if(access(conf.pidfile, F_OK)==0)
+    {
+	puts("PID file found, what's up with that?  I'll overwrite it.");
+    }
 
     if(NULL ==(f=fopen(conf.pidfile, "w")) )
     {
@@ -111,6 +117,48 @@ void rehash_main(void)
     printf("Parsed %d terminal servers.\n", i);
 }
 
+void killserver(void)
+{
+    int pid;
+    FILE *f;
+
+    if(access(conf.pidfile, F_OK)!=0)
+    {
+	puts("Error, no PID file found, is it running?");
+	exit(1);
+    }
+
+    f=fopen(conf.pidfile, "r");
+    if(f==NULL)
+    {
+	perror(conf.pidfile);
+	exit(1);
+    }
+
+    if( fscanf(f, "%d", &pid) == EOF)
+    {
+	puts("Error:  No PID found in pidfile");
+	exit(1);
+    }
+
+    kill(pid, SIGTERM);
+    sleep(1);
+
+    if(access(conf.pidfile, F_OK)==0)
+    {
+	puts("Error, pid file still exists, may not have shut down properly");
+	exit(1);
+    }
+    else
+    {
+	puts("Successfully shut down.");
+	exit(1);
+    }
+
+    fclose(f);
+    exit(0);
+}
+
 void ldb_main(void)
 {
     puts("Users:\n------------");
@@ -145,6 +193,9 @@ void main(int argc, char **argv)
 
         case MODE_RUNQ:
 	    runqueue(); break;
+
+        case MODE_KILL:
+	    killserver(); break;
 
     }
     cleanconfig();
