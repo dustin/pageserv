@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: ldapuserdb.c,v 1.7 1998/12/28 04:25:18 dustin Exp $
+ * $Id: ldapuserdb.c,v 1.8 1998/12/29 02:24:33 dustin Exp $
  */
 
 #include <config.h>
@@ -37,11 +37,15 @@ ldap_getld(void)
 	server=rcfg_lookup(conf.cf, "databases.ldap.server");
 
 	ld = ldap_open(server, 0);
-	if (ld == NULL)
+	if (ld == NULL) {
+		_ndebug(2, ("ldap_open(%s) failed\n", server));
 		return (NULL);
+	}
 
 	ret = ldap_bind_s(ld, binddn, bindpw, LDAP_AUTH_SIMPLE);
 	if (ret != LDAP_SUCCESS) {
+		_ndebug(2, ("ldap_bind_s(%p, %s, %s, %d) failed\n", ld, binddn,
+			bindpw, LDAP_AUTH_SIMPLE));
 		return (NULL);
 	}
 	return (ld);
@@ -77,6 +81,9 @@ ldap_getuser(char *name)
 	ld = ldap_getld();
 	if(ld==NULL)
 		return(u);
+
+	_ndebug(2, ("Doing ldap search on base ``%s'' for ``%s''\n",
+		base, filter));
 
 	if (ldap_search_st(ld, base, LDAP_SCOPE_SUBTREE, filter, att, 0, 0, &res)
 	    == -1) {
@@ -140,7 +147,7 @@ static char   **
 ldap_listusers(char *term)
 {
 	LDAP *ld;
-	LDAPMessage *res;
+	LDAPMessage *res, *e;
 	char **values;
 	char  *base;
 	char *att[] = {
@@ -159,12 +166,16 @@ ldap_listusers(char *term)
 	if(ld==NULL)
 		return(NULL);
 
+	_ndebug(2, ("Doing ldap search on base ``%s'' for ``%s''\n",
+		base, filter));
+
 	if(ldap_search_st(ld, base, LDAP_SCOPE_SUBTREE, filter, att, 0, 0, &res)
 		== -1) {
 		ldap_unbind(ld);
 		return(NULL);
 	}
 	values=ldap_get_values(ld, res, "uid");
+	_ndebug(3, ("Got %d entries\n", ldap_count_values(values)));
 	ldap_unbind(ld);
 	return(values);
 }

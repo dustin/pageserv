@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: ldaptermdb.c,v 1.1 1998/12/28 03:23:56 dustin Exp $
+ * $Id: ldaptermdb.c,v 1.2 1998/12/29 02:24:32 dustin Exp $
  */
 
 #include <config.h>
@@ -73,6 +73,9 @@ ldap_getterm(char *number)
 	ld=ldap_getld();
 	if(ld==NULL)
 		return(t);
+
+	_ndebug(2, ("Doing ldap search on base ``%s'' for ``%s''\n",
+		base, filter));
 
 	if (ldap_search_st(ld, base, LDAP_SCOPE_SUBTREE, filter, att, 0, 0, &res)
 		==-1) {
@@ -154,6 +157,9 @@ ldap_listterms(void)
 		return(NULL);
 
 	base=rcfg_lookup(conf.cf, "databases.ldap.base");
+
+	_ndebug(2, ("Doing ldap search on base ``%s'' for ``%s''\n",
+		base, "objectclass=pageservTerminal"));
 
 	if(ldap_search_st(ld, base, LDAP_SCOPE_SUBTREE,
 		"objectclass=pageservTerminal", att, 0, 0, &res) == -1) {
