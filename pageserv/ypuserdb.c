@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: ypuserdb.c,v 1.11 1998/01/27 01:32:49 dustin Exp $
+ * $Id: ypuserdb.c,v 1.12 1998/01/28 17:34:36 dustin Exp $
  */
 
 #include <config.h>
@@ -15,6 +15,8 @@
 #include <sys/types.h>
 #include <assert.h>
 
+#include <fcntl.h>
+
 #ifdef HAVE_RPCSVC_YPCLNT_H
 #include <rpcsvc/ypclnt.h>
 #endif
@@ -24,7 +26,7 @@
 
 extern struct config conf;
 
-static char *domainname;
+static char *domainname=NULL;
 
 static int nis_u_exists(char *name)
 {
@@ -162,16 +164,13 @@ void nis_userdbInit(void)
     char *data;
     int len, yperr;
 
-    if(conf.udb.u_exists==nis_u_exists)
-    {
-	_ndebug(2, ("nis_userdbInit has already been called\n"));
-	return;
-    }
-
-    domainname=rcfg_lookup(conf.cf, "etc.nisdomain");
     if(domainname==NULL)
     {
-	yp_get_default_domain(&domainname);
+        domainname=rcfg_lookup(conf.cf, "etc.nisdomain");
+        if(domainname==NULL)
+        {
+	    yp_get_default_domain(&domainname);
+        }
     }
 
     yp_bind(domainname);
