@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.56 1998/01/10 01:32:51 dustin Exp $
+ * $Id: pageserv.h,v 1.57 1998/01/15 10:02:34 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -214,6 +214,7 @@ struct userDB {
 struct config {
     int mode;              /* execution mode */
     int debug;             /* debug level */
+    int deliveryd;         /* deliveryd pid */
     int childlifetime;     /* child lifetime */
     int maxqueuetime;      /* max queue time */
     int farkle;            /* farkle toggle */

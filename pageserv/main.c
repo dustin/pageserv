@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.36 1998/01/11 08:05:57 dustin Exp $
+ * $Id: main.c,v 1.37 1998/01/15 10:02:38 dustin Exp $
  */
 
 #include <config.h>
@@ -16,6 +16,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <sys/wait.h>
 
 #ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
@@ -93,6 +94,31 @@ static void detach(void)
    umask(7);
 }
 
+/*
+ * This is a hack.
+ */
+static void deliveryd_main(void)
+{
+    int t, stat;
+    if(fork()>0)
+	return;
+
+    t=rcfg_lookupInt(conf.cf, "etc.deliverysleep");
+
+    for(;;)
+    {
+	sleep(t);
+	if(fork()==0)
+	{
+	    runqueue();
+	}
+	else
+	{
+	    wait(&stat);
+	}
+    }
+}
+
 static void daemon_main(void)
 {
     struct sockaddr_in fsin;
@@ -109,6 +135,12 @@ static void daemon_main(void)
 
     /* *NOW* let's initialize the database, shall we? */
     conf.udb.dbinit();
+
+    if(rcfg_lookup(conf.cf, "etc.deliveryd"))
+    {
+	/* fork off a deliveryd */
+	deliveryd_main();
+    }
 
     resetservtraps(); /* set signal traps */
 
