@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: sockets.c,v 1.3 1997/04/04 22:21:13 dustin Stab $
- * $State: Stab $
+ * $Id: sockets.c,v 1.4 1997/04/14 03:51:56 dustin Exp $
+ * $State: Exp $
  */
 
 #include <stdio.h>
@@ -19,7 +19,7 @@
 
 extern struct config conf;
 
-int initialize(void)
+int getservsocket(int port)
 {
     int reuse=1, s;
     struct sockaddr_in sin;
@@ -34,7 +34,7 @@ int initialize(void)
 
     memset((char *) &sin, 0x00, sizeof(sin));
     sin.sin_family = AF_INET;
-    sin.sin_port = htons(PORT);
+    sin.sin_port = htons(port);
     sin.sin_addr.s_addr = htonl(INADDR_ANY);
 
     setsockopt(s, SOL_SOCKET, SO_REUSEADDR,

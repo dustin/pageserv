@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.8 1997/04/11 15:55:03 dustin Exp $
+ * $Id: main.c,v 1.9 1997/04/14 03:51:52 dustin Exp $
  * $State: Exp $
  */
 
@@ -56,19 +56,39 @@ void detach(void)
 void daemon_main(void)
 {
     struct sockaddr_in fsin;
-    int s, ns, fromlen, pid;
+    int s, ws, ns, fromlen, pid, upper;
     fd_set fdset, tfdset;
     struct timeval t;
+
+    upper=0;
 
     if(conf.debug==0)
         detach();
 
     resetservtraps(); /* set signal traps */
 
-    s=initialize();
-
     FD_ZERO(&tfdset);
+
+    s=getservsocket(PORT);
+    if(s>upper)
+	upper=s;
+
+    /* Tell select to listen to it */
     FD_SET(s, &tfdset);
+
+    if(conf.webserver)
+    {
+        ws=getservsocket(WEBPORT);
+
+        if(ws>upper)
+	    upper=ws;
+
+	/* Tell select to listen to it, too */
+        FD_SET(ws, &tfdset);
+
+    }
+
+    upper++;  /* one more, just because */
 
     for(;;)
     {
@@ -77,30 +97,59 @@ void daemon_main(void)
         t.tv_usec=0;
         fromlen=sizeof(fsin);
 
-        if( select(s+1, &fdset, NULL, NULL, &t) > 0)
+        if( select(upper, &fdset, NULL, NULL, &t) > 0)
         {
-             if( (ns=accept(s, (struct sockaddr *)&fsin, &fromlen)) >=0 )
-             {
-                 pid=fork();
+	    if(FD_ISSET(s, &fdset))
+	    {
+		if(conf.debug>2)
+		    puts("Got a connection on the normal port");
 
-                 if(pid==0)
-		 {
-		     /* Run child's main loop */
-                     childmain(ns);
-		 }
-                 else
-		 {
-		     /* parent just closes its copy of the socket */
-                     close(ns);
+                if( (ns=accept(s, (struct sockaddr *)&fsin, &fromlen)) >=0 )
+                {
+                    pid=fork();
 
-		     if(conf.debug>2)
-			 printf("Spawned new child on pid %d\n", pid);
-		 }
-             }
-        }
+                    if(pid==0)
+		    {
+		        /* Run child's main loop */
+                        childmain(ns);
+		    }
+                    else
+		    {
+		        /* parent just closes its copy of the socket */
+                        close(ns);
+
+		        if(conf.debug>2)
+			    printf("Spawned new child on pid %d\n", pid);
+		    }
+                }
+	    }
+	    else if(FD_ISSET(ws, &fdset) && conf.webserver)
+	    {
+		if(conf.debug>2)
+		    puts("Got a connection on the web port");
+
+                if( (ns=accept(ws, (struct sockaddr *)&fsin, &fromlen)) >=0 )
+                {
+                    pid=fork();
+
+                    if(pid==0)
+		    {
+		        /* Run web child's main loop */
+                        httpmain(ns);
+		    }
+                    else
+		    {
+		        /* parent just closes its copy of the socket */
+                        close(ns);
+
+		        if(conf.debug>2)
+			    printf("Spawned new child on pid %d\n", pid);
+		    }
+                }
+	    } /* end of finding the selections */
+        } /* end of select loop */
         reaper();
     }
-
 }
 
 void rehash_main(void)

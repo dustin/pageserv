@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: utility.c,v 1.5 1997/04/04 23:39:26 dustin Exp $
+ * $Id: utility.c,v 1.6 1997/04/14 03:51:58 dustin Exp $
  * $State: Exp $
  */
 
@@ -39,14 +39,33 @@ int gettext(int s, char *buf)
 
 int gettextcr(int s, char *buf)
 {
-    int size=1, len;
+    int size=1, len=0, cr=0, lf=0;
 
     /* eat any extra CR's and LF's */
     while( (len=recv(s, buf, 1, 0)) >0)
     {
+	if(buf[size-1]=='\r')
+	{
+	    size=0;
+	    break;
+	}
+	else if(buf[size-1]=='\n')
+	{
+	    size=0;
+            break;
+	}
+	else
+	{
+	    break;
+	}
+    }
+
+    /*
+    {
         if(buf[size-1]!='\r' && buf[size-1]!='\n')
             break;
     }
+    */
 
     if(len==0)
     {

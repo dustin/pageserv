@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 2.9 1997/04/13 22:05:13 dustin Exp $
+dnl $Id: configure.in,v 2.10 1997/04/14 03:51:16 dustin Exp $
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(pageserv)
 AC_CONFIG_HEADER(include/config.h)
@@ -70,7 +70,8 @@ dnl Checks for library functions.
 AC_TYPE_SIGNAL
 AC_CHECK_FUNCS(select socket herror getopt)
 
-AC_OUTPUT(Makefile pageserv/Makefile clients/Makefile delivery/Makefile)
+AC_OUTPUT(Makefile pageserv/Makefile clients/Makefile delivery/Makefile
+	http/Makefile)
 
 dnl Now let's make depend if he wants to.
 

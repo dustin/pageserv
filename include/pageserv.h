@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.21 1997/04/13 22:00:51 dustin Exp $
+ * $Id: pageserv.h,v 1.22 1997/04/14 03:51:42 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -18,6 +18,7 @@
 
 /* Port number to run on/connect to */
 #define PORT 1029
+#define WEBPORT 1030
 
 /* Config file location */
 #define CONFIGFILE "/tmp/pageserv.conf"
@@ -54,6 +55,7 @@
 #define USERDB "/tmp/userdb"
 #define TERMDB "/tmp/termdb"
 #define PIDFILE "/tmp/pageserv.pid"
+#define WEBROOT "/tmp"
 
 /* Default child lifetime */
 #define CHILD_LIFETIME 120
@@ -162,11 +164,13 @@ struct config {
     int log_que;           /* logging facility */
     int maxconattempts;    /* maximum attempts to connect to modem server */
     int conattemptsleep;   /* sleep between tries */
+    int webserver;         /* start the webserver? */
     char *servhost;        /* server fqdn */
     char *userdb;          /* path to user database */
     char *termdb;          /* path to terminal database */
     char *qdir;            /* path to queue directory */
     char *pidfile;         /* path to pid file */
+    char *webroot;         /* path to webroot */
 };
 
 /* macros */
@@ -184,9 +188,9 @@ char *newqfile(void);
 int bit_set(int bmap, int which);
 int check_time(int priority, char *whom);
 int f_exists(char *file);
+int getservsocket(int port);
 int gettext(int s, char *buf);
 int gettextcr(int s, char *buf);
-int initialize(void);
 int parseterms(void);
 int parseusers(void);
 int queuedepth(void);
@@ -215,6 +219,7 @@ void eraseuserdb(void);
 void getnormtimes(int times, int *ret);
 void getoptions(int argc, char **argv);
 void getqueueinfo( struct queuent *q );
+void httpmain(int s);
 void logqueue(struct queuent q, int type, char *reason);
 void open_storeuser(DBM *db, struct user u);
 void p_login(int s);

@@ -1,0 +1,38 @@
+# Copyright (c) 1997   Dustin Sallings
+# $Id: Makefile.in,v 1.1 1997/04/14 03:51:22 dustin Exp $
+
+SHELL=/bin/sh
+CC=@CC@
+YACC=@YACC@
+INCLUDES=-I@top_srcdir@/include
+CFLAGS=$(INCLUDES) -DVERSION=\"$(VERSION)\" @CFLAGS@
+AR=@AR@ cr
+RANLIB=@RANLIB@
+
+LIBS=@LIBS@
+
+LDFLAGS=@LDFLAGS@ $(LIBS)
+
+LHTTP_OBJS=httpmain.o httpparse.o httpprocess.o httpmisc.o
+SOURCES=httpmain.c httpparse.c httpprocess.c httpmisc.c
+EXES=
+STUFF=
+JUNK=$(EXES) *.o *.a *.core core
+
+all: http.a
+
+http.a: $(LHTTP_OBJS)
+	$(AR) $@ $(LHTTP_OBJS)
+	$(RANLIB) $@
+
+depend:
+	echo "" >> Makefile
+	echo "# Automatically generated dependencies:" >> Makefile
+	$(CC) $(CFLAGS) -M $(SOURCES) >> Makefile
+
+# irix globbing shit.
+irixhack.o:
+	@touch irixhack.o
+
+clean:  irixhack.o
+	rm -f $(JUNK)

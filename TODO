@@ -22,8 +22,8 @@ Clients:
     * Cleaner client stuff
     * Add more options to clients: remote host, options to parsemail,
       etc...
-    * Web Listener
+    * Enhance web listener
 
 ----------------------------------------
 Copyright (c) 1997  Dustin Sallings
-$Id: TODO,v 2.13 1997/04/13 23:11:50 dustin Exp $
+$Id: TODO,v 2.14 1997/04/14 03:51:11 dustin Exp $

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.10 1997/04/11 15:55:05 dustin Exp $
+ * $Id: readconfig.c,v 1.11 1997/04/14 03:51:54 dustin Exp $
  * $State: Exp $
  */
 
@@ -18,7 +18,7 @@
 
 extern struct config conf;
 
-#define COMMANDS "DTP"
+#define COMMANDS "DTPW"
 
 int isin(char c, char *s)
 {
@@ -52,6 +52,15 @@ char *getarg(char *line)
    *e=0x00;
 
    return(b);
+}
+
+void W_command(char s, char *arg)
+{
+    switch(s)
+    {
+	case 'D': conf.webroot=strdup(arg); break;
+	case 'r': conf.webserver=atoi(arg); break;
+    }
 }
 
 void D_command(char s, char *arg)
@@ -99,6 +108,7 @@ void docommand(int l, char c, char s, char *arg)
 	case 'D': D_command(s, arg);  break;
 	case 'T': T_command(s, arg);  break;
 	case 'P': P_command(s, arg);  break;
+	case 'W': W_command(s, arg);  break;
     }
 }
 
@@ -118,6 +128,9 @@ void setdefaults(void)
 
     if(conf.pidfile == NULL)
 	conf.pidfile= PIDFILE;
+
+    if(conf.webroot == NULL)
+	conf.webroot= WEBROOT;
 }
 
 #ifndef HAVE_GETOPT
@@ -217,6 +230,7 @@ void readconfig(char *file)
     conf.log_que=LOG_LOCAL7|LOG_INFO;
     conf.maxconattempts=MAX_CONATTEMPTS;
     conf.conattemptsleep=CONATTEMPTSSLEEP;
+    conf.webserver=0;
 
     f=fopen(file, "r");
     if(f==NULL)
@@ -250,6 +264,7 @@ void cleanconfig(void)
     if(conf.termdb) free(conf.termdb);
     if(conf.qdir) free(conf.qdir);
     if(conf.pidfile) free(conf.pidfile);
+    if(conf.webroot) free(conf.webroot);
 }
 
 void showconfig(void)
@@ -261,6 +276,8 @@ void showconfig(void)
     printf("\tTerm db:      %s\n", conf.termdb);
     printf("\tQueue dir:    %s\n", conf.qdir);
     printf("\tPID file:     %s\n", conf.pidfile);
+    printf("\tWebRoot:      %s\n", conf.webroot);
+    printf("\tWebserver:    %d\n", conf.webserver);
     printf("\tFarkle        %d\n", conf.farkle);
     printf("\tChild life:   %d\n", conf.childlifetime);
     printf("\tMax queue tm: %d\n", conf.maxqueuetime);
