@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.40 1998/01/16 10:23:47 dustin Exp $
+ * $Id: queue.c,v 1.41 1998/01/20 05:57:52 dustin Exp $
  */
 
 #include <stdio.h>
@@ -383,21 +383,40 @@ struct queuent readqueuefile(char *fn)
     FILE *f;
     struct queuent q;
 
-    if(fn[0]!='/')
+    q.to[0]=0x00;
+
+    if(fn[0]=='/')
     {
+	if(strlen(fn)>=(size_t)FNSIZE)
+	{
+	    _ndebug(2, ("Ack, stack smash on ``%s''\n", fn));
+	    return(q);
+	}
         strcpy(filename, fn);
     }
     else
     {
+	if(strlen(conf.qdir)>=(size_t)FNSIZE+5)
+	{
+	    _ndebug(2, ("Ack, stack smash on ``%s''\n", fn));
+	    return(q);
+	}
         strcpy(filename, conf.qdir);
         strcat(filename, "/");
+	if(strlen(fn)+strlen(filename)>=(size_t)FNSIZE)
+	{
+	    _ndebug(2, ("Ack, stack smash on ``%s'' + ``%s''\n", fn));
+	    return(q);
+	}
         strcat(filename, fn);
     }
+
+    _ndebug(4, ("reading in queue for ``%s''\n", filename));
 
     if(NULL== (f=fopen(filename, "r")))
     {
         perror(filename);
-        exit(1);
+	return(q);
     }
 
     /* priority */
