@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.78 1999/02/25 22:47:39 dustin Exp $
+ * $Id: pageserv.h,v 1.79 1999/06/08 07:25:46 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -163,6 +163,7 @@
 #define  PID_NOFILE 1
 #define  PID_STALE  2
 #define  PID_ACTIVE 3
+#define  PID_NOT_OWNER 4
 
 /* Parser flags */
 #define PARSE_GETPASSWD 1
