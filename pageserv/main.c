@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.26 1997/08/11 14:05:54 dustin Exp $
+ * $Id: main.c,v 1.27 1997/09/04 06:18:45 dustin Exp $
  */
 
 #include <config.h>
@@ -197,7 +197,7 @@ void rehash_main(void)
     conf.udb.eraseuserdb();
     erasetermdb();
 
-    i=parseusers();
+    i=conf.udb.parseusers();
     printf("Parsed %d users.\n", i);
 
     i=parseterms();

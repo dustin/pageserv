@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: ypuserdb.c,v 1.4 1997/08/27 07:09:23 dustin Exp $
+ * $Id: ypuserdb.c,v 1.5 1997/09/04 06:18:50 dustin Exp $
  */
 
 #include <config.h>
@@ -129,6 +129,11 @@ void nis_eraseuserdb(void)
     return;
 }
 
+int nis_parseusers(void)
+{
+    return 0;
+}
+
 void nis_userdbInit(void)
 {
     char *data;
@@ -159,6 +164,7 @@ void nis_userdbInit(void)
     conf.udb.storeuser=nis_storeuser;
     conf.udb.deleteuser=nis_deleteuser;
     conf.udb.eraseuserdb=nis_eraseuserdb;
+    conf.udb.parseusers=nis_parseusers;
 }
 
 #endif

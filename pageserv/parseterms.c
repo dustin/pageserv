@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parseterms.c,v 1.4 1997/06/19 08:24:56 dustin Exp $
+ * $Id: parseterms.c,v 1.5 1997/09/04 06:18:46 dustin Exp $
  * $State: Exp $
  */
 
@@ -22,11 +22,11 @@ struct terminal parseterm(char *line)
     struct terminal t;
 
     t.number[0]=0x00;
-    t.prot=0;
+    t.flags=0;
     t.ts[0]=0x00;
     t.port=0;
 
-    sscanf(line, "%s %d %s %d %s", t.number, &t.prot, t.ts, &t.port,
+    sscanf(line, "%s %d %s %d %s", t.number, &t.flags, t.ts, &t.port,
         t.predial);
 
     if(t.ts[0]=='/')

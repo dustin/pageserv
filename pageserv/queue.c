@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.33 1997/08/11 08:17:10 dustin Exp $
+ * $Id: queue.c,v 1.34 1997/09/04 06:18:47 dustin Exp $
  */
 
 #include <stdio.h>
@@ -86,7 +86,7 @@ void runqueue(void)
             {
                 /* Inside this if is executed if I got the port */
 
-                s_tap_init(s);
+                s_tap_init(s, term.flags);
 
                 /* Keep looping through queue stuff until there are no more
                    requests, in case any where queued while we're already

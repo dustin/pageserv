@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.49 1997/08/27 07:08:42 dustin Exp $
+ * $Id: pageserv.h,v 1.50 1997/09/04 06:18:37 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -176,7 +176,7 @@ struct terminal {
     char ts[FNSIZE];
     char predial[STATLEN];
     int  contype;
-    int  prot;
+    int  flags;
     int  port;
 };
 
@@ -192,6 +192,7 @@ struct userDB {
     void (*storeuser)(struct user u);
     struct user (*getuser)(char *name);
     int (*u_exists)(char *name);
+    int (*parseusers)(void);
 };
 
 struct config {

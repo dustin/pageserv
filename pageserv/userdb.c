@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.14 1997/08/11 06:59:23 dustin Exp $
+ * $Id: userdb.c,v 1.15 1997/09/04 06:18:49 dustin Exp $
  */
 
 #include <stdio.h>
@@ -300,4 +300,5 @@ void dbm_userdbInit(void)
     conf.udb.storeuser=dbm_storeuser;
     conf.udb.getuser=dbm_getuser;
     conf.udb.u_exists=dbm_u_exists;
+    conf.udb.parseusers=parseusers;
 }

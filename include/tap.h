@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * "$Id: tap.h,v 1.4 1997/07/23 23:52:26 dustin Exp $"
+ * "$Id: tap.h,v 1.5 1997/09/04 06:18:38 dustin Exp $"
  */
 
 #ifndef TAP_H
@@ -75,6 +75,9 @@
 #define CRTSCTS CNEW_RTSCTS
 #endif
 
+/* Flags */
+#define TAP_INITCR 0x1
+
 /* functions */
 
 char *tap_sent_checksum(int sum);
@@ -84,7 +87,7 @@ int s_modem_waitfor(int s, char *what, int timeout);
 int s_modem_waitforchar(int s, char what, int timeout);
 int s_openhost(char *host, int port);
 int s_tap_end(int s);
-int s_tap_init(int s);
+int s_tap_init(int s, int flags);
 int s_tap_send(int s, char *id, char *message);
 int tap_checksum(char *string);
 

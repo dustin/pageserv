@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: termdb.c,v 1.8 1997/07/14 00:20:26 dustin Exp $
+ * $Id: termdb.c,v 1.9 1997/09/04 06:18:48 dustin Exp $
  * $State: Exp $
  */
 
@@ -23,7 +23,7 @@ void printterm(struct terminal t)
     printf("Term serv:  %s\n", t.ts);
     printf("Predial:    %s\n", t.predial);
     printf("Port:       %d\n", t.port);
-    printf("Protocol:   %d\n", t.prot);
+    printf("Flags:      %d\n", t.flags);
     printf("Contype:    %d\n", t.contype);
 }
 
