@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: pushqueue.c,v 2.3 1997/04/13 22:00:27 dustin Exp $
+ * $Id: pushqueue.c,v 2.4 1997/08/10 07:17:13 dustin Exp $
  */
 
 #include <stdio.h>
@@ -32,7 +32,7 @@ int c;
     memset( (char *)&q, 0x00, sizeof(q));
 
     /* set default */
-    q.priority=htonl(PR_NORMAL);
+    q.priority=PR_NORMAL;
 
     while( (c=getopt(argc, argv, "p:")) != -1)
     {
@@ -40,7 +40,7 @@ int c;
 	{
 	    case 'p':
 		if( tolower(argv[2][0])=='h')
-		    q.priority=htonl(PR_HIGH); break;
+		    q.priority=PR_HIGH; break;
 	    case '?':
 		usage(argv[0]);
 		exit(1); break;
