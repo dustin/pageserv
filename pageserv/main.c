@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.17 1997/07/08 07:08:28 dustin Exp $
+ * $Id: main.c,v 1.18 1997/07/31 01:28:31 dustin Exp $
  * $State: Exp $
  */
 
@@ -14,6 +14,7 @@
 #include <string.h>
 #include <signal.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 
 #ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
@@ -50,7 +51,7 @@ void writepid(int pid)
 
 void detach(void)
 {
-   int pid;
+   int pid, i;
 
    pid=fork();
 
@@ -60,6 +61,18 @@ void detach(void)
        writepid(pid);
        exit(0);
    }
+
+   setsid();
+
+   /* close uneeded file descriptors */
+
+   for(i=0; i<256; i++)
+   {
+        close(i);
+   }
+
+   chdir("/");
+   umask(7);
 }
 
 void daemon_main(void)
