@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.29 1997/10/10 08:24:21 dustin Exp $
+ * $Id: readconfig.c,v 1.30 1997/12/29 07:44:50 dustin Exp $
  */
 
 #include <readconfig.h>
@@ -217,6 +217,8 @@ void rdconfig(char *file)
     conf.maxconattempts=MAX_CONATTEMPTS;
     conf.conattemptsleep=CONATTEMPTSSLEEP;
     conf.gmtoffset=0;
+    conf.pageport=PORT;
+    conf.pageserv=1;
     conf.webport=WEBPORT;
     conf.webserver=0;
     conf.snppport=SNPPPORT;
@@ -256,27 +258,35 @@ void rdconfig(char *file)
     if(tmp)
 	conf.gmtoffset=atoi(tmp);
 
-    tmp=rcfg_lookup(cf, "protocols.farkle");
+    tmp=rcfg_lookup(cf, "modules.pageserv.protocols.farkle");
     if(tmp)
 	conf.farkle=atoi(tmp);
 
-    tmp=rcfg_lookup(cf, "webserver.run");
+    tmp=rcfg_lookup(cf, "modules.webserver.run");
     if(tmp)
 	conf.webserver=atoi(tmp);
 
-    tmp=rcfg_lookup(cf, "webserver.docroot");
+    tmp=rcfg_lookup(cf, "modules.pageserv.run");
+    if(tmp)
+	conf.pageserv=atoi(tmp);
+
+    tmp=rcfg_lookup(cf, "modules.pageserv.port");
+    if(tmp)
+	conf.pageport=atoi(tmp);
+
+    tmp=rcfg_lookup(cf, "modules.webserver.docroot");
     if(tmp)
 	conf.webroot=tmp;
 
-    tmp=rcfg_lookup(cf, "webserver.port");
+    tmp=rcfg_lookup(cf, "modules.webserver.port");
     if(tmp)
 	conf.webport=atoi(tmp);
 
-    tmp=rcfg_lookup(cf, "snpp.run");
+    tmp=rcfg_lookup(cf, "modules.snpp.run");
     if(tmp)
 	conf.snppserver=atoi(tmp);
 
-    tmp=rcfg_lookup(cf, "snpp.port");
+    tmp=rcfg_lookup(cf, "modules.snpp.port");
     if(tmp)
 	conf.snppport=atoi(tmp);
 
@@ -336,6 +346,8 @@ void showconfig(void)
     printf("\tQueue dir:    %s\n", conf.qdir);
     printf("\tPID file:     %s\n", conf.pidfile);
     printf("\tGMT offset:   %d\n", conf.gmtoffset);
+    printf("\tPaegserv:     %d\n", conf.pageserv);
+    printf("\tPage port:    %d\n", conf.pageport);
     printf("\tWebRoot:      %s\n", conf.webroot);
     printf("\tWebserver:    %d\n", conf.webserver);
     printf("\tWeb port:     %d\n", conf.webport);

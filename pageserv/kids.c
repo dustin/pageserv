@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: kids.c,v 1.6 1997/08/27 06:10:26 dustin Exp $
+ * $Id: kids.c,v 1.7 1997/12/29 07:44:49 dustin Exp $
  */
 
 #include <signal.h>
@@ -42,7 +42,7 @@ int _pageserv_socket(void)
 
 void _pageserv_init(void)
 {
-    mod_pageserv.s=getservsocket(PORT);
+    mod_pageserv.s=getservsocket(conf.pageport);
 
     if(mod_pageserv.s>=0)
     {

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.27 1997/09/04 06:18:45 dustin Exp $
+ * $Id: main.c,v 1.28 1997/12/29 07:44:50 dustin Exp $
  */
 
 #include <config.h>
@@ -112,16 +112,14 @@ void daemon_main(void)
     m=conf.modules;
     for(i=0; i<conf.nmodules; i++)
     {
-	if(conf.debug>2)
-	    printf("Loading module ``%s''\n", m->name);
+        _ndebug(2, ("Loading module ``%s''\n", m->name));
 
 	m->init();
 
 	s=m->socket();
         if(s>=0)
 	{
-	    if(conf.debug>2)
-		printf("Module is listening, fdsetting %d\n", s);
+            _ndebug(2, ("Module is listening, fdsetting %d\n", s));
 
 	    if(s >upper)
 	        upper=s;
@@ -148,8 +146,7 @@ void daemon_main(void)
 	    {
 		if(FD_ISSET(m->socket(), &fdset))
 		{
-		    if(conf.debug>2)
-			printf("Got a connection for ``%s''\n", m->name);
+                    _ndebug(2, ("Got a connection for ``%s''\n", m->name));
 
 		    if( (p.socket=accept(m->socket(),
 			(struct sockaddr *)&fsin, &fromlen)) >=0 )
@@ -177,8 +174,8 @@ void daemon_main(void)
 			{
 			    close(p.socket);
 
-			    if(conf.debug>2 && pid>1)
-				printf("Spawned a child, pid %d\n", pid);
+			    /* This used to be if(conf.debug>2 && pid>1) */
+			    _ndebug(2, ("Spawned a child, pid %d\n", pid));
 			}
 		    }
 		}
