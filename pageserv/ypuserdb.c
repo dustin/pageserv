@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: ypuserdb.c,v 1.10 1998/01/25 11:12:20 dustin Exp $
+ * $Id: ypuserdb.c,v 1.11 1998/01/27 01:32:49 dustin Exp $
  */
 
 #include <config.h>
@@ -121,11 +121,8 @@ static char **nis_listusers(char *term)
 	{
 	    size<<=1;
 
-	    if(conf.debug>2)
-	    {
-		printf("Reallocating, now need %d bytes for %d\n",
-		    size*sizeof(char *), size);
-	    }
+	    _ndebug(2, ("Reallocating, now need %d bytes for %d\n",
+			size*sizeof(char *), size));
 
 	    ret=realloc(ret, size*sizeof(char *));
 	    assert(ret);

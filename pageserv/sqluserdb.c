@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: sqluserdb.c,v 1.2 1998/01/11 11:03:05 dustin Exp $
+ * $Id: sqluserdb.c,v 1.3 1998/01/27 01:32:41 dustin Exp $
  */
 
 #include <config.h>
@@ -38,21 +38,18 @@ static PGresult *do_sql_pg(char *query)
     if(PQstatus(conn)==CONNECTION_BAD)
     {
 	/* Keen logging thing goes here */
-	if(conf.debug>2)
-	    puts(PQerrorMessage(conn));
+        _ndebug(2, (PQerrorMessage(conn)));
 	return(NULL);
     }
 
-    if(conf.debug>3)
-	printf("Doing query:\n%s\n", query);
+    _ndebug(2, ("Doing query:\n%s\n", query));
 
     res=PQexec(conn, query);
 
     if(PQresultStatus(res)!=PGRES_TUPLES_OK)
     {
 	/* Keen logging thing goes here */
-	if(conf.debug>2)
-	    puts(PQerrorMessage(conn));
+        _ndebug(2, (PQerrorMessage(conn)));
 	return(NULL);
     }
 
@@ -178,11 +175,8 @@ char **nis_listusers(char *term)
 	{
 	    size<<=1;
 
-	    if(conf.debug>2)
-	    {
-		printf("Reallocating, now need %d bytes for %d\n",
-		    size*sizeof(char *), size);
-	    }
+            _ndebug(2, ("Reallocating, now need %d bytes for %d\n"
+			size*sizeof(char *), size));
 
 	    ret=realloc(ret, size*sizeof(char *));
 	}

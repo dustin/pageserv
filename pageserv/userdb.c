@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.19 1998/01/25 11:12:19 dustin Exp $
+ * $Id: userdb.c,v 1.20 1998/01/27 01:32:44 dustin Exp $
  */
 
 #include <stdio.h>
@@ -24,8 +24,7 @@ void cleanuserlist(char **list)
 {
     int i;
 
-    if(conf.debug>2)
-        puts("Freeing user list.");
+    _ndebug(2, ("Freeing user list.\n"));
 
     for(i=0; list[i]!=NULL; i++)
     {
@@ -73,11 +72,8 @@ static char **dbm_listusers(char *term)
         {
            size<<=1;
 
-            if(conf.debug>2)
-            {
-                printf("Reallocating, now need %d bytes for %d\n",
-                    size*sizeof(char *), size);
-            }
+	    _ndebug(2, ("Reallocating, now need %d bytes for %d\n",
+			size*sizeof(char *), size));
 
             ret=realloc(ret, size*sizeof(char *));
         }

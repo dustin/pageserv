@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: termdb.c,v 1.12 1998/01/22 10:23:52 dustin Exp $
+ * $Id: termdb.c,v 1.13 1998/01/27 01:32:43 dustin Exp $
  * $State: Exp $
  */
 
@@ -78,11 +78,8 @@ char **listterms(void)
         {
            size<<=1;
 
-            if(conf.debug>2)
-            {
-                printf("Reallocating, now need %d bytes for %d\n",
-                    size*sizeof(char *), size);
-            }
+	    _ndebug(2, ("Reallocating, now need %d bytes for %d\n",
+			size*sizeof(char *), size));
 
             ret=realloc(ret, size*sizeof(char *));
         }
@@ -97,8 +94,7 @@ void cleantermlist(char **list)
 {
     int i;
 
-    if(conf.debug>2)
-	puts("Freeing terminal list.");
+    _ndebug(2, ("Freeing terminal list.\n"));
 
     for(i=0; list[i]!=NULL; i++)
     {

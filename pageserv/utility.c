@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: utility.c,v 1.16 1998/01/10 01:33:13 dustin Exp $
+ * $Id: utility.c,v 1.17 1998/01/27 01:32:46 dustin Exp $
  */
 
 #include <stdio.h>
@@ -80,8 +80,7 @@ void stringListSort(char **list)
 
     if(i>0)
     {
-	if(conf.debug>2)
-	    printf("Calling quicksort(list, %d, %d)\n", 0, i-1);
+	_ndebug(2, ("Calling quicksort(list, %d, %d)\n", 0, i-1));
 	quicksort(list, 0, i-1);
     }
 }
@@ -112,13 +111,11 @@ char *addtostr(int *size, char *dest, char *str)
 {
     int new=0;
 
-    if(conf.debug>5)
-	printf("addtostr(%d, %s, %s);\n", *size, dest, str);
+    _ndebug(5, ("addtostr(%d, %s, %s);\n", *size, dest, str));
 
     if(*size==0)
     {
-	if(conf.debug>5)
-	    puts("Doing initial malloc");
+	_ndebug(5, ("Doing initial malloc\n"));
 
 	*size=DEFAULT_STRLEN;
 	dest=(char *)malloc(*size*sizeof(char));
@@ -132,9 +129,8 @@ char *addtostr(int *size, char *dest, char *str)
 
     if(strlen(dest)+strlen(str)>=(size_t)*size)
     {
-	if(conf.debug>4)
-	    printf("Realloc'in to %d bytes, need more than %d bytes\n",
-		*size<<1, *size);
+	_ndebug(4, ("Realloc'in to %d bytes, need more than %d bytes\n",
+		    *size<<1, *size));
 
 	*size<<=1;
 	dest=realloc(dest, *size*sizeof(char));
@@ -213,8 +209,7 @@ int gettext(int s, char *buf)
         exit(0);
     }
 
-    if(conf.debug>1)
-        printf("gettext() received:\n\t``%s''\n", buf);
+    _ndebug(1, ("gettext() received:\n\t``%s''\n", buf));
 
     return(size);
 }
@@ -244,8 +239,7 @@ int gettextcr(int s, char *buf)
 
     if(len==0)
     {
-	if(conf.debug>0)
-	    puts("Broken pipe?");
+	_ndebug(0, ("Broken pipe?\n"));
 	exit(0);
     }
 
@@ -253,8 +247,7 @@ int gettextcr(int s, char *buf)
     {
         if(len==0)
         {
-	    if(conf.debug>0)
-	        puts("Broken pipe?");
+	    _ndebug(0, ("Broken pipe?\n"));
 	    exit(0);
         }
 
@@ -266,8 +259,7 @@ int gettextcr(int s, char *buf)
 
     kw(buf);
 
-    if(conf.debug>1)
-        printf("gettextcr() received:\n\t``%s''\n", buf);
+    _ndebug(1, ("gettextcr() received:\n\t``%s''\n", buf));
 
     return(size);
 }

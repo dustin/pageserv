@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: signals.c,v 1.9 1998/01/10 01:33:08 dustin Exp $
+ * $Id: signals.c,v 1.10 1998/01/27 01:32:38 dustin Exp $
  */
 
 #include <stdio.h>
@@ -16,8 +16,7 @@ extern struct config conf;
 
 static RETSIGTYPE serv_sigint(int sig)
 {
-    if(conf.debug>0)
-	puts("Exit type signal caught, shutting down...");
+    _ndebug(0, ("Exit type signal caught, shutting down...\n"));
 
     unlink(conf.pidfile);
     cleanconfig();
@@ -45,8 +44,7 @@ static RETSIGTYPE serv_sigchld(int sig)
 
 void resetservtraps(void)
 {
-    if(conf.debug>0)
-	puts("Setting signals...");
+    _ndebug(0, ("Setting signals...\n"));
 
     signal(SIGINT, serv_sigint);
     signal(SIGQUIT, serv_sigint);
@@ -63,8 +61,7 @@ static RETSIGTYPE del_sigint(int sig)
 
 void resetdelivertraps(void)
 {
-    if(conf.debug>0)
-	puts("Setting signals...");
+    _ndebug(0, ("Setting signals...\n"));
 
     signal(SIGINT, del_sigint);
     signal(SIGQUIT, del_sigint);
