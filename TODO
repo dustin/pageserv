@@ -4,7 +4,6 @@ Overall:
     * Bigger queue files (connect from where, etc...)
     * hosts.access
     * Completely internal delivery stuff (no need for -bq all the time)
-    * Make a module compliant with SNPP (RFC1861)
     * Management login to manage crap
     * NIS based databases
     * support numeric pagers
@@ -27,4 +26,4 @@ Clients:
 
 ----------------------------------------
 Copyright (c) 1997  Dustin Sallings
-$Id: TODO,v 2.18 1997/04/18 20:27:27 dustin Exp $
+$Id: TODO,v 2.19 1997/04/29 05:13:34 dustin Exp $

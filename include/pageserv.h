@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.25 1997/04/16 18:22:56 dustin Exp $
+ * $Id: pageserv.h,v 1.26 1997/04/29 05:13:47 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -20,6 +20,7 @@
 /* Port number to run on/connect to */
 #define PORT 1029
 #define WEBPORT 1030
+#define SNPPPORT 1031
 
 /* Config file location */
 #define CONFIGFILE "/tmp/pageserv.conf"
@@ -167,6 +168,9 @@ struct config {
     int conattemptsleep;   /* sleep between tries */
     int webserver;         /* start the webserver? */
     int webport;           /* webserver port num */
+
+    int snppserver;         /* start the snppserver? */
+    int snppport;           /* snppserver port num */
 
     char *servhost;        /* server fqdn */
     char *userdb;          /* path to user database */

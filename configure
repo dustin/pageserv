@@ -1971,7 +1971,7 @@ done
 ac_given_srcdir=$srcdir
 
 trap 'rm -fr `echo "Makefile pageserv/Makefile clients/Makefile delivery/Makefile
-	http/Makefile include/config.h" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
+	http/Makefile snpp/Makefile include/config.h" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
 EOF
 cat >> $CONFIG_STATUS <<EOF
 
@@ -2052,7 +2052,7 @@ EOF
 cat >> $CONFIG_STATUS <<EOF
 
 CONFIG_FILES=\${CONFIG_FILES-"Makefile pageserv/Makefile clients/Makefile delivery/Makefile
-	http/Makefile"}
+	http/Makefile snpp/Makefile"}
 EOF
 cat >> $CONFIG_STATUS <<\EOF
 for ac_file in .. $CONFIG_FILES; do if test "x$ac_file" != x..; then

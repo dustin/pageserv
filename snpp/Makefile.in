@@ -1,0 +1,38 @@
+# Copyright (c) 1997   Dustin Sallings
+# $Id: Makefile.in,v 1.1 1997/04/29 05:14:17 dustin Exp $
+
+SHELL=/bin/sh
+CC=@CC@
+YACC=@YACC@
+INCLUDES=-I@top_srcdir@/include
+CFLAGS=$(INCLUDES) -DVERSION=\"$(VERSION)\" @CFLAGS@
+AR=@AR@ cr
+RANLIB=@RANLIB@
+
+LIBS=@LIBS@
+
+LDFLAGS=@LDFLAGS@ $(LIBS)
+
+LSNPP_OBJS=snppmain.o snppparse.o snppmisc.o
+SOURCES=snppmain.c snppparse.c snppmisc.c
+EXES=
+STUFF=
+JUNK=$(EXES) *.o *.a *.core core
+
+all: snpp.a
+
+snpp.a: $(LSNPP_OBJS)
+	$(AR) $@ $(LSNPP_OBJS)
+	$(RANLIB) $@
+
+depend:
+	echo "" >> Makefile
+	echo "# Automatically generated dependencies:" >> Makefile
+	$(CC) $(CFLAGS) -M $(SOURCES) >> Makefile
+
+# irix globbing shit.
+irixhack.o:
+	@touch irixhack.o
+
+clean:  irixhack.o
+	rm -f $(JUNK)

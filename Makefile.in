@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 2.13 1997/04/18 20:42:21 dustin Exp $
+# $Id: Makefile.in,v 2.14 1997/04/29 05:13:32 dustin Exp $
 
 MAJOR=2
 MINOR=5
@@ -15,7 +15,7 @@ LIBS=@LIBS@
 
 LDFLAGS=@LDFLAGS@ $(LIBS)
 
-DIRS=http delivery pageserv clients
+DIRS=http snpp delivery pageserv clients
 NAME=pageserv
 ARCHIVE=$(NAME)-$(VERSION)
 STUFF=configure configure.in Makefile.in README TODO sample include \

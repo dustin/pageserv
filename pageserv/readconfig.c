@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.15 1997/04/16 18:23:06 dustin Exp $
+ * $Id: readconfig.c,v 1.16 1997/04/29 05:14:08 dustin Exp $
  * $State: Exp $
  */
 
@@ -18,7 +18,7 @@
 
 extern struct config conf;
 
-#define COMMANDS "DTPW"
+#define COMMANDS "DTPWS"
 
 int isin(char c, char *s)
 {
@@ -61,6 +61,15 @@ void W_command(char s, char *arg)
 	case 'D': conf.webroot=strdup(arg); break;
 	case 'r': conf.webserver=atoi(arg); break;
 	case 'p': conf.webport=atoi(arg); break;
+    }
+}
+
+void S_command(char s, char *arg)
+{
+    switch(s)
+    {
+	case 'r': conf.snppserver=atoi(arg); break;
+	case 'p': conf.snppport=atoi(arg); break;
     }
 }
 
@@ -110,6 +119,7 @@ void docommand(int l, char c, char s, char *arg)
 	case 'T': T_command(s, arg);  break;
 	case 'P': P_command(s, arg);  break;
 	case 'W': W_command(s, arg);  break;
+	case 'S': S_command(s, arg);  break;
     }
 }
 
@@ -233,6 +243,8 @@ void readconfig(char *file)
     conf.conattemptsleep=CONATTEMPTSSLEEP;
     conf.webport=WEBPORT;
     conf.webserver=0;
+    conf.snppport=SNPPPORT;
+    conf.snppserver=0;
 
     f=fopen(file, "r");
     if(f==NULL)
@@ -286,6 +298,8 @@ void showconfig(void)
     printf("\tWebRoot:      %s\n", conf.webroot);
     printf("\tWebserver:    %d\n", conf.webserver);
     printf("\tWeb port:     %d\n", conf.webport);
+    printf("\tSNPPserver:   %d\n", conf.snppserver);
+    printf("\tSNPP port:    %d\n", conf.snppport);
     printf("\tFarkle        %d\n", conf.farkle);
     printf("\tChild life:   %d\n", conf.childlifetime);
     printf("\tMax queue tm: %d\n", conf.maxqueuetime);
