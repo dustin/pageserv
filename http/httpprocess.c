@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpprocess.c,v 1.14 1997/07/09 07:26:02 dustin Exp $
+ * $Id: httpprocess.c,v 1.15 1997/07/10 04:07:14 dustin Exp $
  */
 
 #define IWANTDOCINFO 1
@@ -20,6 +20,7 @@
 
 extern struct config conf;
 
+#if 0
 void http_senddoc(int s, struct http_request r)
 {
     FILE *f;
@@ -49,6 +50,7 @@ void http_senddoc(int s, struct http_request r)
     }
     fclose(f);
 }
+#endif
 
 void _http_process_get(int s, struct http_request r)
 {
@@ -63,7 +65,8 @@ void _http_process_get(int s, struct http_request r)
     }
     else
     {
-        http_senddoc(s, r);
+	/* run it through lex */
+	_http_parse(s, r);
     }
 
     _http_footer(s);

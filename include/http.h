@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * "$Id: http.h,v 1.13 1997/07/09 07:26:12 dustin Exp $"
+ * "$Id: http.h,v 1.14 1997/07/10 04:07:18 dustin Exp $"
  */
 
 #ifndef HTTP_H
@@ -93,9 +93,12 @@ void _http_header_notfound(int s, struct http_request r);
 void _http_header_ok(int s, int size);
 void _http_init(void);
 void _http_init_request(struct http_request *r);
+void _http_lex_dofunc(char *func);
+void _http_lex_showthing(char *thing);
 void _http_main(modpass p);
 void _http_moduser(int s, struct http_request r);
 void _http_moduser_timelist(int s, int def);
+void _http_parse(int s, struct http_request r);
 void _http_parseargs(int s, struct http_request *r);
 void _http_process_get(int s, struct http_request r);
 void _http_sendpage(int s, struct http_request r);
