@@ -1,13 +1,14 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: sockets.c,v 1.2 1997/03/10 07:34:38 dustin Exp $
+ * $Id: sockets.c,v 1.3 1997/03/11 06:58:30 dustin Exp $
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <signal.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
