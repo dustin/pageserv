@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.51 1998/02/27 04:31:00 dustin Exp $
+ * $Id: main.c,v 1.52 1998/02/27 07:47:28 dustin Exp $
  */
 
 #include <config.h>
@@ -149,7 +149,10 @@ static int deliveryd_main(void)
     openlog("pageserv", LOG_PID|LOG_NDELAY, conf.log_que);
     syslog(conf.log_que|LOG_INFO, "deliveryd started");
 
-    resetdelivertraps();
+    /*
+     * Defaultify everything, keep the thing from deleting its pid file.
+     */
+    resethappytraps();
 
     t=rcfg_lookupInt(conf.cf, "etc.deliverysleep");
 
