@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: lexer.l,v 1.2 1997/07/10 06:46:54 dustin Exp $
+ * $Id: lexer.l,v 1.3 1997/07/10 06:55:44 dustin Exp $
  */
 
 %{
@@ -11,9 +11,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <sys/stat.h>
 
 extern struct config conf;
 
@@ -135,7 +135,6 @@ void _http_lex_showthing(char *thing)
 void _http_parse(int s, struct http_request r)
 {
     char buf[2048];
-    struct stat st;
 
     /* Set the globals */
     _parse_sock=s;

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: utility.c,v 1.10 1997/07/10 06:47:45 dustin Exp $
+ * $Id: utility.c,v 1.11 1997/07/10 06:55:51 dustin Exp $
  * $State: Exp $
  */
 
@@ -9,6 +9,7 @@
 #include <ctype.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/socket.h>
 
 #include <pageserv.h>
@@ -99,7 +100,7 @@ int pack_timebits(int early, int late)
 
 int puttext(int s, char *txt)
 {
-    write(s, txt, strlen(txt));
+    return(write(s, txt, strlen(txt)));
 }
 
 int gettext(int s, char *buf)

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: login.c,v 1.12 1997/07/09 07:26:22 dustin Exp $
+ * $Id: login.c,v 1.13 1997/07/10 06:55:48 dustin Exp $
  * $State: Exp $
  */
 
@@ -127,7 +127,7 @@ void login_usermain(int s, struct user u)
 {
     char buf[BUFLEN];
     int times[2];
-    int flag, changes=0, i;
+    int flag, changes=0;
 
     /* reset alarm, give him some time to get stuff done */
     alarm(conf.childlifetime);

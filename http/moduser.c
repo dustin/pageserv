@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: moduser.c,v 1.5 1997/07/10 06:46:54 dustin Exp $
+ * $Id: moduser.c,v 1.6 1997/07/10 06:55:45 dustin Exp $
  */
 
 #include <pageserv.h>
@@ -58,7 +58,6 @@ void _http_moduser_process(int s, struct http_request r)
     int times[2];
     char *tmp, *passwd1, *passwd2;
     char buf[BUFLEN];
-    int i;
 
     if(u_exists(r.auth.name))
     {
