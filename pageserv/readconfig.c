@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.13 1997/04/16 06:10:54 dustin Exp $
+ * $Id: readconfig.c,v 1.14 1997/04/16 06:19:18 dustin Exp $
  * $State: Exp $
  */
 
@@ -268,10 +268,14 @@ void cleanconfig(void)
     if(conf.qdir) free(conf.qdir);
     if(conf.pidfile) free(conf.pidfile);
     if(conf.webroot) free(conf.webroot);
+    if(conf.modules) free(conf.modules);
 }
 
 void showconfig(void)
 {
+    int i;
+    module *m;
+
     puts("Configuration:");
     printf("\tServer:       %s\n", conf.servhost);
     printf("\tRunning mode: %s\n", modenames[conf.mode]);
@@ -287,4 +291,13 @@ void showconfig(void)
     printf("\tMax queue tm: %d\n", conf.maxqueuetime);
     printf("\tLog facility: %d\n", conf.log_que);
     printf("\tDebug:        %d\n", conf.debug);
+
+    puts("Modules:");
+
+    m=conf.modules;
+    for(i=0; i<conf.nmodules; i++)
+    {
+	printf("\t%s\n", m->name);
+	m++;
+    }
 }
