@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.25 1997/08/11 03:55:00 dustin Exp $
+ * $Id: readconfig.c,v 1.26 1997/08/11 06:59:21 dustin Exp $
  */
 
 #include <readconfig.h>
@@ -39,7 +39,14 @@ void setdefaults(void)
     if(conf.webroot == NULL)
 	conf.webroot= WEBROOT;
 
+#ifdef HAVE_NIS
+    if( rcfg_lookupInt(conf.cf, "databases.nis_userdb") == 1 )
+        nis_userdbInit();
+    else
+        dbm_userdbInit();
+#else /* Don't have NIS */
     dbm_userdbInit();
+#endif
 }
 
 #ifndef HAVE_GETOPT

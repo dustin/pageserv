@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.13 1997/08/11 04:28:53 dustin Exp $
+ * $Id: userdb.c,v 1.14 1997/08/11 06:59:23 dustin Exp $
  */
 
 #include <stdio.h>
@@ -206,27 +206,20 @@ struct user dbm_open_getuser(DBM *db, char *name)
 
 void printusers(void)
 {
-    char buf[BUFLEN];
     struct user u;
-    datum d;
-    DBM *db;
+    char **users;
+    int i;
 
-    if( (db=dbm_open(conf.userdb, O_RDONLY, 0644)) ==NULL)
-    {
-        perror(conf.userdb);
-        exit(1);
-    }
+    users=conf.udb.listusers("*");
 
-    for(d=dbm_firstkey(db); d.dptr!=NULL; d=dbm_nextkey(db))
+    for(i=0; users[i]; i++)
     {
-        strncpy(buf, d.dptr, d.dsize);
-        buf[d.dsize]=0x00;
-        u=dbm_open_getuser(db, buf);
+        u=conf.udb.getuser(users[i]);
         printuser(u);
         puts("--------");
     }
 
-    dbm_close(db);
+    cleanuserlist(users);
 }
 
 int check_time(struct queuent q)
