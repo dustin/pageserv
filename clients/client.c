@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: client.c,v 1.4 1997/03/14 21:22:21 dustin Exp $
+ * $Id: client.c,v 1.5 1997/03/14 21:33:58 dustin Exp $
  */
 
 /*
@@ -108,9 +108,9 @@ int pushqueue(char *to, char *message, int priority)
 
     switch(priority)
     {
-	case PR_HIGH: strcpy(buf, "high\n"); break;
+        case PR_HIGH: strcpy(buf, "high\n"); break;
 
-	default:      strcpy(buf, "normal\n"); break;
+        default:      strcpy(buf, "normal\n"); break;
     }
 
     send(s, buf, strlen(buf), 0);

@@ -12,13 +12,13 @@ char buf[BUFLEN];
 
     if(argc>2)
     {
-	if(strncmp(argv[1], "-p", 2) == 0)
-	{
-	    if( tolower(argv[2][0])=='h')
-	    {
-		q.priority=htonl(PR_HIGH);
-	    }
-	}
+        if(strncmp(argv[1], "-p", 2) == 0)
+        {
+            if( tolower(argv[2][0])=='h')
+            {
+                q.priority=htonl(PR_HIGH);
+            }
+        }
     }
     else
     {
@@ -29,7 +29,7 @@ char buf[BUFLEN];
     cgettext(q.message, BUFLEN);
 
     if( (pushqueue(q.to, q.message, q.priority)) == 0)
-	puts("Looks successful");
+        puts("Looks successful");
     else
         puts("Didn't work.");
 }
