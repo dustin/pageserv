@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: misc.c,v 2.1 1998/01/28 08:34:25 dustin Exp $
+ * $Id: misc.c,v 2.2 1998/03/18 08:33:22 dustin Exp $
  */
 
 #include <stdio.h>
@@ -101,6 +101,8 @@ void runqueue(void)
                             _ndebug(0, ("Delivery of %s successful\n",
                                 q[i].qid));
                             logqueue(q[i], SUC_LOG, NULL);
+			    dq_notify(q[i], "Successfully delivered",
+				      NOTIFY_SUCC);
                             dequeue(q[i].qid);
                             usleep(2600);
                         }

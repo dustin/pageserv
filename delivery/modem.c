@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: modem.c,v 2.17 1998/03/11 07:18:17 dustin Exp $
+ * $Id: modem.c,v 2.18 1998/03/18 08:33:23 dustin Exp $
  */
 
 #include <config.h>
@@ -21,6 +21,7 @@
 
 #include <tap.h>
 #include <pageserv.h>
+#include <readconfig.h>
 
 extern struct config conf;
 

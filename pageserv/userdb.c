@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.22 1998/02/27 08:35:51 dustin Exp $
+ * $Id: userdb.c,v 1.23 1998/03/18 08:33:31 dustin Exp $
  */
 
 #include <stdio.h>
@@ -190,6 +190,14 @@ void printuser(struct user u)
     printf("Password:  %s\n", u.passwd);
     printf("Pager ID:  %s\n", u.pageid);
     printf("Station:   %s\n", u.statid);
+    printf("Notify:    %s\n", u.notify);
+    printf("Flags:     %d%s", u.flags, (u.flags>0)?" -- ":"");
+
+    /* print out the flags */
+    printf("%s", (u.flags&NOTIFY_SUCC)?"NOTIFY_SUCC ":"");
+    printf("%s", (u.flags&NOTIFY_FAIL)?"NOTIFY_FAIL ":"");
+
+    puts("");
 
     getnormtimes(u.times, times);
     printf("Normal:    %d to %d\n", times[0], times[1]);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.49 1998/03/11 07:35:04 dustin Exp $
+ * $Id: queue.c,v 1.50 1998/03/18 08:33:30 dustin Exp $
  */
 
 #include <stdio.h>
@@ -23,6 +23,69 @@
 #include <readconfig.h>
 
 extern struct config conf;
+
+int sendmail(char *to, char **cc, char *message)
+{
+    FILE *f;
+    char *sm, *from;
+
+    sm=rcfg_lookup(conf.cf, "etc.sendmail");
+    if(sm==NULL)
+    {
+	_ndebug(2, ("etc.sendmail not configured\n"));
+	return(-1);
+    }
+
+    from=rcfg_lookup(conf.cf, "etc.mailfrom");
+    if(from==NULL)
+    {
+	_ndebug(2, ("etc.mailfrom not configured\n"));
+	return(-1);
+    }
+
+    f=popen(sm, "w");
+    if(f==NULL)
+    {
+	_ndebug(2, ("Error executing ``%s''\n", sm));
+	return(-1);
+    }
+
+    fprintf(f, "From: %s\n", from);
+    fprintf(f, "To: %s\n", to);
+    fprintf(f, "Subject: Pageserv message\n\n");
+
+    fprintf(f, message);
+
+    pclose(f);
+}
+
+void dq_notify(struct queuent q, char *message, int flags)
+{
+    struct user u;
+    char *buf=NULL;
+    int size=0;
+
+    _ndebug(4, ("Queue:  %s\n", q.qid));
+
+    u=conf.udb.getuser(q.to);
+    if(!(u.flags&flags))
+    {
+	_ndebug(4, ("User ``%s'' didn't have notify for %d (flags=%d)\n",
+	      q.to, flags, u.flags));
+	return;
+    }
+
+    buf=addtostr(&size, buf, "Message from pageserv:\n\n\t");
+    buf=addtostr(&size, buf, message);
+    buf=addtostr(&size, buf, ":\n\nMessage:\n\n\t");
+    buf=addtostr(&size, buf, q.message);
+
+    _ndebug(2, ("Going to sendmail:%s\n", buf));
+
+    sendmail(u.notify, NULL, buf);
+
+    free(buf);
+}
 
 void logqueue(struct queuent q, int type, char *reason)
 {
@@ -424,6 +487,7 @@ int readytodeliver(struct queuent q)
 	_ndebug(2, ("Deleting %s, too old...\n", q.qid));
 
         logqueue(q, EXP_LOG, NULL);
+	dq_notify(q, "Too old", NOTIFY_FAIL);
         dequeue(q.qid);
         ret=0;
     }
@@ -556,6 +620,11 @@ int storequeue(int s, struct queuent q, int flags)
         time(&q.submitted); /* store the time */
 
         qf=fopen(fn, "w");
+	if(qf==NULL)
+	{
+	    _ndebug(1, ("Can't open queue file\n"));
+	    return(1);
+	}
         fprintf(qf, "%d\n%s\n%d\n%d\n%d\n%u\n%s\n",
 		q.priority,
 		q.to,

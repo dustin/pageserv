@@ -1,7 +1,7 @@
 /*
  * Copyright (c)  1996-1998  Dustin Sallings
  *
- * $Id: snpplogin.c,v 1.5 1998/01/23 09:47:31 dustin Exp $
+ * $Id: snpplogin.c,v 1.6 1998/03/18 08:33:38 dustin Exp $
  */
 
 #include <config.h>
@@ -208,6 +208,7 @@ void snpp_delUserQ(int s, char *user, char *arg)
     }
 
     logqueue(q, DEQUE_LOG, "user request");
+    dq_notify(q, "User requested dequeue (page not sent)", NOTIFY_FAIL);
     dequeue(q.qid);
 
     puttext(s, "250 Message dequeued.\n");

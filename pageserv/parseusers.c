@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parseusers.c,v 1.13 1998/02/26 17:17:51 dustin Exp $
+ * $Id: parseusers.c,v 1.14 1998/03/18 08:33:28 dustin Exp $
  */
 
 #include <stdio.h>
@@ -129,6 +129,35 @@ struct user parseuser(char *line, char *delim, int flags)
     }
 
     u.times=pack_timebits(early, late);
+
+    tmp=strtok(NULL, delim);
+    if(tmp==NULL)
+    {
+        return(u);
+    }
+    else
+    {
+        if(strlen(tmp)>(size_t)EMAILLEN)
+        {
+            printf("Notify Email ``%s'' is too long, skipping\n", tmp);
+            return(u);
+        }
+        else
+        {
+	    kw(tmp);
+            strcpy(u.notify, tmp);
+        }
+    }
+
+    tmp=strtok(NULL, delim);
+    if(tmp==NULL)
+    {
+        return(u);
+    }
+    else
+    {
+        u.flags=atoi(tmp);
+    }
 
     return(u);
 }

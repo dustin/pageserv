@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.65 1998/03/11 07:18:22 dustin Exp $
+ * $Id: pageserv.h,v 1.66 1998/03/18 08:33:26 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -57,11 +57,16 @@
 
 #define DEFAULT_STRLEN 1024
 
-#define NAMELEN 15
-#define PWLEN   14
-#define IDLEN   9
-#define STATLEN 20
-#define INITLEN 80
+#define NAMELEN  15
+#define PWLEN    14
+#define IDLEN     9
+#define STATLEN  20
+#define INITLEN  80
+#define EMAILLEN 80
+
+/* Misc flags */
+#define NOTIFY_SUCC 0x0001
+#define NOTIFY_FAIL 0x0002
 
 /* Messages */
 #define MESG_QUIT "Good bye, thanks for shopping\n"
@@ -184,6 +189,8 @@ struct user {
     char passwd[PWLEN];
     char pageid[IDLEN];
     char statid[STATLEN];
+    char notify[EMAILLEN];
+    int  flags;
     int  times;
 };
 
@@ -317,6 +324,7 @@ void cleanuserlist(char **list);
 void dbm_userdbInit(void);
 void dequeue(char *qid);
 void displayq(struct queuent q);
+void dq_notify(struct queuent q, char *message, int flags);
 void dumpuserdb(void);
 void erasetermdb(void);
 void getnormtimes(int times, int *ret);
