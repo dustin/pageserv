@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.25 1997/08/11 08:17:12 dustin Exp $
+ * $Id: main.c,v 1.26 1997/08/11 14:05:54 dustin Exp $
  */
 
 #include <config.h>
@@ -14,6 +14,7 @@
 #include <signal.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <fcntl.h>
 
 #ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
@@ -81,6 +82,10 @@ void detach(void)
    {
         close(i);
    }
+
+   open("/dev/null", O_RDWR);
+   open("/dev/null", O_RDWR);
+   open("/dev/null", O_RDWR);
 
    chdir("/");
    umask(7);
