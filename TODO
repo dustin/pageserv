@@ -22,8 +22,8 @@ Clients:
     * Cleaner client stuff
     * Add more options to clients: remote host, options to parsemail,
       etc...
-    * CGI client
+    * Web Listener
 
 ----------------------------------------
 Copyright (c) 1997  Dustin Sallings
-$Id: TODO,v 2.12 1997/04/11 15:54:55 dustin Exp $
+$Id: TODO,v 2.13 1997/04/13 23:11:50 dustin Exp $
