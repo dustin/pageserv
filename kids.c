@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: kids.c,v 1.7 1997/03/24 18:47:16 dustin Exp $
+ * $Id: kids.c,v 1.8 1997/03/26 07:26:15 dustin Exp $
  */
 
 #include <signal.h>
@@ -26,6 +26,13 @@ void reaper(void)
     while(pid>0)
     {
         pid=waitpid(0, NULL, WUNTRACED | WNOHANG);
+
+        /* Debugging information */
+	if(conf.debug>2)
+	{
+	    if(pid>0)
+	        printf("Killed off child %d\n", pid);
+	}
     }
 }
 
@@ -33,6 +40,10 @@ void reaper(void)
 
 void onalarm()
 {
+    if(conf.debug>2)
+    {
+	puts("Received alarm, exiting.");
+    }
     exit(0);
 }
 
@@ -46,8 +57,8 @@ void childmain(int s)
     sprintf(buf, MESG_WELCOME, VERSION);
     puttext(s, buf);
 
-    /* Child will only live CHILD_LIFETIME seconds */
-    alarm(CHILD_LIFETIME);
+    /* Child will only live a certain number of seconds */
+    alarm(conf.childlifetime);
     signal(SIGALRM, onalarm);
 
     puttext(s, PROMPT_CMD);

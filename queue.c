@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.9 1997/03/24 18:47:22 dustin Exp $
+ * $Id: queue.c,v 1.10 1997/03/26 07:26:18 dustin Exp $
  */
 
 #include <stdio.h>
@@ -46,11 +46,11 @@ char *newqfile(void)
 
    pid=getpid();
 
-   sprintf(fn, "%s/q%s%d", QUEDIR, newtmp(), pid);
+   sprintf(fn, "%s/q%s%d", conf.qdir, newtmp(), pid);
 
    while(f_exists(fn))
    {
-       sprintf(fn, "%s/q%s%d", QUEDIR, newtmp(), pid);
+       sprintf(fn, "%s/q%s%d", conf.qdir, newtmp(), pid);
    }
 
    return(fn);
@@ -70,10 +70,16 @@ int storequeue(int s, struct queuent q, int flags)
         fclose(qf);
 
         sprintf(buf, "Queued to %s, thank you\n", fn);
+
+	if(conf.debug>1)
+	    printf("Queued %s for %s\n", fn, q.to);
     }
     else
     {
         strcpy(buf, MESG_BADTIME);
+
+	if(conf.debug>1)
+	    printf("Attempted to page %s, bad time\n", q.to);
     }
 
     if(! (flags & STORE_QUIET))
@@ -88,7 +94,7 @@ int queuedepth(void)
     struct dirent *d;
     int i=0;
 
-    chdir(QUEDIR);
+    chdir(conf.qdir);
     dir=opendir(".");
 
     while( (d=readdir(dir))!=NULL)
@@ -108,7 +114,7 @@ void printqueue(void)
     char buf[BUFLEN];
     struct queuent q;
 
-    chdir(QUEDIR);
+    chdir(conf.qdir);
     dir=opendir(".");
 
     printf("There are %d items in the queue.\n\n", queuedepth());
@@ -145,7 +151,7 @@ struct queuent dofarkle()
     char buf[BUFLEN];
     struct queuent q;
 
-    chdir(QUEDIR);
+    chdir(conf.qdir);
     dir=opendir(".");
 
     while( (d=readdir(dir))!=NULL)

@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.20 1997/03/26 00:24:42 dustin Exp $
+ * $Id: pageserv.h,v 1.21 1997/03/26 07:26:16 dustin Exp $
  */
 
 /* for DBM type */
@@ -43,6 +43,7 @@
 #define QUEDIR "/tmp"
 #define USERDB "/tmp/userdb"
 
+/* Default child lifetime */
 #define CHILD_LIFETIME 120
 
 /* The protocol */
@@ -84,8 +85,10 @@ struct user {
 
 struct config {
     int debug;
+    int childlifetime;
     char *servhost;
     char *userdb;
+    char *qdir;
 };
 
 /* macros */

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.7 1997/03/26 00:24:41 dustin Exp $
+ * $Id: main.c,v 1.8 1997/03/26 07:26:15 dustin Exp $
  */
 
 #include <stdio.h>
@@ -40,7 +40,8 @@ void main(void)
     if(conf.debug>0)
         showconfig();
 
-    detach();
+    if(conf.debug==0)
+        detach();
 
     s=initialize();
 
@@ -50,7 +51,7 @@ void main(void)
     for(;;)
     {
         fdset=tfdset;
-        t.tv_sec=CHILD_LIFETIME;
+        t.tv_sec=conf.childlifetime;
         t.tv_usec=0;
         fromlen=sizeof(fsin);
 
@@ -61,9 +62,18 @@ void main(void)
                  pid=fork();
 
                  if(pid==0)
+		 {
+		     /* Run child's main loop */
                      childmain(ns);
+		 }
                  else
+		 {
+		     /* parent just closes its copy of the socket */
                      close(ns);
+
+		     if(conf.debug>2)
+			 printf("Spawned new child on pid %d\n", pid);
+		 }
              }
         }
         reaper();

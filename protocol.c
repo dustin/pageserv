@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: protocol.c,v 1.14 1997/03/24 18:47:20 dustin Exp $
+ * $Id: protocol.c,v 1.15 1997/03/26 07:26:17 dustin Exp $
  */
 
 #include <stdio.h>
@@ -29,6 +29,10 @@ int gettext(int s, char *buf)
         /* Pipe breaking bastard */
         exit(0);
     }
+
+    if(conf.debug>1)
+	printf("gettext() received:\n\t``%s''\n", buf);
+
     return(size);
 }
 
@@ -51,6 +55,10 @@ int gettextcr(int s, char *buf)
     }
 
     kw(buf);
+
+    if(conf.debug>1)
+	printf("gettextcr() received:\n\t``%s''\n", buf);
+
     return(size);
 }
 
@@ -60,6 +68,9 @@ void p_apage(int s)
 {
     struct queuent q;
     int size=0, ack;
+
+    if(conf.debug>1)
+	puts("Entering p_apage");
 
     size+=recv(s, (char *)&q, sizeof(q), 0);
     printf("Received %d bytes, wanted %d\n", size, sizeof(q));
@@ -80,6 +91,9 @@ void p_epage(int s)
 {
     char buf1[BUFLEN], buf2[BUFLEN], buf3[BUFLEN];
     struct queuent q;
+
+    if(conf.debug>1)
+	puts("Entering p_epage");
 
     puttext(s, PROMPT_ID);
     gettextcr(s, buf1);
@@ -115,6 +129,9 @@ void p_mash(int s)
     char buf1[BUFLEN], buf2[BUFLEN];
     struct queuent q;
 
+    if(conf.debug>1)
+	puts("Entering p_mash");
+
     puttext(s, PROMPT_ID);
     gettextcr(s, buf1);
     puttext(s, PROMPT_MESS);
@@ -139,6 +156,9 @@ void p_depth(int s)
 {
     char buf[BUFLEN];
 
+    if(conf.debug>1)
+	puts("Entering p_depth");
+
     sprintf(buf, "%d items in the queue\n", queuedepth());
     puttext(s, buf);
 }
@@ -148,6 +168,9 @@ void p_farkle(int s)
     struct queuent q;
     struct user u;
     char buf[BUFLEN];
+
+    if(conf.debug>1)
+	puts("Entering p_farkle");
 
     if(queuedepth()>0)
     {
@@ -167,6 +190,9 @@ void p_farkle(int s)
 
 void p_quit(int s)
 {
+    if(conf.debug>1)
+	puts("Entering p_quit");
+
     puttext(s, MESG_QUIT);
     exit(0);
 }
@@ -195,9 +221,16 @@ void process(int s, char *cmd)
     if(c == P_UNKNOWN)
     {
         sprintf(buf, "Unknown command: %s\n", cmd);
+
+	if(conf.debug>1)
+	    puts(buf);
+
         send(s, buf, strlen(buf), 0);
         exit(0);
     }
+
+    if(conf.debug>1)
+	printf("Received ``%s'' command\n", cmd);
 
     /* process command */
 
