@@ -10,6 +10,7 @@ Overall:
       - Management login to manage crap
     * NIS based databases
     * support numeric pagers
+    * Move regular listener out of base code and make it a module
 
 Delivery:
 
@@ -26,4 +27,4 @@ Clients:
 
 ----------------------------------------
 Copyright (c) 1997  Dustin Sallings
-$Id: TODO,v 2.14 1997/04/14 03:51:11 dustin Exp $
+$Id: TODO,v 2.15 1997/04/16 06:42:55 dustin Exp $
