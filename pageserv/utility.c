@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: utility.c,v 1.4 1997/04/04 22:21:17 dustin Exp $
+ * $Id: utility.c,v 1.5 1997/04/04 23:39:26 dustin Exp $
  * $State: Exp $
  */
 
@@ -39,17 +39,32 @@ int gettext(int s, char *buf)
 
 int gettextcr(int s, char *buf)
 {
-    int size=1;
+    int size=1, len;
 
     /* eat any extra CR's and LF's */
-    while( (recv(s, buf, 1, 0)) >0)
+    while( (len=recv(s, buf, 1, 0)) >0)
     {
         if(buf[size-1]!='\r' && buf[size-1]!='\n')
             break;
     }
 
-    while( (size+=recv(s, buf+size, 1, 0)) >0)
+    if(len==0)
     {
+	if(conf.debug>0)
+	    puts("Broken pipe?");
+	exit(0);
+    }
+
+    while( (len=recv(s, buf+size, 1, 0)) >0)
+    {
+        if(len==0)
+        {
+	    if(conf.debug>0)
+	        puts("Broken pipe?");
+	    exit(0);
+        }
+
+	size+=len;
         buf[size]=0x00;
         if(buf[size-1]=='\r' || buf[size-1]=='\n')
             break;
