@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * "$Id: snpp.h,v 1.7 1998/01/20 04:29:41 dustin Exp $"
+ * "$Id: snpp.h,v 1.8 1998/01/23 09:25:49 dustin Exp $"
  */
 
 #ifndef SNPP_H
@@ -46,6 +46,7 @@
 #define SNPP_KTAG   22
 #define SNPP_PRIORITY 23
 #define SNPP_SHOWQ  24
+#define SNPP_DEQUE  25
 
 #ifdef IWANTMETHODNAMES
 
@@ -76,6 +77,7 @@ static char *methodnames[]={
 /* The following are not standard SNPP commands */
     "PRIORITY",
     "SHOWQ",
+    "DEQUE",
     NULL
 };
 
@@ -86,5 +88,6 @@ char *snpp_login(int s, char *what);
 int snpp_parse(char *cmd);
 void snpp_help(int s);
 void snpp_showUserQ(int s, char *user, char *arg);
+void snpp_delUserQ(int s, char *user, char *arg);
 
 #endif /* SNPP_H */

@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.59 1998/01/22 10:23:38 dustin Exp $
+ * $Id: pageserv.h,v 1.60 1998/01/23 09:25:48 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -142,6 +142,7 @@
 #define SUC_LOG     1
 #define FAIL_LOG    2
 #define EXP_LOG     3
+#define DEQUE_LOG   4
 
 /* Function returns */
 #define FUNC_UNKNOWN -1
