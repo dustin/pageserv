@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: serial.c,v 2.3 1997/06/22 07:56:39 dustin Exp $
+ * $Id: serial.c,v 2.4 1997/07/23 06:03:14 dustin Exp $
  * $State: Exp $
  */
 
@@ -174,8 +174,8 @@ s=open(port, O_RDWR|O_NOCTTY, 0);
     tm.c_oflag=0;
     tm.c_lflag=0;
 
-    tm.c_cflag &= ~(CSTOPB | CSIZE | PARODD | CLOCAL);
-    tm.c_cflag |= (HUPCL | CREAD | CS7 | PARENB);
+    tm.c_cflag &= ~(CSTOPB | CSIZE | PARODD);
+    tm.c_cflag |= (HUPCL | CREAD | CS7 | PARENB | CLOCAL);
 
     if (cfsetispeed(&tm, B2400) == -1)
 	perror("cfsetispeed");
