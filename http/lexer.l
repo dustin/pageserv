@@ -2,7 +2,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: lexer.l,v 1.11 1998/01/10 01:32:43 dustin Exp $
+ * $Id: lexer.l,v 1.12 1998/12/28 02:56:50 dustin Exp $
  */
 
 #include <config.h>
@@ -84,11 +84,10 @@ static void _parse_listTerms(void)
 
     _http_auth_require(_parse_sock, _parse_r, "admin");
 
-    terms=listterms();
+    terms=conf.tdb.list();
     stringListSort(terms);
 
-    for(i=0; terms[i]!=NULL; i++)
-    {
+    for(i=0; terms[i]!=NULL; i++) {
         sprintf(buf, "<option>%s\n", terms[i]);
         _parse_sendstr=addtostr(&_parse_strlen, _parse_sendstr, buf);
     }
@@ -116,7 +115,7 @@ static void _parse_tableUserList(void)
 
     _http_auth_require(_parse_sock, _parse_r, "admin");
 
-    terms=listterms();
+    terms=conf.tdb.list();
     stringListSort(terms);
 
     _parse_sendstr=addtostr(&_parse_strlen, _parse_sendstr,

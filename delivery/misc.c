@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: misc.c,v 2.9 1998/10/27 18:31:28 dustin Exp $
+ * $Id: misc.c,v 2.10 1998/12/28 02:56:48 dustin Exp $
  */
 
 #include <stdio.h>
@@ -85,8 +85,9 @@ runqueue(void)
 	int     t = 0, i = 0, s = 0, r = 0;
 
 	conf.udb.dbinit();
+	conf.tdb.dbinit();
 	resetdelivertraps();
-	termlist = listterms();
+	termlist = conf.tdb.list();
 
 	/* two minutes to complete delivery */
 	alarm(120);
@@ -99,7 +100,7 @@ runqueue(void)
 
 		if (i > 0) {
 			del_log("starting to process queue %d", i);
-			term = getterm(termlist[t]);
+			term = conf.tdb.get(termlist[t]);
 
 			if ((s = any_openterm(term)) >= 0) {
 				/* Inside this if is executed if I got the port */

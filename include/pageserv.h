@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.75 1998/12/26 08:43:29 dustin Exp $
+ * $Id: pageserv.h,v 1.76 1998/12/28 02:56:51 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -233,6 +233,15 @@ struct userDB {
     void (*dbinit)(void);
 };
 
+struct termDB {
+	void (*erase)(void);
+	char **(*list)(void);
+	void (*store)(struct terminal t);
+	struct terminal (*get)(char *number);
+	int (*exists)(char *number);
+    void (*dbinit)(void);
+};
+
 struct config {
     int mode;              /* execution mode */
     int debug;             /* debug level */
@@ -259,6 +268,7 @@ struct config {
     char *webroot;         /* path to webroot */
 
     struct userDB udb;     /* The user database handlers */
+    struct termDB tdb;     /* The terminal database handlers */
 
     struct confType *cf;   /* The *real* config stuff */
 
@@ -276,7 +286,6 @@ struct config {
 
 /* prototypes */
 
-char **listterms(void);
 char *addtostr(int *size, char *dest, char *str);
 char *fntoqid(char *fn);
 char *getHostName(unsigned int addr);
@@ -313,8 +322,6 @@ int t_exists(char *number);
 struct queuent *listqueue(char *number);
 struct queuent dofarkle(void);
 struct queuent readqueuefile(char *fn);
-struct terminal getterm(char *key);
-struct terminal open_getterm(DBM *db, char *key);
 struct user parseuser(char *line, char *delim, int flags);
 struct user setpasswd(struct user u, char *passwd);
 void checklocks(void);
@@ -324,12 +331,12 @@ void cleanqueuelist(struct queuent *list);
 void cleantermlist(char **list);
 void cleanuserlist(char **list);
 void dbm_userdbInit(void);
+void dbm_termdbInit(void);
 void del_log(char *format, ...);
 void dequeue(char *qid);
 void displayq(struct queuent q);
 void dq_notify(struct queuent q, char *message, int flags);
 void dumpuserdb(void);
-void erasetermdb(void);
 void getnormtimes(int times, int *ret);
 void getoptions(int argc, char **argv);
 void getqueueinfo( struct queuent *q );
@@ -356,7 +363,6 @@ void runqueue_main(void);
 void showconfig(void);
 void showversion(void);
 void sql_userdbInit(void);
-void storeterm(DBM *db, struct terminal t);
 void stringListSort(char **list);
 
 #if !defined(HAVE_SNPRINTF)
@@ -370,6 +376,7 @@ void nis_userdbInit(void);
 
 #ifdef HAVE_LDAP
 void ldap_userdbInit(void);
+void ldap_termdbInit(void);
 #endif
 
 #endif /* PAGESERV_H */

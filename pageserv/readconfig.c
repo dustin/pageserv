@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.38 1998/12/26 08:43:33 dustin Exp $
+ * $Id: readconfig.c,v 1.39 1998/12/28 02:57:00 dustin Exp $
  */
 
 #include <readconfig.h>
@@ -31,16 +31,26 @@ static void setdefaults(void)
 #ifdef HAVE_NIS
 	{ "nis", nis_userdbInit },
 #endif /* have NIS */
-	{ "dbm", dbm_userdbInit },
 #ifdef HAVE_SQL
         { "sql", sql_userdbInit },
 #endif /* have SQL */
 #ifdef HAVE_LDAP
 		{ "ldap", ldap_userdbInit },
 #endif /* have LDAP */
+	{ "dbm", dbm_userdbInit },
 	{ NULL, NULL }
     };
+struct { char *name;
+		void (*func)(void);
+	} termdbtypes[]={
+#ifdef HAVE_LDAP
+	{ "ldap", ldap_termdbInit },
+#endif
+	{ "dbm", dbm_termdbInit },
+	{ NULL, NULL }
+};
     char *userdb;
+    char *termdb;
     int i=0;
 
     if(conf.servhost == NULL)
@@ -64,8 +74,7 @@ static void setdefaults(void)
     userdb=rcfg_lookup(conf.cf, "databases.userdbType");
 
     /* Check to make sure this is configured in somewhere */
-    if(userdb)
-    {
+    if(userdb) {
         for(i=0; userdbtypes[i].name != NULL; i++)
         {
 	    if(strcmp(userdbtypes[i].name, userdb)==0)
@@ -73,16 +82,30 @@ static void setdefaults(void)
         }
     }
 
-    if( (userdbtypes[i].func == NULL) || (userdb==NULL) )
-    {
-	fputs("Unknown, or unconfigured user database type, using dbm\n",
+	if( (userdbtypes[i].func == NULL) || (userdb==NULL) ) {
+		fputs("Unknown, or unconfigured user database type, using dbm\n",
               stderr);
-	conf.udb.dbinit=dbm_userdbInit;
-    }
-    else
-    {
-	conf.udb.dbinit=userdbtypes[i].func;
-    }
+		conf.udb.dbinit=dbm_userdbInit;
+	} else {
+		conf.udb.dbinit=userdbtypes[i].func;
+	}
+
+    termdb=rcfg_lookup(conf.cf, "databases.termdbType");
+	if(termdb) {
+		for(i=0; termdbtypes[i].name!=NULL; i++) {
+			if(strcmp(termdbtypes[i].name, termdb)==0)
+				break;
+		}
+	}
+
+	if( (termdbtypes[i].func == NULL) || (termdb==NULL) ) {
+		fputs("Unknown, or unconfigured term database type, using dbm\n",
+              stderr);
+		conf.tdb.dbinit=dbm_termdbInit;
+	} else {
+		conf.tdb.dbinit=termdbtypes[i].func;
+	}
+
 }
 
 #ifndef HAVE_GETOPT
@@ -322,6 +345,12 @@ void showconfig(void)
     printf("\tUser db type: %s\n", tmp);
 
     printf("\tTerm db:      %s\n", conf.termdb);
+
+    /* Find out the configured terminal database type */
+    tmp=rcfg_lookup(conf.cf, "databases.termdbType");
+    tmp=tmp?tmp:"dbm";
+    printf("\tTerm db type: %s\n", tmp);
+
     printf("\tQueue dir:    %s\n", conf.qdir);
     printf("\tPID file:     %s\n", conf.pidfile);
     printf("\tPaegserv:     %d\n", conf.pageserv);

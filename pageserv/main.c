@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.55 1998/07/16 07:17:25 dustin Exp $
+ * $Id: main.c,v 1.56 1998/12/28 02:56:56 dustin Exp $
  */
 
 #include <config.h>
@@ -200,13 +200,14 @@ static void daemon_main(void)
     else
 	writepid(getpid());
 
-    /* *NOW* let's initialize the database, shall we? */
+    /* *NOW* let's initialize the databases, shall we? */
     conf.udb.dbinit();
+    conf.tdb.dbinit();
 
-    if(rcfg_lookupInt(conf.cf, "etc.deliveryd")==0)
-	deliveryd=-1;
-    else
-	deliveryd=0;
+	if(rcfg_lookupInt(conf.cf, "etc.deliveryd")==0)
+		deliveryd=-1;
+	else
+		deliveryd=0;
 
     resetservtraps(); /* set signal traps */
 
@@ -311,6 +312,7 @@ static void rehash_main(void)
     struct user u;
 
     conf.udb.dbinit();
+    conf.tdb.dbinit();
 
     names=conf.udb.listusers("*");
     if(names) {
@@ -324,7 +326,7 @@ static void rehash_main(void)
     }
 
     conf.udb.eraseuserdb();
-    erasetermdb();
+    conf.tdb.erase();
 
     i=conf.udb.parseusers();
     printf("Parsed %d users.\n", i);
@@ -406,6 +408,7 @@ static void killserver(void)
 static void ldb_main(void)
 {
     conf.udb.dbinit();
+    conf.tdb.dbinit();
     puts("Users:\n------------");
     printusers();
     puts("\nTerminals:\n------------");

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: ldapuserdb.c,v 1.4 1998/12/27 15:12:17 dustin Exp $
+ * $Id: ldapuserdb.c,v 1.5 1998/12/28 02:56:54 dustin Exp $
  */
 
 #include <config.h>
@@ -56,6 +56,7 @@ ldap_getuser(char *name)
 	char          **values;
 	char           *base;
 	struct user     u;
+	int				times[2];
 	char           *att[] = {
 		"uid",
 		"pagePasswd",
@@ -63,7 +64,8 @@ ldap_getuser(char *name)
 		"pageStatId",
 		"pageNotify",
 		"pageFlags",
-		"pageTimes",
+		"pageEarly",
+		"pageLate",
 		0
 	};
 
@@ -78,8 +80,8 @@ ldap_getuser(char *name)
 
 	if (ldap_search_st(ld, base, LDAP_SCOPE_SUBTREE, filter, att, 0, 0, &res)
 	    == -1) {
-		return (u);
 		ldap_unbind(ld);
+		return (u);
 	}
 	values = ldap_get_values(ld, res, "uid");
 	if (values && values[0]) {
@@ -87,30 +89,47 @@ ldap_getuser(char *name)
 			strlen(values[0]) < NAMELEN ? strlen(values[0]) : NAMELEN - 1);
 	}
 	ldap_value_free(values);
-	values = ldap_get_values(ld, res, "pagepasswd");
+	values = ldap_get_values(ld, res, "pagePasswd");
 	if (values && values[0]) {
 		strncpy(u.passwd, values[0],
 		 strlen(values[0]) < PWLEN ? strlen(values[0]) : PWLEN - 1);
 	}
 	ldap_value_free(values);
-	values = ldap_get_values(ld, res, "pageid");
+	values = ldap_get_values(ld, res, "pageId");
 	if (values && values[0]) {
 		strncpy(u.pageid, values[0],
 		 strlen(values[0]) < IDLEN ? strlen(values[0]) : IDLEN - 1);
 	}
 	ldap_value_free(values);
-	values = ldap_get_values(ld, res, "pagestatid");
+	values = ldap_get_values(ld, res, "pageStatid");
 	if (values && values[0]) {
 		strncpy(u.statid, values[0],
 			strlen(values[0]) < STATLEN ? strlen(values[0]) : STATLEN - 1);
 	}
 	ldap_value_free(values);
-	values = ldap_get_values(ld, res, "pagenotify");
+
+	values = ldap_get_values(ld, res, "pageNotify");
 	if (values && values[0]) {
 		strncpy(u.notify, values[0],
 			strlen(values[0]) < EMAILLEN ? strlen(values[0]) : EMAILLEN - 1);
 	}
+
+	/* get early and late times */
+
+	times[0]=times[1]=0;
+
+	values = ldap_get_values(ld, res, "pageEarly");
+	if (values && values[0])
+		times[0]=atoi(values[0]);
 	ldap_value_free(values);
+
+	values = ldap_get_values(ld, res, "pageLate");
+	if (values && values[0])
+		times[1]=atoi(values[0]);
+	ldap_value_free(values);
+
+	u.times=pack_timebits(times[0], times[1]);
+
 	ldap_unbind(ld);
 	return (u);
 }

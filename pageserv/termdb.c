@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: termdb.c,v 1.13 1998/01/27 01:32:43 dustin Exp $
+ * $Id: termdb.c,v 1.14 1998/12/28 02:57:01 dustin Exp $
  * $State: Exp $
  */
 
@@ -17,6 +17,14 @@
 
 extern struct config conf;
 
+static DBM *dbm_open_termdb(flags)
+{
+	DBM *db;
+    if( (db=dbm_open(conf.termdb, flags, 0644)) == NULL)
+        perror(conf.termdb);
+	return(db);
+}
+
 void printterm(struct terminal t)
 {
     printf("Number:     %s\n", t.number);
@@ -26,22 +34,18 @@ void printterm(struct terminal t)
     printf("Flags:      %d\n", t.flags);
 }
 
-void erasetermdb(void)
+static void dbm_erasetermdb(void)
 {
     datum d;
     DBM *db;
     char *tmp;
 
-    if( (db=dbm_open(conf.termdb, O_RDWR, 0644)) ==NULL)
-    {
-	/* there isn't one, just return */
-	return;
-    }
+	db=dbm_open_termdb(O_RDWR);
+	if(db==NULL)
+		return;
 
-    for(d=dbm_firstkey(db); d.dptr!=NULL; d=dbm_firstkey(db))
-    {
-        if(conf.debug>2)
-        {
+    for(d=dbm_firstkey(db); d.dptr!=NULL; d=dbm_firstkey(db)) {
+        if(conf.debug>2) {
             tmp=strdup((char *)d.dptr);
             tmp[d.dsize]=0x00;
             _ndebug(2, ("deleting %s\n", tmp));
@@ -53,7 +57,7 @@ void erasetermdb(void)
     dbm_close(db);
 }
 
-char **listterms(void)
+static char **dbm_listterms(void)
 {
     datum d;
     DBM *db;
@@ -62,20 +66,16 @@ char **listterms(void)
 
     ret=malloc(size * sizeof(char *));
 
-    if( (db=dbm_open(conf.termdb, O_RDONLY, 0644)) ==NULL)
-    {
-        perror(conf.termdb);
-        exit(1);
-    }
+	db=dbm_open_termdb(O_RDONLY);
+	if(db==NULL)
+		return(NULL);
 
-    for(d=dbm_firstkey(db); d.dptr!=NULL; d=dbm_nextkey(db))
-    {
+    for(d=dbm_firstkey(db); d.dptr!=NULL; d=dbm_nextkey(db)) {
         ret[index]=malloc(d.dsize+1);
         strncpy(ret[index], d.dptr, d.dsize);
         ret[index++][d.dsize]=0x00;
 
-        if(index == size-1)
-        {
+        if(index == size-1) {
            size<<=1;
 
 	    _ndebug(2, ("Reallocating, now need %d bytes for %d\n",
@@ -92,15 +92,13 @@ char **listterms(void)
 
 void cleantermlist(char **list)
 {
-    int i;
+	int i;
 
-    _ndebug(2, ("Freeing terminal list.\n"));
+	_ndebug(2, ("Freeing terminal list.\n"));
 
-    for(i=0; list[i]!=NULL; i++)
-    {
-	free(list[i]);
-    }
-    free(list);
+	for(i=0; list[i]!=NULL; i++)
+		free(list[i]);
+	free(list);
 }
 
 void printterms(void)
@@ -109,19 +107,19 @@ void printterms(void)
     int i;
     char **list;
 
-    list=listterms();
-    for(i=0; list[i]!=NULL; i++)
-    {
-        t=getterm(list[i]);
+    list=conf.tdb.list();
+	if(list==NULL)
+		return;
+    for(i=0; list[i]!=NULL; i++) {
+        t=conf.tdb.get(list[i]);
         printterm(t);
         puts("--------");
-	/* printf("%d:  %s\n", i, list[i]); */
     }
 
     cleantermlist(list);
 }
 
-void storeterm(DBM *db, struct terminal t)
+static void dbm_open_storeterm(DBM *db, struct terminal t)
 {
     datum k, d;
     k.dptr=t.number;
@@ -133,25 +131,17 @@ void storeterm(DBM *db, struct terminal t)
     dbm_store(db, k, d, DBM_REPLACE);
 }
 
-struct terminal getterm(char *number)
+static void dbm_storeterm(struct terminal t)
 {
-    DBM *db;
-    struct terminal t;
-
-    if( (db=dbm_open(conf.termdb, O_RDONLY, 0644)) == NULL)
-    {
-        perror(conf.termdb);
-        exit(1);
-    }
-
-    t=open_getterm(db, number);
-
-    dbm_close(db);
-
-    return(t);
+	DBM *db;
+	db=dbm_open_termdb(O_RDWR|O_CREAT);
+	if(db==NULL)
+		return;
+	dbm_open_storeterm(db, t);
+	dbm_close(db);
 }
 
-struct terminal open_getterm(DBM *db, char *number)
+static struct terminal dbm_open_getterm(DBM *db, char *number)
 {
     datum d, k;
     struct terminal t;
@@ -163,19 +153,32 @@ struct terminal open_getterm(DBM *db, char *number)
     d=dbm_fetch(db, k);
 
     if(d.dptr!=NULL)
-    {
         memcpy( (void *)&t, (void *)d.dptr, sizeof(t));
-    }
 
     return(t);
 }
 
-int t_exists(char *number)
+static struct terminal dbm_getterm(char *number)
+{
+    DBM *db;
+    struct terminal t;
+	memset(&t, 0x00, sizeof(t));
+	db=dbm_open_termdb(O_RDONLY);
+	if(db==NULL)
+		return(t);
+    t=dbm_open_getterm(db, number);
+    dbm_close(db);
+    return(t);
+}
+
+static int dbm_t_exists(char *number)
 {
     datum d, k;
     DBM *db;
 
-    db=dbm_open(conf.termdb, O_RDONLY, 0644);
+	db=dbm_open_termdb(O_RDONLY);
+	if(db==NULL)
+		return(0);
 
     k.dptr=number;
     k.dsize=strlen(number);
@@ -185,4 +188,14 @@ int t_exists(char *number)
     dbm_close(db);
 
     return(d.dptr!=NULL);
+}
+
+void dbm_termdbInit(void)
+{
+	conf.tdb.erase=dbm_erasetermdb;
+	conf.tdb.list=dbm_listterms;
+	conf.tdb.store=dbm_storeterm;
+	conf.tdb.get=dbm_getterm;
+	conf.tdb.exists=dbm_t_exists;
+	conf.tdb.dbinit=dbm_termdbInit;
 }

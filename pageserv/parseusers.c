@@ -1,12 +1,11 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parseusers.c,v 1.15 1998/07/16 07:17:28 dustin Exp $
+ * $Id: parseusers.c,v 1.16 1998/12/28 02:56:59 dustin Exp $
  */
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <ndbm.h>
 #include <ctype.h>
 #include <string.h>
 #include <sys/types.h>
@@ -127,7 +126,6 @@ int parseusers(void)
     FILE *f;
     char buf[BUFLEN];
     struct user u;
-    DBM *db;
     int i=0;
     char *delim;
 
@@ -140,14 +138,6 @@ int parseusers(void)
     delim=rcfg_lookup(conf.cf, "databases.textdelim");
     if(delim==NULL)
         delim=" \t";
-
-    /* just initialize the database */
-    if( (db=dbm_open(conf.userdb, O_CREAT|O_RDWR, 0644)) ==NULL)
-    {
-        perror(conf.userdb);
-        exit(1);
-    }
-    dbm_close(db);
 
     while(fgets(buf, BUFLEN, f))
     {
