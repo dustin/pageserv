@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: serial.c,v 2.20 2000/09/12 17:16:34 dustin Exp $
+ * $Id: serial.c,v 2.21 2000/09/12 17:37:28 dustin Exp $
  */
 
 /*
@@ -168,8 +168,9 @@ p_openterm(struct terminal t)
 static int
 p_openport(char *port)
 {
-	int     s;
+	int     s=0;
 	struct termios tm;
+	int flags=0;
 
 	_ndebug(3, ("Called p_openport(%s);\n", port));
 
@@ -215,6 +216,14 @@ p_openport(char *port)
 
 	if (tcsetattr(s, TCSANOW, &tm))
 		del_log("tcsetattr", strerror(errno));
+
+/* If we opened it non-blocking, we've gotta disable blocking. */
+#ifdef O_NONBLOCK
+	flags = fcntl(s, F_GETFL);
+	if(fcntl(s, F_SETFL, flags & ~O_NONBLOCK)<0) {
+		del_log("Could not disable NON_BLOCKING I/O, will continue anyway.");
+	}
+#endif
 
 	return (s);
 }
