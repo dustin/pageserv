@@ -1,8 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.19 1997/08/06 07:39:14 dustin Exp $
- * $State: Exp $
+ * $Id: readconfig.c,v 1.20 1997/08/07 07:23:07 dustin Exp $
  */
 
 #include <readconfig.h>
@@ -123,10 +122,51 @@ void getoptions(int argc, char **argv)
     }
 }
 
+int getlogFacility(char *facility)
+{
+    int i;
+    static struct { char *name; int value; } fcs[]={
+      "audit",        LOG_AUDIT,
+      "auth",         LOG_AUTH,
+      "cron",         LOG_CRON,
+      "daemon",       LOG_DAEMON,
+      "kern",         LOG_KERN,
+      "lpr",          LOG_LPR,
+      "mail",         LOG_MAIL,
+      "news",         LOG_NEWS,
+      "sat",          LOG_AUDIT,
+      "security",     LOG_AUTH,
+      "syslog",       LOG_SYSLOG,
+      "user",         LOG_USER,
+      "uucp",         LOG_UUCP,
+      "local0",       LOG_LOCAL0,
+      "local1",       LOG_LOCAL1,
+      "local2",       LOG_LOCAL2,
+      "local3",       LOG_LOCAL3,
+      "local4",       LOG_LOCAL4,
+      "local5",       LOG_LOCAL5,
+      "local6",       LOG_LOCAL6,
+      "local7",       LOG_LOCAL7,
+      NULL,           LOG_LOCAL7,  /* Default is to log local7 */
+    };
+
+    if(facility==NULL)
+        return(LOG_LOCAL7);
+
+    for(i=0; fcs[i].name!=NULL; i++)
+    {
+        if(strcmp(fcs[i].name, facility)==0)
+	    break;
+    }
+
+    return(fcs[i].value);
+}
+
 void rdconfig(char *file)
 {
     char *tmp;
     struct confType *cf;
+    int log;
 
     /* set int defaults */
     memset( (char *)&conf, 0x00, sizeof(conf));
@@ -134,7 +174,7 @@ void rdconfig(char *file)
     conf.childlifetime=CHILD_LIFETIME;
     conf.maxqueuetime=MAX_QUEUETIME;
     conf.farkle=DEFAULT_FARKLE;
-    conf.log_que=LOG_LOCAL7|LOG_INFO;
+
     conf.maxconattempts=MAX_CONATTEMPTS;
     conf.conattemptsleep=CONATTEMPTSSLEEP;
     conf.gmtoffset=0;
@@ -148,67 +188,70 @@ void rdconfig(char *file)
     conf.cf=readconfig(file);
     cf=conf.cf;
 
-    tmp=lookupvar(cf, "etc.userdb");
+    /* Hook up with some log facility action */
+    conf.log_que=getlogFacility(rcfg_lookup(cf, "log.facility"));
+
+    tmp=rcfg_lookup(cf, "etc.userdb");
     if(tmp)
 	conf.userdb=tmp;
 
-    tmp=lookupvar(cf, "etc.termdb");
+    tmp=rcfg_lookup(cf, "etc.termdb");
     if(tmp)
 	conf.termdb=tmp;
 
-    tmp=lookupvar(cf, "etc.pidfile");
+    tmp=rcfg_lookup(cf, "etc.pidfile");
     if(tmp)
 	conf.pidfile=tmp;
 
-    tmp=lookupvar(cf, "etc.queuedir");
+    tmp=rcfg_lookup(cf, "etc.queuedir");
     if(tmp)
 	conf.qdir=tmp;
 
-    tmp=lookupvar(cf, "etc.gmtOffset");
+    tmp=rcfg_lookup(cf, "etc.gmtOffset");
     if(tmp)
 	conf.gmtoffset=atoi(tmp);
 
-    tmp=lookupvar(cf, "protocols.farkle");
+    tmp=rcfg_lookup(cf, "protocols.farkle");
     if(tmp)
 	conf.farkle=atoi(tmp);
 
-    tmp=lookupvar(cf, "webserver.run");
+    tmp=rcfg_lookup(cf, "webserver.run");
     if(tmp)
 	conf.webserver=atoi(tmp);
 
-    tmp=lookupvar(cf, "webserver.docroot");
+    tmp=rcfg_lookup(cf, "webserver.docroot");
     if(tmp)
 	conf.webroot=tmp;
 
-    tmp=lookupvar(cf, "webserver.port");
+    tmp=rcfg_lookup(cf, "webserver.port");
     if(tmp)
 	conf.webport=atoi(tmp);
 
-    tmp=lookupvar(cf, "snpp.run");
+    tmp=rcfg_lookup(cf, "snpp.run");
     if(tmp)
 	conf.snppserver=atoi(tmp);
 
-    tmp=lookupvar(cf, "snpp.port");
+    tmp=rcfg_lookup(cf, "snpp.port");
     if(tmp)
 	conf.snppport=atoi(tmp);
 
-    tmp=lookupvar(cf, "tuning.debug");
+    tmp=rcfg_lookup(cf, "tuning.debug");
     if(tmp)
 	conf.debug=atoi(tmp);
 
-    tmp=lookupvar(cf, "tuning.childLifetime");
+    tmp=rcfg_lookup(cf, "tuning.childLifetime");
     if(tmp)
 	conf.childlifetime=atoi(tmp);
 
-    tmp=lookupvar(cf, "tuning.queueLifeTime");
+    tmp=rcfg_lookup(cf, "tuning.queueLifeTime");
     if(tmp)
 	conf.maxqueuetime=atoi(tmp);
 
-    tmp=lookupvar(cf, "tuning.modemGrabAttempts");
+    tmp=rcfg_lookup(cf, "tuning.modemGrabAttempts");
     if(tmp)
 	conf.maxconattempts=atoi(tmp);
 
-    tmp=lookupvar(cf, "tuning.modemGrabSleep");
+    tmp=rcfg_lookup(cf, "tuning.modemGrabSleep");
     if(tmp)
 	conf.conattemptsleep=atoi(tmp);
 

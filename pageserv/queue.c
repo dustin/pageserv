@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.28 1997/08/06 04:37:09 dustin Exp $
+ * $Id: queue.c,v 1.29 1997/08/07 07:23:06 dustin Exp $
  * $State: Exp $
  */
 
@@ -147,22 +147,22 @@ void runqueue(void)
 
 void logqueue(struct queuent q, int type, char *reason)
 {
-    openlog("pageserv", LOG_PID|LOG_NDELAY, LOG_LOCAL7);
+    openlog("pageserv", LOG_PID|LOG_NDELAY, conf.log_que);
 
     switch(type)
     {
         case QUE_LOG:
-            syslog(conf.log_que, "queued %s to %s:  %d bytes",
+            syslog(conf.log_que|LOG_INFO, "queued %s to %s:  %d bytes",
                 q.qid, q.to, strlen(q.message)); break;
         case SUC_LOG:
-            syslog(conf.log_que, "delivered %s to %s: %d bytes",
+            syslog(conf.log_que|LOG_INFO, "delivered %s to %s: %d bytes",
                 q.qid, q.to, strlen(q.message)); break;
         case FAIL_LOG:
-            syslog(conf.log_que, "failed %s to %s: %s", q.qid,
+            syslog(conf.log_que|LOG_NOTICE, "failed %s to %s: %s", q.qid,
                 q.to, reason); break;
         case EXP_LOG:
-            syslog(conf.log_que, "expired %s to %s:  dequeuing", q.qid,
-                q.to ); break;
+            syslog(conf.log_que|LOG_NOTICE, "expired %s to %s:  dequeuing",
+	        q.qid, q.to ); break;
     }
     closelog();
 }
