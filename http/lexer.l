@@ -2,7 +2,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: lexer.l,v 1.7 1997/07/14 06:10:54 dustin Exp $
+ * $Id: lexer.l,v 1.8 1997/08/11 04:28:38 dustin Exp $
  */
 
 #include <config.h>
@@ -51,7 +51,7 @@ void _parse_maketimelist(int frwhen)
     if(_parse_r.auth.name == NULL)
         return;
 
-    u=getuser(_parse_r.auth.name);
+    u=conf.udb.getuser(_parse_r.auth.name);
 
     getnormtimes(u.times, times);
 
@@ -113,12 +113,12 @@ void _parse_tableUserList(void)
 
     for(j=0; terms[j]!=NULL; j++)
     {
-        users=listusers(terms[j]);
+        users=conf.udb.listusers(terms[j]);
         stringListSort(users);
 
         for(i=0; users[i]!=NULL; i++)
         {
-            u=getuser(users[i]);
+            u=conf.udb.getuser(users[i]);
             sprintf(buf, "<tr><td>%s</td><td>%s</td></tr>\n", users[i],
                 u.statid);
             _parse_sendstr=addtostr(&_parse_strlen, _parse_sendstr, buf);
