@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: nettools.c,v 1.2 1997/08/09 06:48:35 dustin Exp $
+ * $Id: nettools.c,v 1.3 1997/08/09 06:56:56 dustin Exp $
  */
 
 /*
@@ -9,6 +9,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 #include <netinet/in.h>
