@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.26 1997/07/06 19:30:48 dustin Exp $
+ * $Id: queue.c,v 1.27 1997/07/07 08:54:55 dustin Exp $
  * $State: Exp $
  */
 
@@ -84,7 +84,7 @@ void runqueue(void)
 
             if( (s=any_openterm(term))>=0)
             {
-		/* Inside this if is executed if I got the port */
+                /* Inside this if is executed if I got the port */
 
                 s_tap_init(s);
 
@@ -103,16 +103,16 @@ void runqueue(void)
                         {
                             if(conf.debug>0)
                                 printf("Delivery of %s successful\n",
-					q[i].qid);
+                                        q[i].qid);
                             logqueue(q[i], SUC_LOG, NULL);
                             dequeue(q[i].qid);
-			    usleep(2600);
+                            usleep(2600);
                         }
                         else
                         {
                             if(conf.debug>0)
                                 printf("Delivery of %s unsuccessful\n",
-					q[i].qid);
+                                        q[i].qid);
                             logqueue(q[i], FAIL_LOG, MESG_TAPFAIL);
                             q_unlock(q[i]);
                         }
@@ -128,14 +128,14 @@ void runqueue(void)
 
                 s_tap_end(s);
                 puttext(s, "+++atz\n");
-		any_closeterm(s, term);
+                any_closeterm(s, term);
                 sleep(5); /* sleep it off */
             } /* got port */
-	    else
-	    {
-		if(conf.debug>2)
-		    puts("Didn't get the port");
-	    }
+            else
+            {
+                if(conf.debug>2)
+                    puts("Didn't get the port");
+            }
         }
 
         cleanqueuelist(q);
@@ -153,10 +153,10 @@ void logqueue(struct queuent q, int type, char *reason)
     {
         case QUE_LOG:
             syslog(conf.log_que, "queued %s to %s:  %d bytes",
-		q.qid, q.to, strlen(q.message)); break;
+                q.qid, q.to, strlen(q.message)); break;
         case SUC_LOG:
             syslog(conf.log_que, "delivered %s to %s: %d bytes",
-		q.qid, q.to, strlen(q.message)); break;
+                q.qid, q.to, strlen(q.message)); break;
         case FAIL_LOG:
             syslog(conf.log_que, "failed %s to %s: %s", q.qid,
                 q.to, reason); break;
