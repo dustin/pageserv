@@ -1,0 +1,21 @@
+#!/usr/local/bin/perl
+
+my($BASE, $terminals, @a);
+
+$BASE="dc=beyond,dc=com";
+$terminals="ou=Pagerterminals,dc=beyond,dc=com";
+
+while(<>) {
+	next if(/^#/o);
+	next unless(/\w/o);
+	chop;
+	@a=split;
+
+	print "dn: pageNumber=$a[0],$terminals\n";
+	print "objectclass: top\n";
+	print "objectclass: pageservTerminal\n";
+	print "pageNumber: $a[0]\n";
+	print "pageDevice: $a[2]\n";
+	print "pagePort: $a[3]\n";
+	print "pagePredial: $a[4]\n\n";
+}

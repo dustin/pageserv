@@ -1,0 +1,32 @@
+#!/usr/local/bin/perl
+
+my($BASE, $people, @a);
+
+$BASE="dc=beyond,dc=com";
+$people="ou=People,dc=beyond,dc=com";
+
+while(<>) {
+	next if(/^#/o);
+	next unless(/\w/o);
+	chop;
+	@a=split;
+
+	print "\ndn: uid=$a[0],$people\n";
+	print "objectclass: top\n";
+	print "objectclass: pageservUser\n";
+	print "uid: $a[0]\n";
+	print "pageId: $a[1]\n";
+	print "pageStatId: $a[2]\n";
+
+	next unless(defined($a[3]));
+	print "pageEarly: $a[3]\n";
+
+	next unless(defined($a[4]));
+	print "pageLate: $a[4]\n";
+
+	next unless(defined($a[5]));
+	print "pageNotify: $a[5]\n";
+
+	next unless(defined($a[6]));
+	print "pageFlags: $a[6]\n";
+}
