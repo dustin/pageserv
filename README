@@ -6,7 +6,7 @@ Developed under:
     SGI Irix 6.2
     Sun SunOS 4.1.4
 
-Tested (at one time or another) on the following platforms:
+Tested (though it's probably been a while) on the following platforms:
 
     BSDi 2.1
     DEC Digital Unix 3.2
@@ -29,4 +29,4 @@ Documentation:
 
 ----------------------------------------
 Copyright (c) 1997  Dustin Sallings
-$Id: README,v 2.2 1997/07/10 07:16:48 dustin Exp $
+$Id: README,v 2.3 1997/07/30 02:12:31 dustin Exp $
