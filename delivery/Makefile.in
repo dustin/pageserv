@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 2.3 1997/04/01 04:54:09 dustin Exp $
+# $Id: Makefile.in,v 2.4 1997/04/01 05:41:35 dustin Exp $
 
 SHELL=/bin/sh
 CC=@CC@
@@ -13,8 +13,8 @@ LIBS=@LIBS@
 
 LDFLAGS=-g $(LIBS)
 
-LDELIVER_OBJS=tap.o network.o checksum.o modem.o
-SOURCES=tap.c network.c checksum.c network.c modem.c
+LDELIVER_OBJS=tap.o network.o modem.o
+SOURCES=tap.c network.c network.c modem.c
 EXES=taptest
 STUFF=
 JUNK=$(EXES) *.o *.a *.core core
