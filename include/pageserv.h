@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.12 1997/04/02 04:26:15 dustin Exp $
+ * $Id: pageserv.h,v 1.13 1997/04/02 06:20:03 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -36,6 +36,7 @@
 #define MESG_NOUSER "No such user\n\n\n"
 #define MESG_BADTIME "User is not accepting normal priority pages now\n\n\n"
 #define MESG_WELCOME "Welcome to Dustin's pager server version %s.\n"
+#define MESG_NOFARKLE "Sorry, but farkle is not supported.\n\n\n"
 
 /* prompts */
 #define PROMPT_CMD  "CMD: "
@@ -54,6 +55,9 @@
 
 /* Max queue time before deletion */
 #define MAX_QUEUETIME  180
+
+/* Farkle by default */
+#define DEFAULT_FARKLE 0
 
 /* The protocol */
 
@@ -79,7 +83,7 @@
 #define MODE_LDB    2    /* list databases */
 #define MODE_PQ     3    /* print queue */
 #define MODE_VERS   4    /* print version info */
-#define MODE_RUNQ   5    /* print version info */
+#define MODE_RUNQ   5    /* Run the queue */
 
 #ifdef IWANT_MODENAMES
 static char *modenames[]={
@@ -128,6 +132,7 @@ struct config {
     int debug;
     int childlifetime;
     int maxqueuetime;
+    int farkle;
     char *servhost;
     char *userdb;
     char *termdb;
@@ -172,6 +177,7 @@ void childmain(int s);
 void cleanconfig(void);
 void cleanqueuelist(struct queuent *list);
 void cleantermlist(char **list);
+void dequeue(char *qid);
 void displayq(struct queuent q);
 void erasetermdb(void);
 void eraseuserdb(void);
