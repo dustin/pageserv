@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: modem.c,v 2.18 1998/03/18 08:33:23 dustin Exp $
+ * $Id: modem.c,v 2.19 1998/06/03 15:49:22 dustin Exp $
  */
 
 #include <config.h>
@@ -232,7 +232,7 @@ int s_modem_connect(int s, char *number)
 
     sprintf(buf, "atdt%s\r\n", number);
     i=puttext(s, buf);
-    _ndebug(3, ("Wrote %d bytes\n", i));
+    _ndebug(3, ("Wrote %d bytes (atdt%s)\n", i, number));
 
     i=dexpect(s, constr, dialtimeout);
     if(i!=0)
