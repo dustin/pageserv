@@ -1,12 +1,13 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: snppmisc.c,v 1.1 1997/04/29 05:14:22 dustin Exp $
+ * $Id: snppmisc.c,v 1.2 1997/04/29 05:23:50 dustin Exp $
  */
 
 #include <snpp.h>
 #include <pageserv.h>
 
+#include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 

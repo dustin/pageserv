@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: snppmain.c,v 1.1 1997/04/29 05:14:19 dustin Exp $
+ * $Id: snppmain.c,v 1.2 1997/04/29 05:23:48 dustin Exp $
  */
 
 #include <config.h>
@@ -147,7 +147,7 @@ void snpp_send(int s)
 void _snpp_main(modpass p)
 {
     int s, going=1, c;
-    char buf[BUFLEN], *arg;
+    char buf[BUFLEN];
 
     s=p.socket;
 
