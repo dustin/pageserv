@@ -66,3 +66,21 @@ priority to high, default is normal:
 <pre>
 priority high
 </pre>
+
+<p>
+
+Also added, were <code>SHOWQ</code> and <code>DEQUEUE</code> for
+individual users after they've logged in.  <code>SHOWQ</code> with no
+arguments will list everything that's queued up for the currently
+logged-in user, if you give it an argument of the queue ID you wish to
+look at, you can see the entire page that would be delivered.  An
+asterisk in the list means that the page has been held, is not yet due to
+be delivered.  Showing the individual message will let you know when it's
+due to go out.
+
+<code>DEQUEUE</code> requires an argument of the queue ID you wish to
+delete.  <code>DEQUEUE</code> will not dequeue any pages that aren't
+destined for the currently logged-in user.
+
+</body>
+</html>
