@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.35 1998/01/10 01:33:00 dustin Exp $
+ * $Id: main.c,v 1.36 1998/01/11 08:05:57 dustin Exp $
  */
 
 #include <config.h>
@@ -322,5 +322,5 @@ int main(int argc, char **argv)
 	    changepasswd(); break;
     }
     cleanconfig();
-    exit(0);
+    return(0);
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: login.c,v 1.16 1998/01/10 01:32:59 dustin Exp $
+ * $Id: login.c,v 1.17 1998/01/11 08:05:56 dustin Exp $
  */
 
 #include <config.h>
@@ -208,7 +208,7 @@ void p_login(int s)
         exit(0);
     }
 
-    if(strlen(u.passwd)<13)
+    if(strlen(u.passwd)<(size_t)13)
     {
         puttext(s, "Password has not been setup for this account.\n");
         exit(0);

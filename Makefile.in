@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 2.44 1998/01/10 01:32:08 dustin Exp $
+# $Id: Makefile.in,v 2.45 1998/01/11 08:05:32 dustin Exp $
 
 MAJOR=2
 MINOR=10
@@ -56,7 +56,6 @@ clean:  irixhack.o
 
 lint:
 	for i in $(DIRS) ; do cd $$i && $(MAKE) lint ; cd .. ; done
-	rm -f $(JUNK)
 
 ultrabrite: irixhack.o
 	for i in $(DIRS) ; do cd $$i && $(MAKE) clean ; cd .. ; done

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: network.c,v 2.10 1998/01/10 01:32:27 dustin Exp $
+ * $Id: network.c,v 2.11 1998/01/11 08:05:49 dustin Exp $
  */
 
 /*
@@ -22,6 +22,8 @@
 #include <tap.h>
 
 extern struct config conf;
+
+static int s_openhost(char *host, int port);
 
 int s_openterm(struct terminal t)
 {

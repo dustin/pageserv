@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  SPY Internetworking
  *
- * $Id: tap.c,v 2.17 1998/01/10 01:32:30 dustin Exp $
+ * $Id: tap.c,v 2.18 1998/01/11 08:05:51 dustin Exp $
  */
 
 #include <stdio.h>
@@ -14,6 +14,9 @@
 #include <tap.h>
 
 extern struct config conf;
+
+static int tap_checksum(char *string);
+static char *tap_sent_checksum(int sum);
 
 static int tap_checksum(char *string)
 {

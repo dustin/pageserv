@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 2.9 1998/01/10 01:32:24 dustin Exp $
+# $Id: Makefile.in,v 2.10 1998/01/11 08:05:48 dustin Exp $
 
 SHELL=/bin/sh
 CC=@CC@
@@ -18,13 +18,13 @@ LDELIVER_OBJS=tap.o network.o modem.o serial.o
 SOURCES=tap.c network.c network.c modem.c serial.c
 EXES=taptest
 STUFF=
-JUNK=$(EXES) *.o *.a *.core core
-AUTOJUNK=
 
 # Lint stuff
 LINT=@LINT@
 LINTFLAGS=$(INCLUDES) -DVERSION=\"$(VERSION)\" -v -x -u
 LINTS=tap.ln network.ln modem.ln serial.ln
+
+JUNK=$(EXES) *.o *.a *.ln *.core core
 
 .SUFFIXES: .c .o .l .a .ln
 
@@ -50,7 +50,7 @@ depend:
 
 # irix globbing shit.
 irixhack.o:
-	@touch irixhack.o
+	@touch irixhack.o irixhack.ln
 
 clean:  irixhack.o
 	rm -f $(JUNK)

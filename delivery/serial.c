@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: serial.c,v 2.10 1998/01/10 01:32:28 dustin Exp $
+ * $Id: serial.c,v 2.11 1998/01/11 08:05:50 dustin Exp $
  */
 
 /*
@@ -35,6 +35,7 @@
 extern struct config conf;
 
 static int p_lock(char *dev);
+static int p_openport(char *port);
 
 void checklocks(void)
 {

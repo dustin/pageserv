@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 1.17 1998/01/10 01:32:56 dustin Exp $
+# $Id: Makefile.in,v 1.18 1998/01/11 08:05:55 dustin Exp $
 
 SHELL=/bin/sh
 CC=@CC@
@@ -38,7 +38,7 @@ LINTS=sockets.ln main.ln utility.ln kids.ln queue.ln protocol.ln \
 	parseusers.ln userdb.ln readconfig.ln termdb.ln parseterms.ln \
 	signals.ln login.ln modules.ln nettools.ln ypuserdb.ln sqluserdb.ln
 
-JUNK=$(EXES) *.o *.core core $(LINTS)
+JUNK=$(EXES) *.o *.ln *.core core $(LINTS)
 AUTOJUNK=Makefile
 
 .SUFFIXES: .c .o .l .a .ln
@@ -61,7 +61,7 @@ depend:
 
 # irix globbing shit.
 irixhack.o:
-	@touch irixhack.o
+	@touch irixhack.o irixhack.ln
 
 clean:  irixhack.o
 	rm -f $(JUNK)
