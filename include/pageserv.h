@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.26 1997/04/29 05:13:47 dustin Exp $
+ * $Id: pageserv.h,v 1.27 1997/04/29 17:53:41 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -204,6 +204,9 @@ int gettext(int s, char *buf);
 int gettextcr(int s, char *buf);
 int parseterms(void);
 int parseusers(void);
+int q_islocked(struct queuent q);
+int q_lock(struct queuent q);
+int q_unlock(struct queuent q);
 int queuedepth(void);
 int readytodeliver(struct queuent q);
 int s_openterm(struct terminal t);
@@ -222,6 +225,7 @@ struct user setpasswd(struct user u, char *passwd);
 void _pageserv_init(void);
 void _pageserv_main(modpass p);
 void cleanconfig(void);
+void cleanmylocks(void);
 void cleanqueuelist(struct queuent *list);
 void cleantermlist(char **list);
 void dequeue(char *qid);
@@ -244,6 +248,7 @@ void process(int s, char *cmd);
 void quit(int s);
 void readconfig(char *file);
 void reaper(void);
+void resetdelivertraps(void);
 void resetservtraps(void);
 void runqueue(void);
 void showconfig(void);

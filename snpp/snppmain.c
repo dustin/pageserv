@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: snppmain.c,v 1.4 1997/04/29 15:11:01 dustin Exp $
+ * $Id: snppmain.c,v 1.5 1997/04/29 17:53:47 dustin Exp $
  */
 
 #include <config.h>
@@ -73,10 +73,15 @@ void snpp_setpageid(int s, char *id)
     if(u_exists(id))
     {
         if(snpp_pageid!=NULL)
-            free(snpp_pageid);
-
-        snpp_pageid=strdup(id);
-        puttext(s, "250 Pager ID Accepted\n");
+	{
+	    puttext(s, "552 Maximum Entries exceeded, one page at a time.\n");
+	    return;
+	}
+	else
+	{
+            snpp_pageid=strdup(id);
+            puttext(s, "250 Pager ID Accepted\n");
+	}
     }
     else
     {
@@ -140,7 +145,7 @@ void snpp_send(int s)
     }
     else
     {
-        puttext(s, "250 Message sent successfully\n");
+        puttext(s, "250 Message queued successfully\n");
     }
 }
 
@@ -154,7 +159,8 @@ void _snpp_main(modpass p)
     alarm(conf.childlifetime);
     signal(SIGALRM, snpp_onalarm);
 
-    puttext(s, "220 Dustin's SNPP gateway ready\n");
+    sprintf(buf, "220 Dustin's SNPP gateway version %s ready\n", VERSION);
+    puttext(s, buf);
 
     while(going)
     {

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.17 1997/04/18 20:27:40 dustin Exp $
+ * $Id: queue.c,v 1.18 1997/04/29 17:53:44 dustin Exp $
  * $State: Exp $
  */
 
@@ -21,6 +21,40 @@
 
 extern struct config conf;
 
+void cleanmylocks()
+{
+    DIR *dir;
+    FILE *f;
+    struct dirent *d;
+    int i=0, pid;
+
+    pid=getpid();
+
+    chdir(conf.qdir);
+    dir=opendir(".");
+
+    while( (d=readdir(dir))!=NULL)
+    {
+        if(d->d_name[0]=='l')
+        {
+	    f=fopen(d->d_name, "r");
+	    if(f!=NULL)
+	    {
+		fscanf(f, "%d", &i);
+		if(i==pid)
+		{
+		    if(conf.debug>0)
+			printf("Getting rid of %s\n", d->d_name);
+
+		    unlink(d->d_name);
+		}
+	        fclose(f);
+	    }
+	}
+    }
+    closedir(dir);
+}
+
 void runqueue(void)
 {
     struct queuent *q;
@@ -28,7 +62,11 @@ void runqueue(void)
     struct terminal term;
     int t, i, s;
 
+    resetdelivertraps();
     termlist=listterms();
+
+    /* four minutes to complete delivery */
+    alarm(240);
 
     for(t=0; termlist[t]!=NULL; t++)
     {
@@ -99,7 +137,7 @@ void logqueue(struct queuent q, int type, char *reason)
 
 void dequeue(char *qid)
 {
-    char buf[BUFLEN];
+    char buf[BUFLEN], *tmp;
 
     switch(qid[0])
     {
@@ -108,9 +146,11 @@ void dequeue(char *qid)
 	    strcat(buf, "/");
 	    strcat(buf, qid);
 	    break;
+
 	case '/':
 	    strcpy(buf, qid);
 	    break;
+
         default:
 	    if(conf.debug>0)
 		printf("I don't know what the hell to do with %s\n", qid);
@@ -122,7 +162,19 @@ void dequeue(char *qid)
 	if(conf.debug>0)
 	    printf("Unlinking file: %s\n", buf);
         unlink(buf);
-    }
+
+        /* Nasty lock handler */
+
+	tmp=buf+strlen(buf)-1;
+	while(*tmp!='q' && *tmp!='/') tmp--;
+	if(*tmp=='q')
+	{
+	    *tmp='l';
+	    if(conf.debug>0)
+		printf("Unlinking file: %s\n", buf);
+	    unlink(buf);
+	} /* lock handler */
+    } /* all delete handler */
 }
 
 int gq_checkit(struct queuent q, char *number)
@@ -130,9 +182,9 @@ int gq_checkit(struct queuent q, char *number)
     if( (strcmp(q.u.statid, number))!=0)
     {
 	/* Splat means grab 'em all */
-	if(strcmp(number, "*") != 0)
+	if(strcmp(number, "*") == 0)
 	{
-            return(0);
+	    return(1);
 	}
     }
 
@@ -141,7 +193,70 @@ int gq_checkit(struct queuent q, char *number)
 	return(0);
     }
 
+    if( q_islocked(q) == 1 )
+    {
+	return(0);
+    }
+
     return(1);
+}
+
+int q_lock(struct queuent q)
+{
+    char buf[BUFLEN];
+    char tmp[FNSIZE];
+    FILE *f;
+
+    strcpy(buf, conf.qdir);
+    strcat(buf, "/");
+    strcpy(tmp, q.qid);
+    tmp[0]='l';
+    strcat(buf, tmp);
+
+    if(conf.debug>0)
+	printf("Locked %s with %s\n", q.qid, buf);
+
+    f=fopen(buf, "w");
+    if(f==NULL)
+    {
+	return(-1);
+    }
+
+    fprintf(f, "%d\n", getpid());
+
+    fclose(f);
+
+}
+
+int q_unlock(struct queuent q)
+{
+    char buf[BUFLEN];
+    char tmp[FNSIZE];
+
+    strcpy(buf, conf.qdir);
+    strcat(buf, "/");
+    strcpy(tmp, q.qid);
+    tmp[0]='l';
+    strcat(buf, tmp);
+
+    unlink(buf);
+
+    if(conf.debug>0)
+	printf("Unlocked %s with %s\n", q.qid, buf);
+}
+
+int q_islocked(struct queuent q)
+{
+    char buf[BUFLEN];
+    char tmp[FNSIZE];
+
+    strcpy(buf, conf.qdir);
+    strcat(buf, "/");
+    strcpy(tmp, q.qid);
+    tmp[0]='l';
+    strcat(buf, tmp);
+
+    return( (access(buf, F_OK)) == 0);
 }
 
 void cleanqueuelist(struct queuent *list)
@@ -225,6 +340,10 @@ struct queuent *listqueue(char *number)
 
 		    list=realloc(list, size*sizeof(struct queuent));
 		}
+
+		if(strcmp(number, "*")!=0)
+		    q_lock(q);
+
 		list[index++]=q;
 	    }
         }

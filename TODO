@@ -7,11 +7,11 @@ Overall:
     * Management login to manage crap
     * NIS based databases
     * support numeric pagers
+    * make it so that I can run the server as root to get secure ports, but
+      it actually serves as a pager user of some sort
 
 Delivery:
 
-    * Some sort of delivery locking, or file locking, or something so running
-      -bq twice at the same time won't give you two copies of your pages.
     * check time at delivery time in case a message has been stuck
     * have timeouts actually time out
     * Local modem support
@@ -26,4 +26,4 @@ Clients:
 
 ----------------------------------------
 Copyright (c) 1997  Dustin Sallings
-$Id: TODO,v 2.19 1997/04/29 05:13:34 dustin Exp $
+$Id: TODO,v 2.20 1997/04/29 17:53:37 dustin Exp $
