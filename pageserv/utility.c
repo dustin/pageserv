@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: utility.c,v 1.12 1997/07/14 00:20:28 dustin Exp $
+ * $Id: utility.c,v 1.13 1997/07/14 06:03:10 dustin Exp $
  * $State: Exp $
  */
 
@@ -75,17 +75,20 @@ int execnamedfunc(char *name, struct namedfunc *f)
     return(0);
 }
 
-int addtostr(int size, char *dest, char *str)
+char *addtostr(int *size, char *dest, char *str)
 {
     int new=0;
 
-    if(size==0)
+    if(conf.debug>5)
+	printf("addtostr(%d, %s, %s);\n", *size, dest, str);
+
+    if(*size==0)
     {
 	if(conf.debug>5)
 	    puts("Doing initial malloc");
 
-	size=DEFAULT_STRLEN;
-	dest=(char *)malloc(size*sizeof(char));
+	*size=DEFAULT_STRLEN;
+	dest=(char *)malloc(*size*sizeof(char));
 	if(dest==NULL)
 	{
 	    perror("malloc");
@@ -94,14 +97,14 @@ int addtostr(int size, char *dest, char *str)
 	new=1;
     }
 
-    if(strlen(dest)+strlen(str)>=size)
+    if(strlen(dest)+strlen(str)>=*size)
     {
 	if(conf.debug>4)
 	    printf("Realloc'in to %d bytes, need more than %d bytes\n",
-		size<<1, size);
+		*size<<1, *size);
 
-	size<<=1;
-	realloc(dest, size*sizeof(char));
+	*size<<=1;
+	dest=realloc(dest, *size*sizeof(char));
 	if(dest==NULL)
 	{
 	    perror("realloc");
@@ -114,7 +117,7 @@ int addtostr(int size, char *dest, char *str)
     else
         strcat(dest, str);
 
-    return(size);
+    return(dest);
 }
 
 int pack_timebits(int early, int late)

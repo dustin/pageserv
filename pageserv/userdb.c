@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.9 1997/07/14 00:20:27 dustin Exp $
+ * $Id: userdb.c,v 1.10 1997/07/14 06:03:08 dustin Exp $
  * $State: Exp $
  */
 
@@ -19,6 +19,67 @@ extern struct config conf;
 
 /* bounds checker for hour loop things */
 #define BC (i<24)
+
+void cleanuserlist(char **list)
+{
+    int i;
+
+    if(conf.debug>2)
+        puts("Freeing user list.");
+
+    for(i=0; list[i]!=NULL; i++)
+    {
+        free(list[i]);
+    }
+    free(list);
+}
+
+char **listusers(char *term)
+{
+    datum d, val;
+    DBM *db;
+    char **ret;
+    struct user u;
+    int size=4, index=0;
+
+    ret=malloc(size * sizeof(char *));
+
+    if( (db=dbm_open(conf.userdb, O_RDONLY, 0644)) ==NULL)
+    {
+        perror(conf.userdb);
+        exit(1);
+    }
+
+    for(d=dbm_firstkey(db); d.dptr!=NULL; d=dbm_nextkey(db))
+    {
+	val=dbm_fetch(db, d);
+	memcpy( (void *)&u, (void *)val.dptr, sizeof(u));
+
+	if( (strcmp(u.statid, term) == 0) || (strcmp(term, "*") == 0) )
+	{
+            ret[index]=malloc(d.dsize+1);
+            strncpy(ret[index], d.dptr, d.dsize);
+            ret[index++][d.dsize]=0x00;
+	}
+
+        if(index == size-1)
+        {
+           size<<=1;
+
+            if(conf.debug>2)
+            {
+                printf("Reallocating, now need %d bytes for %d\n",
+                    size*sizeof(char *), size);
+            }
+
+            ret=realloc(ret, size*sizeof(char *));
+        }
+    }
+    ret[index]=NULL;
+
+    dbm_close(db);
+    return(ret);
+}
 
 void getnormtimes(int times, int *ret)
 {

@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.36 1997/07/14 00:19:06 dustin Exp $
+ * $Id: pageserv.h,v 1.37 1997/07/14 06:02:59 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -209,11 +209,12 @@ struct config {
 RETSIGTYPE serv_sighup(int sig);
 RETSIGTYPE serv_sigint(int sig);
 char **listterms(void);
+char **listusers(char *term);
+char *addtostr(int *size, char *dest, char *str);
 char *fntoqid(char *fn);
 char *kw(char *in);
 char *newqfile(void);
 int _pageserv_socket(void);
-int addtostr(int size, char *dest, char *str);
 int any_closeterm(int s, struct terminal t);
 int any_openterm(struct terminal t);
 int bit_set(int bmap, int which);
@@ -256,6 +257,7 @@ void cleanconfig(void);
 void cleanmylocks(void);
 void cleanqueuelist(struct queuent *list);
 void cleantermlist(char **list);
+void cleanuserlist(char **list);
 void dequeue(char *qid);
 void displayq(struct queuent q);
 void erasetermdb(void);
