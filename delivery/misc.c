@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: misc.c,v 2.5 1998/07/14 22:46:56 dustin Exp $
+ * $Id: misc.c,v 2.6 1998/07/14 23:05:41 dustin Exp $
  */
 
 #include <stdio.h>
@@ -107,7 +107,11 @@ void runqueue(void)
             if( (s=any_openterm(term))>=0) {
                 /* Inside this if is executed if I got the port */
 
-                s_tap_init(s, term.flags);
+                if(s_tap_init(s, term.flags)<0) {
+		    any_closeterm(s, term);
+		    sleep(5); /* sleep it off */
+		    break;
+                }
 
                 /* Keep looping through queue stuff until there are no more
                    requests, in case any where queued while we're already
@@ -131,7 +135,7 @@ void runqueue(void)
 					q[i].qid, q[i].to);
 				dequeue(q[i].qid);
 			    } else {
-                                del_log("failed %s to %s, "
+                                del_log("deferred %s to %s, "
                                         "will keep trying until it expires",
 					q[i].qid, q[i].to);
                                 q_unlock(q[i]);
