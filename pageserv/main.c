@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.41 1998/01/15 23:35:01 dustin Exp $
+ * $Id: main.c,v 1.42 1998/01/18 09:59:13 dustin Exp $
  */
 
 #include <config.h>
@@ -94,16 +94,52 @@ static void detach(void)
    umask(7);
 }
 
+static int deliveryd_checkmom(int oldpid)
+{
+    int pid;
+    FILE *f;
+
+    f=fopen(conf.pidfile, "r");
+    if(f==NULL)
+	return(-1);
+
+    if(fscanf(f, "%d", &pid)<1)
+	pid=-1;
+
+    fclose(f);
+
+    if(oldpid!=0)
+    {
+	if(pid!=oldpid)
+	    pid=-1;
+    }
+
+    return(pid);
+}
+
 /*
  * This is a hack.
  */
 static void deliveryd_main(void)
 {
-    int t, stat;
+    int t, stat, ppid;
+
+    /*
+     * We return here because we're still the main server daemon until
+     * we fork().
+     */
     if(fork()>0)
 	return;
 
     t=rcfg_lookupInt(conf.cf, "etc.deliverysleep");
+
+    /*
+     * Racy condition, pid file went away before we got here, we have to
+     * know the pid so we can exit, so if it's not there, we go away.
+     */
+    ppid=deliveryd_checkmom(0);
+    if(ppid<0)
+       exit(0);
 
     if(t<1)
         t=DEFAULT_DELSLEEP;
@@ -124,8 +160,8 @@ static void deliveryd_main(void)
 	    }
 	}
 
-	/* Exit if we can't see the pidfile */
-	if(access(conf.pidfile, F_OK)<0)
+	/* See if it's ``our time'' */
+        if(deliveryd_checkmom(ppid)<0)
 	    exit(0);
     }
 }
