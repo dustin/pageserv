@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 1.1 1997/03/29 19:21:27 dustin Exp $
+# $Id: Makefile.in,v 1.2 1997/03/29 20:36:11 dustin Exp $
 
 MAJOR=2
 MINOR=2
@@ -10,12 +10,14 @@ SHELL=/bin/sh
 CC=@CC@
 YACC=@YACC@
 CFLAGS=-g -DVERSION=\"$(VERSION)\"
+AR=@AR@
+RANLIB=@RANLIB@
 
 LIBS=@LIBS@
 
 LDFLAGS=-g $(LIBS)
 
-LTAP_OBJS=tap.o
+LTAP_OBJS=tap.o network.o
 SOURCES=tap.c
 EXES=taptest
 STUFF=
@@ -23,6 +25,13 @@ JUNK=$(EXES) *.o *.core core
 AUTOJUNK=
 
 all: $(EXES)
+
+taptest: taptest.o tap.a
+	$(CC) -o taptest -ltap
+
+tap.a: $(LTAP_OBJS)
+	$(AR) $(LTAP_OBJS)
+	$(RANLIB) $(LTAP_OBJS)
 
 depend:
 	echo "" >> Makefile

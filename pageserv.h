@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.28 1997/03/29 19:21:16 dustin Exp $
+ * $Id: pageserv.h,v 1.29 1997/03/29 20:36:04 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -110,6 +110,7 @@ struct terminal {
     char number[STATLEN];
     char ts[FNSIZE];
     char predial[STATLEN];
+    int  contype;
     int  prot;
     int  port;
 };

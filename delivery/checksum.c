@@ -1,14 +1,14 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: checksum.c,v 1.2 1997/03/29 19:29:54 dustin Exp $
+ * $Id: checksum.c,v 1.3 1997/03/29 20:36:12 dustin Exp $
  */
 
 #include <stdio.h>
 
 #include "tap.h"
 
-int do_checksum(char *string)
+int tap_checksum(char *string)
 {
     int tmp, i, sum=0;
 
@@ -22,7 +22,7 @@ int do_checksum(char *string)
     return(sum);
 }
 
-char *sent_checksum(int sum)
+char *tap_sent_checksum(int sum)
 {
     static char charsum[4]={0,0,0,0};
 
@@ -31,8 +31,6 @@ char *sent_checksum(int sum)
     charsum[1]=48+ sum - (int)(sum/16) * 16;
     sum = (int)(sum/16);
     charsum[0]=48+ sum - (int)(sum/16) * 16;
-
-    revstring(charsum);
 
     return(charsum);
 }
