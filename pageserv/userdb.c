@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.20 1998/01/27 01:32:44 dustin Exp $
+ * $Id: userdb.c,v 1.21 1998/02/26 17:17:53 dustin Exp $
  */
 
 #include <stdio.h>
@@ -212,6 +212,50 @@ static struct user dbm_open_getuser(DBM *db, char *name)
     }
 
     return(u);
+}
+
+void dumpuser(struct user u, char *delim)
+{
+    int times[2];
+
+    if(strcmp(u.name, u.pageid)!=0)
+    {
+        getnormtimes(u.times, times);
+        printf("%s%s%s%s%s%s%d%s%d\n", u.name, delim,
+				       u.pageid, delim,
+				       u.statid, delim,
+				       times[0], delim,
+				       times[1], delim);
+    }
+
+}
+
+void dumpuserdb(void)
+{
+    struct user u;
+    char **users, *delim;
+    int i;
+    time_t t;
+
+    conf.udb.dbinit();
+
+    delim=rcfg_lookup(conf.cf, "databases.textdelim");
+    if(delim==NULL)
+	delim="\t";
+
+    t=time(NULL);
+    printf("# Database dump created on %s", ctime(&t));
+    printf("# Using text delimiter ``%s''\n\n", delim);
+
+    users=conf.udb.listusers("*");
+
+    for(i=0; users[i]; i++)
+    {
+        u=conf.udb.getuser(users[i]);
+        dumpuser(u, delim);
+    }
+
+    cleanuserlist(users);
 }
 
 void printusers(void)

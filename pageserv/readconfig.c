@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.34 1998/01/11 11:03:04 dustin Exp $
+ * $Id: readconfig.c,v 1.35 1998/02/26 17:17:52 dustin Exp $
  */
 
 #include <readconfig.h>
@@ -95,7 +95,7 @@ static void showusage(char *cmd)
 {
     showversion();
 
-    printf("Usage:  %s -b{d|r|q|k|p} [-dx] or\n", cmd);
+    printf("Usage:  %s -b{d|r|q|k|p|u} [-dx] or\n", cmd);
     printf("        %s -p{l|q} [-dx]   or\n", cmd);
     printf("        %s -v [-dx]\n", cmd);
     printf("        %s -h", cmd);
@@ -106,6 +106,7 @@ static void showusage(char *cmd)
     puts("\tq: runs the queue");
     puts("\tk: kills an already running daemon");
     puts("\tp: sets a user's password");
+    puts("\tu: dumps user database");
 
     puts("\n-p is print modes");
     puts("\tl: lists databases");
@@ -140,6 +141,8 @@ void getoptions(int argc, char **argv)
 			conf.mode=MODE_KILL; break;
 		    case 'p':
 			conf.mode=MODE_PWCH; break;
+		    case 'u':
+			conf.mode=MODE_DUMPUSERS; break;
                     default:
 			printf("Unknown run mode %c\n", optarg[0]);
 			exit(1); break;

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parseusers.c,v 1.12 1998/01/22 10:23:51 dustin Exp $
+ * $Id: parseusers.c,v 1.13 1998/02/26 17:17:51 dustin Exp $
  */
 
 #include <stdio.h>
@@ -42,6 +42,7 @@ struct user parseuser(char *line, char *delim, int flags)
         }
         else
         {
+            kw(tmp);
             strcpy(u.name, tmp);
         }
     }
@@ -63,6 +64,7 @@ struct user parseuser(char *line, char *delim, int flags)
             }
             else
             {
+		kw(tmp);
                 strcpy(u.passwd, tmp);
             }
         }
@@ -82,6 +84,7 @@ struct user parseuser(char *line, char *delim, int flags)
         }
         else
         {
+	    kw(tmp);
             strcpy(u.pageid, tmp);
         }
     }
@@ -100,6 +103,7 @@ struct user parseuser(char *line, char *delim, int flags)
         }
         else
         {
+	    kw(tmp);
             strcpy(u.statid, tmp);
         }
     }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.49 1998/01/28 08:59:05 dustin Exp $
+ * $Id: main.c,v 1.50 1998/02/26 17:17:49 dustin Exp $
  */
 
 #include <config.h>
@@ -547,6 +547,9 @@ int main(int argc, char **argv)
 
         case MODE_PWCH:
 	    changepasswd(); break;
+
+        case MODE_DUMPUSERS:
+            dumpuserdb(); break;
     }
     cleanconfig();
     return(0);

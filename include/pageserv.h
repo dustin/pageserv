@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.61 1998/01/28 08:34:29 dustin Exp $
+ * $Id: pageserv.h,v 1.62 1998/02/26 17:17:46 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -135,6 +135,7 @@
 #define MODE_RUNQ   5    /* Run the queue */
 #define MODE_KILL   6    /* Kill off the daemon. */
 #define MODE_PWCH   7    /* Password change */
+#define MODE_DUMPUSERS 8  /* dump user databases */
 
 /* log types */
 
