@@ -1,7 +1,23 @@
 This isn't much of a history, but it may be if we start using it.
 
+    The first major change I made after release_2_9_3 I made consisted of
+configuration file movement.  This is very important:
+
+    etc.userdb and etc.termdb are now databases.userdb and
+    databases.termdb respectively
+
+Please update your local configs for this, you can use the included
+sample for reference.
+
+    Also, databases.nis_userdb and nis_termdb have been removed for the
+more generic databases.userdbType and databases.termdbType.  These now
+use a string as an argument, and it is matched against known database
+types.  The term database info is currently ignored.
+
+--------------------
+
 As of release_2_9_3, there are multiple developers, starting with
 spberry@iastate.edu
 
 ----------------------------------------
-$Id: HISTORY,v 2.1 1997/08/27 00:02:30 dustin Exp $
+$Id: HISTORY,v 2.2 1997/08/27 07:07:49 dustin Exp $
