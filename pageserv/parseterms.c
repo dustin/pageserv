@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parseterms.c,v 1.9 1998/01/23 08:48:11 dustin Exp $
+ * $Id: parseterms.c,v 1.10 1998/03/11 07:18:37 dustin Exp $
  */
 
 #include <stdio.h>
@@ -100,6 +100,25 @@ struct terminal parseterm(char *line)
         else
         {
             strcpy(t.predial, tmp);
+        }
+    }
+
+    tmp=strtok(NULL, delim);
+    if(tmp==NULL)
+    {
+	_ndebug(2, ("Using default init %s\n", DEF_INIT));
+	strcpy(t.init, DEF_INIT);
+    }
+    else
+    {
+        if(strlen(tmp)>(size_t)INITLEN)
+        {
+            printf("Init ``%s'' is too long, skipping\n", tmp);
+            return(t);
+        }
+        else
+        {
+            strcpy(t.init, tmp);
         }
     }
 
