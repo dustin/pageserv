@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.7 1997/04/01 05:41:44 dustin Exp $
+ * $Id: pageserv.h,v 1.8 1997/04/01 05:57:05 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -181,8 +181,6 @@ void readconfig(char *file);
 void reaper(void);
 void resetservtraps(void);
 void runqueue(void);
-void serv_sighup();
-void serv_sigint();
 void showconfig(void);
 void showversion(void);
 void storeterm(DBM *db, struct terminal t);
