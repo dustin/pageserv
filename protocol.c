@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: protocol.c,v 1.3 1997/03/11 19:47:52 dustin Exp $
+ * $Id: protocol.c,v 1.4 1997/03/11 20:26:55 dustin Exp $
  */
 
 #include <stdio.h>
@@ -47,6 +47,23 @@ void p_depth(int s)
     puttext(s, buf);
 }
 
+void p_farkle(int s)
+{
+    struct queuent q;
+    char buf[BUFLEN];
+
+    if(queuedepth()>0)
+    {
+	q=dofarkle();
+	sprintf(buf, "%s\n%s\n\n", q.to, q.message);
+	puttext(s, buf);
+    }
+    else
+    {
+	puttext(s, MESG_NOQUEUE);
+    }
+}
+
 void process(int s, char *cmd)
 {
     static char *commands[4]={
@@ -84,6 +101,9 @@ void process(int s, char *cmd)
 
 	case P_DEPTH:
 	    p_depth(s); break;
+
+	case P_FARKLE:
+	    p_farkle(s); break;
 
         case P_QUIT:
 	    quit(s);

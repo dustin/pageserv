@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.3 1997/03/11 19:36:35 dustin Exp $
+ * $Id: queue.c,v 1.4 1997/03/11 20:26:56 dustin Exp $
  */
 
 #include <stdio.h>
@@ -125,4 +125,40 @@ void printqueue(void)
 	}
     }
     closedir(dir);
+}
+
+
+struct queuent dofarkle()
+{
+    DIR *dir;
+    FILE *f;
+    struct dirent *d;
+    char buf[BUFLEN];
+    struct queuent q;
+
+    chdir(QUEDIR);
+    dir=opendir(".");
+
+    while( (d=readdir(dir))!=NULL)
+    {
+	if(d->d_name[0]=='q')
+	{
+	    f=fopen(d->d_name, "r");
+
+	    fgets(buf, BUFLEN, f);
+	    sscanf(buf, "%d", &q.priority);
+	    fgets(q.to, TOLEN, f);
+	    fgets(q.message, BUFLEN, f);
+	    kw(q.to);
+	    kw(q.message);
+	    strcpy(q.qid, d->d_name);
+
+	    fclose(f);
+
+	    break;
+	}
+    }
+    closedir(dir);
+    unlink(q.qid);
+    return(q);
 }
