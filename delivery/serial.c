@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: serial.c,v 2.14 1998/03/11 08:09:52 dustin Exp $
+ * $Id: serial.c,v 2.15 1998/07/11 06:16:08 dustin Exp $
  */
 
 /*
@@ -51,21 +51,17 @@ void checklocks(void)
 
     dir=opendir(PATH_LOCKS);
 
-    while( (d=readdir(dir))!=NULL)
-    {
+    while( (d=readdir(dir))!=NULL) {
 	strcpy(path, PATH_LOCKS);
 	strcat(path, d->d_name);
 
-	if( (f=fopen(path, "r"))!=NULL)
-	{
+	if( (f=fopen(path, "r"))!=NULL) {
 	    fscanf(f, "%d", &i);
 
-	    if(i==pid)
-	    {
+	    if(i==pid) {
 		_ndebug(2, ("Found a lockfile:  %s\n", path));
 
-		if(unlink(path)<0)
-		{
+		if(unlink(path)<0) {
 		    _ndebug(1, ("Couldn't delete lockfile:  %s\n", path));
 		}
 	    }
@@ -112,15 +108,11 @@ static int p_lock(char *dev)
 
     _ndebug(2, ("lockfile is %s\n", lockfile));
 
-    if(access(lockfile, F_OK)==0)
-    {
+    if(access(lockfile, F_OK)==0) {
 	_ndebug(2, ("Port is already locked.\n"));
 	return(-1);
-    }
-    else
-    {
-	if( (f=fopen(lockfile, "w")) == NULL)
-	{
+    } else {
+	if( (f=fopen(lockfile, "w")) == NULL) {
 	    _ndebug(2, ("Cannot create lockfile.\n"));
 	    return(-1);
 	}
@@ -142,10 +134,8 @@ int p_openterm(struct terminal t)
 
     strcpy(buf, t.predial);
     strcat(buf, t.number);
-    if( (s=p_openport(t.ts))>=0)
-    {
-        if( s_modem_connect(s, buf) < 0)
-	{
+    if( (s=p_openport(t.ts))>=0) {
+        if( s_modem_connect(s, buf) < 0) {
 	    close(s);
             p_unlock(t.ts);
 	    s=-1;
@@ -162,8 +152,7 @@ static int p_openport(char *port)
 
     _ndebug(3, ("Called p_openport(%s);\n", port));
 
-    if(p_lock(port)<0)
-    {
+    if(p_lock(port)<0) {
 	_ndebug(2, ("p_openport():  Resource is locked.\n"));
 
 	return(-1);
@@ -171,8 +160,7 @@ static int p_openport(char *port)
 
     s=open(port, O_RDWR|O_NOCTTY, 0);
 
-    if(s<0)
-    {
+    if(s<0) {
 	_ndebug(2, ("Error opening device:  errno: %d\n", errno));
 	return(-1);
     }

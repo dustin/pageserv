@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: network.c,v 2.11 1998/01/11 08:05:49 dustin Exp $
+ * $Id: network.c,v 2.12 1998/07/11 06:16:07 dustin Exp $
  */
 
 /*
@@ -34,8 +34,7 @@ int s_openterm(struct terminal t)
     strcat(buf, t.number);
     s=s_openhost(t.ts, t.port);
 
-    if(s_modem_connect(s, buf) < 0)
-    {
+    if(s_modem_connect(s, buf) < 0) {
         close(s);
 	s=-1;
     }
@@ -46,7 +45,7 @@ int s_openterm(struct terminal t)
 void net_timeout(void)
 {
     fputs("Connection timed out.\n", stderr);
-    exit(1);
+    return(-1);
 }
 
 static int s_openhost(char *host, int port)
@@ -57,22 +56,19 @@ static int s_openhost(char *host, int port)
     struct linger l;
     struct sockaddr_in sin;
 
-    if((hp=gethostbyname(host)) == NULL)
-    {
+    if((hp=gethostbyname(host)) == NULL) {
 #ifdef HAVE_HERROR
         herror("gethostbyname");
 #else
         fprintf(stderr, "Error looking up %s\n", host);
 #endif
-        exit(1);
+        return(-1);
     }
 
-    for(i=0; i<conf.maxconattempts; i++)
-    {
-        if((s=socket(AF_INET, SOCK_STREAM, 0))<0)
-        {
+    for(i=0; i<conf.maxconattempts; i++) {
+        if((s=socket(AF_INET, SOCK_STREAM, 0))<0) {
             perror("socket");
-            exit(1);
+            return(-1);
         }
 
         sin.sin_family = AF_INET;
@@ -85,21 +81,17 @@ static int s_openhost(char *host, int port)
 
 	flag=1;
 	if (setsockopt(s, IPPROTO_TCP, TCP_NODELAY, (char *)&flag,
-	    sizeof(int)) <0)
-        {
+	    sizeof(int)) <0) {
 	    _ndebug(0, ("Nagle algorithm not dislabled.\n"));
 	}
 
-        if(connect(s, (struct sockaddr *)&sin, sizeof(sin))<0)
-        {
+        if(connect(s, (struct sockaddr *)&sin, sizeof(sin))<0) {
 	    _ndebug(2, ("Error getting modem, attempt %d, sleeping...\n",
 	        i+1));
 
 	    sleep(conf.conattemptsleep);
-        }
-	else
-	{
-	    break;
+        } else {
+	    break; /* We're connected */
 	}
     }
 
