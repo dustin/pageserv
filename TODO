@@ -1,15 +1,21 @@
 Overall:
 
+    * Configuration for logging
+    * Bigger queue files (connect from where, etc...)
+    * hosts.access
     * Completely internal delivery stuff (no need for -bq all the time)
     * Make compliant with SNPP (RFC1861)
     * Queue postponing
     * A login method into the server to allow clients to modify stuff
       about their database entry.
     * NIS based databases
+    * support numeric pagers
 
 Delivery:
 
     * Local modem support
+    * Make it know what connection refused means.
+    * clean stuff
 
 Clients:
 
@@ -20,4 +26,4 @@ Clients:
 
 ----------------------------------------
 Copyright (c) 1997  Dustin Sallings
-$Id: TODO,v 2.7 1997/04/02 23:24:04 dustin Exp $
+$Id: TODO,v 2.8 1997/04/03 05:51:45 dustin Exp $
