@@ -1,0 +1,40 @@
+# Copyright (c) 1997   Dustin Sallings
+# $Id: Makefile.in,v 1.1 1997/03/29 19:21:27 dustin Exp $
+
+MAJOR=2
+MINOR=2
+PATCH=0
+VERSION=$(MAJOR).$(MINOR).$(PATCH)
+
+SHELL=/bin/sh
+CC=@CC@
+YACC=@YACC@
+CFLAGS=-g -DVERSION=\"$(VERSION)\"
+
+LIBS=@LIBS@
+
+LDFLAGS=-g $(LIBS)
+
+LTAP_OBJS=tap.o
+SOURCES=tap.c
+EXES=taptest
+STUFF=
+JUNK=$(EXES) *.o *.core core
+AUTOJUNK=
+
+all: $(EXES)
+
+depend:
+	echo "" >> Makefile
+	echo "# Automatically generated dependencies:" >> Makefile
+	$(CC) $(CFLAGS) -M $(SOURCES) >> Makefile
+
+# irix globbing shit.
+irixhack.o:
+	@touch irixhack.o
+
+clean:  irixhack.o
+	rm -f $(JUNK)
+
+ultrabrite: irixhack.o
+	rm -f $(JUNK) $(AUTOJUNK)
