@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: urlparse.c,v 1.6 1997/07/08 06:40:08 dustin Exp $
+ * $Id: urlparse.c,v 1.7 1998/01/01 09:40:52 dustin Exp $
  */
 
 #include <pageserv.h>
@@ -46,8 +46,7 @@ void _http_addtolist(struct http_request *r, char *n, char *v)
     list->name=strdup(n);
     list->value=strdup(v);
 
-    if(conf.debug>3)
-	printf("Adding %s = %s\n", n, v);
+    _ndebug(3, ("Adding %s = %s\n", n, v));
 
     r->nargs++;
 
@@ -98,9 +97,8 @@ void _http_parseargs(int s, struct http_request *r)
         while(i<r->length)
             i+=recv(s, r->args+i, r->length-i, 0);
 
-        if(conf.debug>2)
-            printf("Got POST data:  ``%s'' (%d/%d bytes)\n", r->args,
-                i, r->length);
+	_ndebug(2, ("Got POST data:  ``%s'' (%d/%d bytes)\n", r->args,
+		    i, r->length));
     }
 
     buf=r->args;

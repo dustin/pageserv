@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  SPY Internetworking
  *
- * $Id: tap.c,v 2.15 1997/09/08 13:53:01 dustin Exp $
+ * $Id: tap.c,v 2.16 1998/01/01 09:40:43 dustin Exp $
  */
 
 #include <stdio.h>
@@ -54,15 +54,13 @@ int s_tap_init(int s, int flags)
 {
     char buf[BUFLEN];
 
-    if(conf.debug>0)
-        puts("Initializing TAP");
+    _ndebug(0, ("Initializing TAP\n"));
 
     /* If configured to do so, pimp slap it with a CR right away */
 
     if(flags & TAP_INITCR)
     {
-	if(conf.debug>3)
-	    puts("flag TAP_INITCR is set, sending a CR");
+	_ndebug(3, ("flag TAP_INITCR is set, sending a CR\n"));
 
 	usleep(500000);
 	puttext(s, "\r");
@@ -82,8 +80,7 @@ int s_tap_end(int s)
 {
     char buf[BUFLEN];
 
-    if(conf.debug>0)
-        puts("ending TAP session");
+    _ndebug(0, ("ending TAP session\n"));
 
     sprintf(buf, "%c\r", C_EOT);
     puttext(s, buf);
@@ -111,8 +108,7 @@ int s_tap_send(int s, char *id, char *message)
     char c;
     int i;
 
-    if(conf.debug>0)
-        printf("Sending message to %s:\n%s\n", id, message);
+    _ndebug(0, ("Sending message to %s:\n%s\n", id, message));
 
     sprintf(buf, "%c%s%c%s%c%c", C_STX, id, C_CR, message, C_CR, C_ETX);
 
@@ -131,12 +127,7 @@ int s_tap_send(int s, char *id, char *message)
 	if(i>0)
 	{
 	    buf[i]=0x00;
-	    if(conf.debug>2)
-	    {
-		/* printf("Received %d bytes\n", i); */
-		fputs(buf, stdout);
-		puts("");
-	    }
+	    _ndebug(2, ("%s\n", buf));
 	}
     }
 
@@ -148,8 +139,7 @@ int s_tap_send(int s, char *id, char *message)
     }
     else
     {
-	if(conf.debug>2)
-	    printf(":( Received character %xh\n", c);
+	_ndebug(2, (":( Received character %xh\n", c));
 	return(1);
     }
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpmain.c,v 1.7 1997/08/11 08:16:52 dustin Exp $
+ * $Id: httpmain.c,v 1.8 1998/01/01 09:40:47 dustin Exp $
  */
 
 #include <config.h>
@@ -30,8 +30,7 @@ module mod_webserv={
 
 void http_onalarm()
 {
-    if(conf.debug>2)
-        puts("Web server received alarm, exiting...");
+    _ndebug(2, ("Web server received alarm, exiting...\n"));
 
     exit(0);
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: serial.c,v 2.8 1997/09/10 08:00:49 dustin Exp $
+ * $Id: serial.c,v 2.9 1998/01/01 09:40:42 dustin Exp $
  */
 
 /*
@@ -57,8 +57,7 @@ void checklocks(void)
 
 	    if(i==pid)
 	    {
-		if(conf.debug>2)
-		    printf("Found a lockfile:  %s\n", path);
+		_ndebug(2, ("Found a lockfile:  %s\n", path));
 
 		unlink(path);
 	    }
@@ -83,8 +82,7 @@ int p_unlock(char *dev)
     strcat(lockfile, "LCK..");
     strcat(lockfile, lock);
 
-    if(conf.debug>2)
-	printf("lockfile is %s, killin' it\n", lockfile);
+    _ndebug(2, ("lockfile is %s, killin' it\n", lockfile));
 
     unlink(lockfile);
     return(0);
@@ -105,21 +103,18 @@ int p_lock(char *dev)
     strcat(lockfile, "LCK..");
     strcat(lockfile, lock);
 
-    if(conf.debug>2)
-	printf("lockfile is %s\n", lockfile);
+    _ndebug(2, ("lockfile is %s\n", lockfile));
 
     if(access(lockfile, F_OK)==0)
     {
-	if(conf.debug>2)
-	    puts("Port is already locked.");
+	_ndebug(2, ("Port is already locked.\n"));
 	return(-1);
     }
     else
     {
 	if( (f=fopen(lockfile, "w")) == NULL)
 	{
-	    if(conf.debug>2)
-		perror("Cannot create lockfile");
+	    _ndebug(2, ("Cannot create lockfile.\n"));
 	    return(-1);
 	}
 
@@ -150,20 +145,17 @@ int p_openport(char *port)
     int s;
     struct termios tm;
 
-    if(conf.debug>3)
-	printf("Called p_openport(%s);\n", port);
+    _ndebug(3, ("Called p_openport(%s);\n", port));
 
     if(p_lock(port)<0)
     {
-	if(conf.debug>2)
-	    puts("p_openport():  Resource is locked.");
+	_ndebug(2, ("p_openport():  Resource is locked.\n"));
 
 	return(-1);
     }
     s=open(port, O_RDWR|O_NOCTTY, 0);
 
-    if(conf.debug>2)
-	printf("Serial port attached for ``%s'', fd %d\n", port, s);
+    _ndebug(2, ("Serial port attached for ``%s'', fd %d\n", port, s));
 
     if(tcgetattr(s, &tm)<0)
 	perror("tcgetattr");

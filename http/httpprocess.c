@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpprocess.c,v 1.17 1997/08/11 08:16:54 dustin Exp $
+ * $Id: httpprocess.c,v 1.18 1998/01/01 09:40:50 dustin Exp $
  */
 
 #define IWANTDOCINFO 1
@@ -118,14 +118,8 @@ void http_process(int s, struct http_request r, modpass p)
         _http_header_notfound(s, r);
     }
 
-    if(conf.debug>2)
-    {
-        puts("Request was good");
-        if(r.special==1)
-            puts("It was a special request");
-        else
-            puts("It was a normal request");
-    }
+    _ndebug(2, ("Request was good, it was a %s request.\n",
+                r.special==1?"special":"normal"));
 
     switch(r.method)
     {

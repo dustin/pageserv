@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpmisc.c,v 1.5 1997/07/07 08:47:49 dustin Exp $
+ * $Id: httpmisc.c,v 1.6 1998/01/01 09:40:48 dustin Exp $
  */
 
 #include <config.h>
@@ -84,14 +84,12 @@ void _http_footer(int s)
 
 void _http_free_largs(struct http_list *l)
 {
-    if(conf.debug>4)
-        printf("Got http_list entry at %p\n", l);
+    _ndebug(4, ("Got http_list entry at %p\n", l));
 
     if(l == NULL)
         return;
 
-    if(conf.debug>4)
-        printf("Freeing http_list entry at %p\n", l);
+    _ndebug(4, ("Freeing http_list entry at %p\n", l));
 
     if(l->next != NULL)
         _http_free_largs(l->next);
@@ -104,15 +102,13 @@ void _http_free_largs(struct http_list *l)
 
 void _http_free_request(struct http_request r)
 {
-    if(conf.debug>2)
-        puts("Freeing http_request struct members");
+    _ndebug(2, ("Freeing http_request struct members\n"));
 
     if(r.args)
         free(r.args);
 
-    if(conf.debug>4)
-        if(r.largs == NULL)
-            puts("Odd, r.largs was NULL");
+    if(r.largs == NULL)
+        _ndebug(4, ("Odd, r.largs was NULL\n"));
 
     _http_free_largs(r.largs);
 
@@ -128,8 +124,7 @@ void _http_free_request(struct http_request r)
 
 void _http_init_request(struct http_request *r)
 {
-    if(conf.debug>3)
-        puts("Initializing http_request struct.");
+    _ndebug(3, ("Initializing http_request struct.\n"));
 
     /* normal stuff */
     memset(r, 0x00, sizeof(struct http_request));

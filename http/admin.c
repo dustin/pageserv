@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: admin.c,v 1.6 1997/08/11 03:54:49 dustin Exp $
+ * $Id: admin.c,v 1.7 1998/01/01 09:40:46 dustin Exp $
  */
 
 #include <pageserv.h>
@@ -172,8 +172,7 @@ void _http_admin(int s, struct http_request r)
 
     _http_auth_require(s, r, "admin");
 
-    if(conf.debug>2)
-        puts("Admin request");
+    _ndebug(2, ("Admin request\n"));
 
     if(r.nargs==0)
         _http_adminerror(s, "No data sent.");

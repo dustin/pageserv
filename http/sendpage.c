@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: sendpage.c,v 1.6 1997/08/11 08:16:55 dustin Exp $
+ * $Id: sendpage.c,v 1.7 1998/01/01 09:40:52 dustin Exp $
  */
 
 #include <pageserv.h>
@@ -36,8 +36,7 @@ void _http_sendpage(int s, struct http_request r, modpass p)
     struct queuent q;
     char *tmp;
 
-    if(conf.debug>2)
-	puts("Sendpage request");
+    _ndebug(2, ("Sendpage request\n"));
 
     memset(&q, 0x00, sizeof(q));
 
@@ -50,8 +49,7 @@ void _http_sendpage(int s, struct http_request r, modpass p)
 
     q.rem_addr=ntohl(p.fsin.sin_addr.s_addr);
 
-    if(conf.debug>2)
-	printf("Page is being sent priority ``%s''\n", tmp);
+    _ndebug(2, ("Page is being sent priority ``%s''\n", tmp));
 
     if(tolower(tmp[0])=='h')
         q.priority=PR_HIGH;
@@ -66,8 +64,7 @@ void _http_sendpage(int s, struct http_request r, modpass p)
     }
     strcpy(q.to, tmp);
 
-    if(conf.debug>2)
-	printf("Page is being sent to ``%s''\n", tmp);
+    _ndebug(2, ("Page is being sent to ``%s''\n", tmp));
 
     tmp=_http_getcgiinfo(r, "message");
     if(tmp==NULL)
@@ -77,8 +74,7 @@ void _http_sendpage(int s, struct http_request r, modpass p)
     }
     strcpy(q.message, tmp);
 
-    if(conf.debug>2)
-	printf("Page being sent is ``%s''\n", tmp);
+    _ndebug(2, ("Page being sent is ``%s''\n", tmp));
 
     if(conf.udb.u_exists(q.to))
     {

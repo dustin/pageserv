@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: network.c,v 2.8 1997/04/16 19:44:14 dustin Exp $
+ * $Id: network.c,v 2.9 1998/01/01 09:40:42 dustin Exp $
  * $State: Exp $
  */
 
@@ -82,14 +82,13 @@ struct sockaddr_in sin;
 	if (setsockopt(s, IPPROTO_TCP, TCP_NODELAY, (char *)&flag,
 	    sizeof(int)) <0)
         {
-	    if(conf.debug>0)
-	        puts("Nagle algorithm not dislabled.");
+	    _ndebug(0, ("Nagle algorithm not dislabled.\n"));
 	}
 
         if(connect(s, (struct sockaddr *)&sin, sizeof(sin))<0)
         {
-	    if(conf.debug>2)
-		printf("Error getting modem, attempt %d, sleeping...\n", i+1);
+	    _ndebug(2, ("Error getting modem, attempt %d, sleeping...\n",
+	        i+1));
 
 	    sleep(conf.conattemptsleep);
         }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: snppmain.c,v 1.15 1997/09/10 08:00:57 dustin Exp $
+ * $Id: snppmain.c,v 1.16 1998/01/01 09:40:55 dustin Exp $
  */
 
 #include <config.h>
@@ -50,8 +50,7 @@ int  snpp_holdtime=0;
 
 void snpp_onalarm()
 {
-    if(conf.debug>2)
-        puts("SNPP server received alarm, exiting...");
+    _ndebug(2, ("SNPP server received alarm, exiting...\n"));
 
     exit(0);
 }
@@ -112,8 +111,7 @@ void snpp_holduntil(int s, char *time)
 	{
 	    offset=atoi(time+12);
 
-	    if(conf.debug>2)
-	        printf("User supplied offset is %d\n", offset);
+	    _ndebug(2, ("User supplied offset is %d\n", offset));
 	}
 	else
 	{
@@ -140,8 +138,7 @@ void snpp_holduntil(int s, char *time)
 
     t=mktime(&tm);
 
-    if(conf.debug>2)
-        printf("Adding %d for GMT offset\n", 3600*conf.gmtoffset);
+    _ndebug(2, ("Adding %d for GMT offset\n", 3600*conf.gmtoffset));
 
     t+=(3600*conf.gmtoffset);
     tmptm=localtime(&t);
@@ -269,8 +266,7 @@ void snpp_send(int s, struct sockaddr_in fsin)
     else
         puttext(s, "554 Message failed\n");
 
-    if(conf.debug>2)
-        printf("j is %d, snpp_nid is %d\n", j, snpp_nid);
+    _ndebug(2, ("j is %d, snpp_nid is %d\n", j, snpp_nid));
 
     return;
 }

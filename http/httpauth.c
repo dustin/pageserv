@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpauth.c,v 1.8 1997/08/11 03:54:49 dustin Exp $
+ * $Id: httpauth.c,v 1.9 1998/01/01 09:40:46 dustin Exp $
  */
 
 #include <config.h>
@@ -49,8 +49,7 @@ void http_checkauth(int s, struct http_request r, char *path)
         strcat(buf, "/");
         strcat(buf, ".htaccess");
 
-        if(conf.debug>2)
-            printf("trying ``%s''\n", buf);
+	_ndebug(2, ("trying ``%s''\n", buf));
 
         if( (f=fopen(buf, "r")) != NULL)
         {
@@ -74,8 +73,7 @@ void _http_auth_require(int s, struct http_request r, char *authname)
 {
     struct user u;
 
-    if(conf.debug>2)
-        printf("authname is ``%s''\n", authname);
+    _ndebug(2, ("authname is ``%s''\n", authname));
 
     if(r.auth.name == NULL)
         _http_header_needauth(s, authname, r);

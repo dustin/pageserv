@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpparse.c,v 1.13 1997/07/31 07:31:32 dustin Exp $
+ * $Id: httpparse.c,v 1.14 1998/01/01 09:40:49 dustin Exp $
  */
 
 #define IWANTMETHODNAMES 1
@@ -42,8 +42,7 @@ void _http_authdecode(struct http_request *r)
 
     string=r->auth.string;
 
-    if(conf.debug>2)
-        printf("Decoding:  ``%s''\n", string);
+    _ndebug(2, ("Decoding:  ``%s''\n", string));
 
     /* This is overkill, but I don't care */
     dest=(char *)malloc(strlen(string));
@@ -80,9 +79,8 @@ void _http_authdecode(struct http_request *r)
 r->auth.name=strdup(dest);
     r->auth.pass=strdup(dest+i+1);
 
-    if(conf.debug>2)
-        printf("User:  ``%s'', Pass:  ``%s''\n", r->auth.name,
-            r->auth.pass);
+    _ndebug(2, ("User:  ``%s'', Pass:  ``%s''\n", r->auth.name,
+		r->auth.pass));
 
     free(dest);
 }
@@ -105,11 +103,8 @@ struct http_request http_parserequest(int s)
         {
             if(strncmp(buf, methodnames[i], strlen(methodnames[i]))==0)
             {
-                if(conf.debug>2)
-                {
-                    printf("Appears to be the %s method\n",
-                        methodnames[i]);
-                }
+		_ndebug(2, ("Appears to be the %s method\n",
+		            methodnames[i]));
 
                 r.method=i;
                 start=strlen(methodnames[i])+1;
@@ -153,13 +148,11 @@ struct http_request http_parserequest(int s)
                     case HTTP_CONTENTLENGTH:
                     case HTTP_CONTENTLENGTH2:
                         r.length=atoi(buf+(strlen(miscnames[i])));
-                        if(conf.debug>2)
-                            printf("Found length:  %d\n", r.length);
+			_ndebug(2, ("Found length:  %d\n", r.length));
                         break;
                     case HTTP_AUTHBASIC:
                         r.auth.string=strdup(buf+strlen(miscnames[i]));
-                        if(conf.debug>2)
-                            printf("Found authbasic:  %s\n", r.auth.string);
+			_ndebug(2, ("Found authbasic:  %s\n", r.auth.string));
                         _http_authdecode(&r);
                         break;
                 }
