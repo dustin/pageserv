@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: serial.c,v 2.5 1997/07/23 23:51:56 dustin Exp $
+ * $Id: serial.c,v 2.6 1997/08/02 01:48:45 dustin Exp $
  * $State: Exp $
  */
 
@@ -172,13 +172,13 @@ int p_openport(char *port)
 
     tm.c_iflag &= ~(BRKINT | IGNPAR | PARMRK | INPCK | ISTRIP |
 	INLCR | IGNCR | ICRNL | IXON | ICANON);
-    tm.c_iflag |= (IGNBRK | ISTRIP | IXON);
+    tm.c_iflag |= (INPCK | IGNBRK | ISTRIP | IXON | IXOFF);
 
     tm.c_oflag=0;
     tm.c_lflag=0;
 
     tm.c_cflag &= ~(CSTOPB | CSIZE | PARODD);
-    tm.c_cflag |= (CREAD | CS7 | PARENB | CLOCAL | CRTSCTS);
+    tm.c_cflag |= (CREAD | CS7 | PARENB | CLOCAL);
 
     if (tcflush(s, TCIFLUSH) == -1)
 	perror("tcflush");
