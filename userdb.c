@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.14 1997/03/26 00:24:46 dustin Exp $
+ * $Id: userdb.c,v 1.15 1997/03/28 03:19:25 dustin Exp $
  */
 
 #include <stdio.h>
@@ -61,8 +61,9 @@ void getnormtimes(int times, int *ret)
 void printuser(struct user u)
 {
     int times[2];
-    printf("ID:        %s\nPager ID:  %s\nStation:   %s\n", u.name,
-         u.pageid, u.statid);
+    printf("ID:        %s\n", u.name);
+    printf("Pager ID:  %s\n", u.pageid);
+    printf("Station:   %s\n", u.statid);
 
     getnormtimes(u.times, times);
     printf("Normal:    %d to %d\n", times[0], times[1]);

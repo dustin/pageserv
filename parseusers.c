@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parseusers.c,v 1.10 1997/03/26 00:24:43 dustin Exp $
+ * $Id: parseusers.c,v 1.11 1997/03/28 03:19:23 dustin Exp $
  */
 
 #include <stdio.h>
@@ -86,6 +86,11 @@ int parseusers(void)
         if( (buf[0]!='#') && (!isspace(buf[0])) )
         {
             u=parseuser(buf);
+	    if(conf.debug>0)
+	    {
+		printuser(u);
+		puts("--");
+	    }
             storeuser(db, u);
             i++;
         }

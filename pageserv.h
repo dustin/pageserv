@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.22 1997/03/28 02:05:37 dustin Exp $
+ * $Id: pageserv.h,v 1.23 1997/03/28 03:19:21 dustin Exp $
  */
 
 /* for DBM type */
@@ -84,6 +84,14 @@ struct user {
     int  times;
 };
 
+struct terminal {
+    char number[STATLEN];
+    char ts[FNSIZE];
+    char predial[STATLEN];
+    int  prot;
+    int  port;
+};
+
 struct config {
     int debug;
     int childlifetime;
@@ -107,24 +115,30 @@ int f_exists(char *file);
 int gettext(int s, char *buf);
 int gettextcr(int s, char *buf);
 int initialize(void);
+int parseterms(void);
 int parseusers(void);
 int queuedepth(void);
 int set_bit(int bmap, int which);
 int storequeue(int s, struct queuent q, int flags);
+int t_exists(char *number);
 int u_exists(char *name);
 struct queuent dofarkle();
+struct terminal getterm(char *key);
+struct terminal open_getterm(DBM *db, char *key);
 struct user getuser(char *key);
 struct user open_getuser(DBM *db, char *key);
 void childmain(int s);
 void cleanconfig(void);
 void getnormtimes(int times, int *ret);
 void printqueue(void);
+void printterm(struct terminal t);
 void printuser(struct user u);
 void process(int s, char *cmd);
 void quit(int s);
 void readconfig(char *file);
 void reaper(void);
 void showconfig(void);
+void storeterm(DBM *db, struct terminal t);
 void storeuser(DBM *db, struct user u);
 
 /* client stuff */

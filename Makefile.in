@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 1.11 1997/03/26 07:26:14 dustin Exp $
+# $Id: Makefile.in,v 1.12 1997/03/28 03:19:20 dustin Exp $
 
 MAJOR=2
 MINOR=1
@@ -16,13 +16,15 @@ LIBS=@LIBS@
 LDFLAGS=-g $(LIBS)
 
 SERV_OBJS=sockets.o main.o utility.o kids.o queue.o protocol.o userdb.o \
-	readconfig.o
+	readconfig.o termdb.o
 PQ_OBJS=pqueue.o utility.o queue.o userdb.o readconfig.o
 PU_OBJS=parseusers.o userdb.o utility.o readconfig.o
+PT_OBJS=parseterms.o termdb.o utility.o readconfig.o
 LU_OBJS=listusers.o userdb.o utility.o readconfig.o
 SOURCES=sockets.c main.c utility.c kids.c queue.c protocol.c pqueue.c \
-	parseusers.c userdb.c listusers.c readconfig.c
-EXES=pageserv pqueue parseusers listusers
+	parseusers.c userdb.c listusers.c readconfig.c termdb.c \
+	parseterms.c
+EXES=pageserv pqueue parseusers listusers parseterms
 DIRS=clients
 NAME=pageserv
 ARCHIVE=$(NAME)-$(VERSION)
@@ -42,6 +44,9 @@ pqueue: $(PQ_OBJS)
 
 parseusers: $(PU_OBJS)
 	$(CC) -o $@ $(PU_OBJS) $(LDFLAGS)
+
+parseterms: $(PT_OBJS)
+	$(CC) -o $@ $(PT_OBJS) $(LDFLAGS)
 
 listusers: $(LU_OBJS)
 	$(CC) -o $@ $(LU_OBJS) $(LDFLAGS)
