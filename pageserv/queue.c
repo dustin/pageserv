@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.46 1998/01/28 08:34:33 dustin Exp $
+ * $Id: queue.c,v 1.47 1998/03/05 08:04:13 dustin Exp $
  */
 
 #include <stdio.h>
@@ -14,10 +14,13 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <ctype.h>
+#include <assert.h>
 
 #include <pageserv.h>
 #include <nettools.h>
 #include <tap.h>
+#include <readconfig.h>
 
 extern struct config conf;
 
@@ -474,13 +477,68 @@ char *fntoqid(char *fn)
     return(fn+i);
 }
 
+int _splitsq(int s, struct queuent q, int flags)
+{
+    char buf[BUFLEN], current[BUFLEN];
+    int ret=0, maxlen, p, done=0;
+
+    maxlen=rcfg_lookupInt(conf.cf, "tuning.maxMessageLenth");
+    if(maxlen==0)
+	maxlen=250;
+
+    assert(maxlen<BUFLEN-1);
+
+    _ndebug(3, ("Beginning a truncation loop for %s\n", q.message));
+
+    strcpy(current, q.message);
+
+    do {
+	strncpy(buf, current, maxlen);
+	p=strlen(buf);
+	while(--p>0 && !isspace(buf[p]));
+	if(p==0)
+	    p=maxlen;
+
+	buf[p]=0x00;
+
+	strcpy(q.message, buf);
+
+        _ndebug(3, ("Trying to queue ``%s''\n", q.message));
+
+	ret+=storequeue(s, q, flags);
+	if(ret!=0)
+	    return(ret);
+
+	if(current[strlen(q.message)+1]!=NULL)
+	{
+	    strncpy(buf, &current[strlen(q.message)+1], maxlen);
+	    strcpy(current, buf);
+	}
+	else
+	{
+	    done=1;
+	}
+    } while(!done);
+}
+
 int storequeue(int s, struct queuent q, int flags)
 {
     char buf[BUFLEN], *fn;
-    int ret=0;
+    int ret=0, maxlen;
     FILE *qf;
 
     _ndebug(3, ("Running storequeue()\n"));
+
+    maxlen=rcfg_lookupInt(conf.cf, "tuning.maxMessageLenth");
+    if(maxlen==0)
+	maxlen=250;
+
+     _ndebug(4, ("Max message length is set to %d\n", maxlen));
+
+    if(strlen(q.message)>maxlen)
+    {
+	return(_splitsq(s, q, flags));
+    }
 
     if(check_time(q))
     {
