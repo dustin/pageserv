@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.62 1998/02/26 17:17:46 dustin Exp $
+ * $Id: pageserv.h,v 1.63 1998/02/27 07:47:03 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -311,6 +311,7 @@ void cleanuserlist(char **list);
 void dbm_userdbInit(void);
 void dequeue(char *qid);
 void displayq(struct queuent q);
+void dumpuserdb(void);
 void erasetermdb(void);
 void getnormtimes(int times, int *ret);
 void getoptions(int argc, char **argv);
@@ -330,6 +331,7 @@ void quit(int s);
 void rdconfig(char *file);
 void reaper(void);
 void resetdelivertraps(void);
+void resethappytraps(void);
 void resetservtraps(void);
 void runqueue(void);
 void runqueue_main(void);
