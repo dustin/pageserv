@@ -2,7 +2,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: lexer.l,v 1.9 1997/08/21 07:17:51 dustin Exp $
+ * $Id: lexer.l,v 1.10 1997/09/11 03:14:02 dustin Exp $
  */
 
 #include <config.h>
@@ -40,6 +40,10 @@ FUNC    &[_A-Za-z][_A-Za-z0-9]*
 
 #define EARLY  0
 #define LATE   1
+
+#ifdef yywrap
+#undef yywrap
+#endif
 
 int yywrap(void)
 {
