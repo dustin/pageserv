@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 1.7 1998/01/10 01:32:32 dustin Exp $
+# $Id: Makefile.in,v 1.8 1998/01/18 11:35:25 dustin Exp $
 
 SHELL=/bin/sh
 CC=@CC@
@@ -34,6 +34,7 @@ JUNK=$(EXES) lexer.c *.o *.a *.ln *.core core $(LINTS)
 all: http.a
 
 http.a: $(LHTTP_OBJS)
+	rm -f $@
 	$(AR) $@ $(LHTTP_OBJS)
 	$(RANLIB) $@
 

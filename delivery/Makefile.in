@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 2.10 1998/01/11 08:05:48 dustin Exp $
+# $Id: Makefile.in,v 2.11 1998/01/18 11:35:21 dustin Exp $
 
 SHELL=/bin/sh
 CC=@CC@
@@ -34,6 +34,7 @@ taptest: taptest.o deliver.a
 	$(CC) -o taptest taptest.o deliver.a @top_srcdir@/pageserv/utility.o
 
 deliver.a: $(LDELIVER_OBJS)
+	rm -f $@
 	$(AR) $@ $(LDELIVER_OBJS)
 	$(RANLIB) $@
 
