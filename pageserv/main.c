@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.4 1997/04/01 05:42:00 dustin Exp $
+ * $Id: main.c,v 1.5 1997/04/02 04:26:21 dustin Stab $
  */
 
 #include <stdio.h>
@@ -99,6 +99,9 @@ void daemon_main(void)
 void rehash_main(void)
 {
     int i;
+
+    eraseuserdb();
+    erasetermdb();
 
     i=parseusers();
     printf("Parsed %d users.\n", i);

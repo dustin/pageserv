@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: termdb.c,v 1.3 1997/04/01 20:16:10 dustin Exp $
+ * $Id: termdb.c,v 1.4 1997/04/02 04:26:22 dustin Exp $
  */
 
 #include <stdio.h>
@@ -23,6 +23,27 @@ void printterm(struct terminal t)
     printf("Predial:    %s\n", t.predial);
     printf("Port:       %d\n", t.port);
     printf("Protocol:   %d\n", t.prot);
+}
+
+void erasetermdb(void)
+{
+    datum d;
+    DBM *db;
+
+    if( (db=dbm_open(conf.termdb, O_RDWR, 0644)) ==NULL)
+    {
+        perror(conf.termdb);
+        exit(1);
+    }
+
+    for(d=dbm_firstkey(db); d.dptr!=NULL; d=dbm_firstkey(db))
+    {
+	if(conf.debug>2)
+	    printf("Deleting %s\n", d.dptr);
+        dbm_delete(db, d);
+    }
+
+    dbm_close(db);
 }
 
 char **listterms(void)

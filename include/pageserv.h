@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.11 1997/04/01 21:46:56 dustin Exp $
+ * $Id: pageserv.h,v 1.12 1997/04/02 04:26:15 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -173,6 +173,8 @@ void cleanconfig(void);
 void cleanqueuelist(struct queuent *list);
 void cleantermlist(char **list);
 void displayq(struct queuent q);
+void erasetermdb(void);
+void eraseuserdb(void);
 void getnormtimes(int times, int *ret);
 void getoptions(int argc, char **argv);
 void getqueueinfo( struct queuent *q );

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.3 1997/03/31 23:12:09 dustin Exp $
+ * $Id: userdb.c,v 1.4 1997/04/02 04:26:22 dustin Exp $
  */
 
 #include <stdio.h>
@@ -57,6 +57,27 @@ void getnormtimes(int times, int *ret)
         else
             ret[0]=0;
     }
+}
+
+void eraseuserdb(void)
+{
+    datum d;
+    DBM *db;
+
+    if( (db=dbm_open(conf.userdb, O_RDWR, 0644)) ==NULL)
+    {
+	perror(conf.userdb);
+	exit(1);
+    }
+
+    for(d=dbm_firstkey(db); d.dptr!=NULL; d=dbm_firstkey(db))
+    {
+	if(conf.debug>2)
+	    printf("deleting %s\n", d.dptr);
+	dbm_delete(db, d);
+    }
+
+    dbm_close(db);
 }
 
 void printuser(struct user u)
