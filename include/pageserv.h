@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.20 1997/04/11 15:54:59 dustin Exp $
+ * $Id: pageserv.h,v 1.21 1997/04/13 22:00:51 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -197,7 +197,7 @@ int storequeue(int s, struct queuent q, int flags);
 int t_exists(char *number);
 int u_exists(char *name);
 struct queuent *listqueue(char *number);
-struct queuent dofarkle();
+struct queuent dofarkle(void);
 struct queuent readqueuefile(char *fn);
 struct terminal getterm(char *key);
 struct terminal open_getterm(DBM *db, char *key);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: login.c,v 1.6 1997/04/11 22:58:06 dustin Exp $
+ * $Id: login.c,v 1.7 1997/04/13 22:01:02 dustin Exp $
  * $State: Exp $
  */
 
@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <ctype.h>
 #include <sys/types.h>
 #include <sys/time.h>
 #include <sys/socket.h>

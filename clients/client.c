@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: client.c,v 2.1 1997/04/01 22:29:44 dustin Exp $
+ * $Id: client.c,v 2.2 1997/04/13 22:00:25 dustin Exp $
  */
 
 /*
@@ -14,10 +14,12 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include <strings.h>
 #include <ctype.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <netinet/tcp.h>
 #include <netdb.h>
 
 #include <pageserv.h>
@@ -32,6 +34,7 @@ int openhost(void)
 {
 struct hostent *hp;
 register int s;
+int flag;
 struct linger l;
 struct sockaddr_in sin;
 
@@ -58,6 +61,10 @@ struct sockaddr_in sin;
     l.l_onoff  = 1;
     l.l_linger = 60;
     setsockopt(s, SOL_SOCKET, SO_LINGER, (char *)&l, sizeof(l));
+
+    flag=1;
+    setsockopt(s, IPPROTO_TCP, TCP_NODELAY, (char *)&flag,
+	sizeof(int));
 
     if(connect(s, (struct sockaddr *)&sin, sizeof(sin))<0)
     {
@@ -123,7 +130,7 @@ int pushqueue(char *to, char *message, int priority)
        ret=size;
 
     /* Sleep a second, unless I can figure out how to do it right... */
-    sleep(1);
+    /* sleep(1); */
 
     close(s);
     return(ret);

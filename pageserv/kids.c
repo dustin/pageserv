@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: kids.c,v 1.3 1997/04/04 22:21:01 dustin Stab $
- * $State: Stab $
+ * $Id: kids.c,v 1.4 1997/04/13 22:01:00 dustin Exp $
+ * $State: Exp $
  */
 
 #include <signal.h>
@@ -11,6 +11,8 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
 
 #include <pageserv.h>
 
@@ -53,6 +55,17 @@ void child_onalarm()
 void childmain(int s)
 {
     char buf[BUFLEN];
+    int flag;
+
+    /* Get rid of that bastard Nagle algorithm */
+    flag=1;
+
+    if (setsockopt(s, IPPROTO_TCP, TCP_NODELAY, (char *)&flag,
+	sizeof(int)) <0)
+    {
+	if(conf.debug>0)
+	    puts("Looks like we're sticking with ol' Nagle.");
+    }
 
     /* Cheezy welcome banner */
     sprintf(buf, MESG_WELCOME, VERSION);

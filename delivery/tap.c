@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  SPY Internetworking
  *
- * $Id: tap.c,v 2.8 1997/04/04 23:39:22 dustin Exp $
+ * $Id: tap.c,v 2.9 1997/04/13 22:00:40 dustin Exp $
  * $State: Exp $
  */
 
@@ -99,7 +99,7 @@ int charfound(char *string, char *chars)
 int s_tap_send(int s, char *id, char *message)
 {
     char buf[BUFLEN];
-    char search[]={C_ACK, C_NAK, 0x00};
+    char search[]={C_ACK, C_ESC, C_NAK, 0x00};
     char c;
     int i;
 
@@ -129,7 +129,7 @@ int s_tap_send(int s, char *id, char *message)
 	buf[i]=0x00;
 	if(conf.debug>2)
 	{
-	    printf("Received %d bytes\n", i);
+	    /* printf("Received %d bytes\n", i); */
 	    fputs(buf, stdout);
 	    puts("");
 	}
@@ -137,7 +137,7 @@ int s_tap_send(int s, char *id, char *message)
 
     usleep(1700);
 
-    if(c==C_ACK)
+    if(c==C_ACK || c==C_ESC)
     {
 	return(0);
     }

@@ -1,13 +1,15 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: pushqueue.c,v 2.2 1997/04/01 22:29:48 dustin Exp $
+ * $Id: pushqueue.c,v 2.3 1997/04/13 22:00:27 dustin Exp $
  */
 
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
 #include <ctype.h>
+#include <sys/types.h>
+#include <netinet/in.h>
 
 #include <pageserv.h>
 

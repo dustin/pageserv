@@ -1,10 +1,10 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 2.1 1997/03/30 06:38:28 dustin Exp $
+# $Id: Makefile.in,v 2.2 1997/04/13 22:00:23 dustin Exp $
 
 SHELL=/bin/sh
 CC=@CC@
 INCLUDES=-I@top_srcdir@/include
-CFLAGS=-g $(INCLUDES) -DVERSION=\"$(VERSION)\"
+CFLAGS=-g $(INCLUDES) -DVERSION=\"$(VERSION)\" @CFLAGS@
 
 LIBS=@LIBS@
 

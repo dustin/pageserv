@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: network.c,v 2.6 1997/04/10 04:15:52 dustin Exp $
+ * $Id: network.c,v 2.7 1997/04/13 22:00:38 dustin Exp $
  * $State: Exp $
  */
 
@@ -12,10 +12,12 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include <strings.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
+#include <netinet/tcp.h>
 
 #include <pageserv.h>
 #include <tap.h>
@@ -43,7 +45,7 @@ void net_timeout(void)
 int s_openhost(char *host, int port)
 {
 struct hostent *hp;
-int success, i;
+int success, i, flag;
 register int s;
 struct linger l;
 struct sockaddr_in sin;
@@ -75,6 +77,14 @@ struct sockaddr_in sin;
         l.l_onoff  = 1;
         l.l_linger = 60;
         setsockopt(s, SOL_SOCKET, SO_LINGER, (char *)&l, sizeof(l));
+
+	flag=1;
+	if (setsockopt(s, IPPROTO_TCP, TCP_NODELAY, (char *)&flag,
+	    sizeof(int)) <0)
+        {
+	    if(conf.debug>0)
+	        puts("Nagle algorithm not dislabled.");
+	}
 
         if(connect(s, (struct sockaddr *)&sin, sizeof(sin))<0)
         {
