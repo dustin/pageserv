@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.2 1997/03/26 07:26:19 dustin Exp $
+ * $Id: readconfig.c,v 1.3 1997/03/28 02:05:38 dustin Exp $
  */
 
 #include <stdio.h>
@@ -54,6 +54,7 @@ void d_command(char s, char *arg)
     {
 	case 'H': conf.servhost=strdup(arg); break;
 	case 'u': conf.userdb=strdup(arg); break;
+	case 't': conf.termdb=strdup(arg); break;
 	case 'q': conf.qdir=strdup(arg); break;
 	case 'd': conf.debug=atoi(arg); break;
 	case 'l': conf.childlifetime=atoi(arg); break;
@@ -81,6 +82,9 @@ void setdefaults(void)
 
     if(conf.userdb == NULL)
 	conf.userdb= USERDB;
+
+    if(conf.termdb == NULL)
+	conf.termdb= TERMDB;
 
     if(conf.qdir == NULL)
 	conf.qdir= QUEDIR;
@@ -126,14 +130,15 @@ void cleanconfig(void)
 {
     if(conf.servhost) free(conf.servhost);
     if(conf.userdb) free(conf.userdb);
+    if(conf.termdb) free(conf.termdb);
     if(conf.qdir) free(conf.qdir);
 }
 
 void showconfig(void)
 {
     puts("Configuration:");
-    printf("\tServer:       %s\n\tUser db:      %s\n\tQueue dir:    %s\n",
-	conf.servhost, conf.userdb, conf.qdir);
-    printf("\tChild life:   %d\n\tDebug:        %d\n",
-	conf.childlifetime, conf.debug);
+    printf("\tServer:       %s\n\tUser db:      %s\n\tTerm db:      %s\n",
+	conf.servhost, conf.userdb, conf.termdb);
+    printf("\tQueue dir:    %s\n\tChild life:   %d\n\tDebug:        %d\n",
+	conf.qdir, conf.childlifetime, conf.debug);
 }
