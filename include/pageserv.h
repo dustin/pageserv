@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.58 1998/01/15 23:34:58 dustin Exp $
+ * $Id: pageserv.h,v 1.59 1998/01/22 10:23:38 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -151,6 +151,9 @@
 #define  PID_STALE  2
 #define  PID_ACTIVE 3
 
+/* Parser flags */
+#define PARSE_GETPASSWD 1
+
 #ifdef IWANT_MODENAMES
 static char *modenames[]={
     "daemon",
@@ -295,6 +298,7 @@ struct queuent dofarkle(void);
 struct queuent readqueuefile(char *fn);
 struct terminal getterm(char *key);
 struct terminal open_getterm(DBM *db, char *key);
+struct user parseuser(char *line, char *delim, int flags);
 struct user setpasswd(struct user u, char *passwd);
 void checklocks(void);
 void cleanconfig(void);
@@ -314,7 +318,6 @@ void logConnect(struct sockaddr_in fsin, module *m);
 void logqueue(struct queuent q, int type, char *reason);
 void p_getpasswd(int s, char *to);
 void p_login(int s);
-void reaper(void);
 void printqueue(void);
 void printterm(struct terminal t);
 void printterms(void);
@@ -323,6 +326,7 @@ void printusers(void);
 void process(int s, char *cmd, modpass p);
 void quit(int s);
 void rdconfig(char *file);
+void reaper(void);
 void resetdelivertraps(void);
 void resetservtraps(void);
 void runqueue(void);
