@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: snppmisc.c,v 1.2 1997/04/29 05:23:50 dustin Exp $
+ * $Id: snppmisc.c,v 1.3 1997/04/29 05:42:36 dustin Exp $
  */
 
 #include <snpp.h>
@@ -27,7 +27,7 @@ void snpp_help(int s)
 
     static char *snpp_helptext[]={
     "Welcome to Dustin's Pager Server SNPP Module.",
-    "The following commands are recognized here:\n",
+    "The following commands are recognized here:\n214 ",
     "HELP",
     "\tThis help",
     "PAGE <id>",
