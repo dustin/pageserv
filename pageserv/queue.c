@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.21 1997/06/19 08:24:57 dustin Exp $
+ * $Id: queue.c,v 1.22 1997/06/20 09:14:27 dustin Exp $
  * $State: Exp $
  */
 
@@ -37,20 +37,20 @@ void cleanmylocks()
     {
         if(d->d_name[0]=='l')
         {
-	    f=fopen(d->d_name, "r");
-	    if(f!=NULL)
-	    {
-		fscanf(f, "%d", &i);
-		if(i==pid)
-		{
-		    if(conf.debug>0)
-			printf("Getting rid of %s\n", d->d_name);
+            f=fopen(d->d_name, "r");
+            if(f!=NULL)
+            {
+                fscanf(f, "%d", &i);
+                if(i==pid)
+                {
+                    if(conf.debug>0)
+                        printf("Getting rid of %s\n", d->d_name);
 
-		    unlink(d->d_name);
-		}
-	        fclose(f);
-	    }
-	}
+                    unlink(d->d_name);
+                }
+                fclose(f);
+            }
+        }
     }
     closedir(dir);
 }
@@ -70,46 +70,61 @@ void runqueue(void)
 
     for(t=0; termlist[t]!=NULL; t++)
     {
-	if(conf.debug>0)
-	    printf("Queue for %s:\n", termlist[t]);
+        if(conf.debug>0)
+            printf("Queue for %s:\n", termlist[t]);
         q=listqueue(termlist[t]);
 
         for(i=0; q[i].to[0] != NULL; i++);
 
-	if(i>0)
-	{
-	    term=getterm(termlist[t]);
+        if(i>0)
+        {
+            term=getterm(termlist[t]);
 
             s=any_openterm(term);
-	    s_tap_init(s);
+            s_tap_init(s);
 
-            for(i=0; q[i].to[0] != NULL; i++)
-	    {
-		getqueueinfo(&q[i]);
+	    /* Keep looping through queue stuff until there are no more
+	       requests, in case any where queued while we're already
+	       delivering.  */
 
-		if( (s_tap_send(s, q[i].u.pageid, q[i].message)) == 0)
-		{
-		    if(conf.debug>0)
-			printf("Delivery of %s successful\n", q[i].qid);
-		    logqueue(q[i], SUC_LOG, NULL);
-		    dequeue(q[i].qid);
-		}
-		else
-		{
-		    if(conf.debug>0)
-			printf("Delivery of %s unsuccessful\n", q[i].qid);
-		    logqueue(q[i], FAIL_LOG, MESG_TAPFAIL);
-                    q_unlock(q[i]);
-		}
-		if(conf.debug>2)
-                    printf("\t%d to %s  ``%s''\n", i, q[i].to, q[i].message);
-            }
-	    s_tap_end(s);
-	    close(s);
-	    sleep(1); /* sleep it off */
-	}
+            while(q[0].to[0] != NULL)
+            {
+
+                for(i=0; q[i].to[0] != NULL; i++)
+                {
+                    getqueueinfo(&q[i]);
+
+                    if( (s_tap_send(s, q[i].u.pageid, q[i].message)) == 0)
+                    {
+                        if(conf.debug>0)
+                            printf("Delivery of %s successful\n", q[i].qid);
+                        logqueue(q[i], SUC_LOG, NULL);
+                        dequeue(q[i].qid);
+                    }
+                    else
+                    {
+                        if(conf.debug>0)
+                            printf("Delivery of %s unsuccessful\n", q[i].qid);
+                        logqueue(q[i], FAIL_LOG, MESG_TAPFAIL);
+                        q_unlock(q[i]);
+                    }
+                    if(conf.debug>2)
+                        printf("\t%d to %s  ``%s''\n", i, q[i].to,
+				q[i].message);
+                } /* for loop */
+
+                cleanqueuelist(q);
+                q=listqueue(termlist[t]);
+
+	    } /* while loop */
+
+            s_tap_end(s);
+            close(s);
+            sleep(1); /* sleep it off */
+        }
 
         cleanqueuelist(q);
+
     }
     cleantermlist(termlist);
     cleanmylocks();
@@ -121,18 +136,18 @@ void logqueue(struct queuent q, int type, char *reason)
 
     switch(type)
     {
-	case QUE_LOG:
+        case QUE_LOG:
             syslog(conf.log_que, "%s got paged %d bytes qid %s", q.to,
-	        strlen(q.message), q.qid); break;
-	case SUC_LOG:
+                strlen(q.message), q.qid); break;
+        case SUC_LOG:
             syslog(conf.log_que, "delivered %s %d bytes qid %s", q.to,
-	        strlen(q.message), q.qid); break;
-	case FAIL_LOG:
+                strlen(q.message), q.qid); break;
+        case FAIL_LOG:
             syslog(conf.log_que, "failed %s to %s: %s", q.qid,
-	        q.to, reason); break;
-	case EXP_LOG:
+                q.to, reason); break;
+        case EXP_LOG:
             syslog(conf.log_que, "%s to %s expired, dequeuing", q.qid,
-	        q.to ); break;
+                q.to ); break;
     }
     closelog();
 }
@@ -143,39 +158,39 @@ void dequeue(char *qid)
 
     switch(qid[0])
     {
-	case 'q':
-	    strcpy(buf, conf.qdir);
-	    strcat(buf, "/");
-	    strcat(buf, qid);
-	    break;
+        case 'q':
+            strcpy(buf, conf.qdir);
+            strcat(buf, "/");
+            strcat(buf, qid);
+            break;
 
-	case '/':
-	    strcpy(buf, qid);
-	    break;
+        case '/':
+            strcpy(buf, qid);
+            break;
 
         default:
-	    if(conf.debug>0)
-		printf("I don't know what the hell to do with %s\n", qid);
-	    qid[0]=NULL;
+            if(conf.debug>0)
+                printf("I don't know what the hell to do with %s\n", qid);
+            qid[0]=NULL;
     }
 
     if(qid[0]!=NULL)
     {
-	if(conf.debug>0)
-	    printf("Unlinking file: %s\n", buf);
+        if(conf.debug>0)
+            printf("Unlinking file: %s\n", buf);
         unlink(buf);
 
         /* Nasty lock handler */
 
-	tmp=buf+strlen(buf)-1;
-	while(*tmp!='q' && *tmp!='/') tmp--;
-	if(*tmp=='q')
-	{
-	    *tmp='l';
-	    if(conf.debug>0)
-		printf("Unlinking file: %s\n", buf);
-	    unlink(buf);
-	} /* lock handler */
+        tmp=buf+strlen(buf)-1;
+        while(*tmp!='q' && *tmp!='/') tmp--;
+        if(*tmp=='q')
+        {
+            *tmp='l';
+            if(conf.debug>0)
+                printf("Unlinking file: %s\n", buf);
+            unlink(buf);
+        } /* lock handler */
     } /* all delete handler */
 }
 
@@ -183,25 +198,25 @@ int gq_checkit(struct queuent q, char *number)
 {
     if( (strcmp(q.u.statid, number))!=0)
     {
-	/* Splat means grab 'em all */
-	if(strcmp(number, "*") == 0)
-	{
-	    return(1);
-	}
-	else
-	{
-	    return(0);
-	}
+        /* Splat means grab 'em all */
+        if(strcmp(number, "*") == 0)
+        {
+            return(1);
+        }
+        else
+        {
+            return(0);
+        }
     }
 
     if( readytodeliver(q) == 0)
     {
-	return(0);
+        return(0);
     }
 
     if( q_islocked(q) == 1 )
     {
-	return(0);
+        return(0);
     }
 
     return(1);
@@ -220,12 +235,12 @@ int q_lock(struct queuent q)
     strcat(buf, tmp);
 
     if(conf.debug>0)
-	printf("Locked %s with %s\n", q.qid, buf);
+        printf("Locked %s with %s\n", q.qid, buf);
 
     f=fopen(buf, "w");
     if(f==NULL)
     {
-	return(-1);
+        return(-1);
     }
 
     fprintf(f, "%d\n", getpid());
@@ -246,7 +261,7 @@ int q_unlock(struct queuent q)
     strcat(buf, tmp);
 
     if(conf.debug>0)
-	printf("Unlocking %s with %s\n", q.qid, buf);
+        printf("Unlocking %s with %s\n", q.qid, buf);
 
     return(unlink(buf));
 }
@@ -278,7 +293,7 @@ int queuecompare(struct queuent q1, struct queuent q2)
 
     if(q1.priority != q2.priority)
     {
-	return(q1.priority < q2.priority);
+        return(q1.priority < q2.priority);
     }
 
     return(q1.submitted < q2.submitted);
@@ -291,23 +306,23 @@ void queuesort(struct queuent *q, int l, int r)
 
     if(r>l)
     {
-	v=q[r]; i=l-1; j=r;
+        v=q[r]; i=l-1; j=r;
 
-	do
-	{
-	    /*
-	    do{ i++; } while(q[i].submitted<v.submitted);
-	    do{ j--; } while(q[j].submitted>v.submitted);
-	    */
-	    do{ i++; } while(queuecompare(q[i], v));
-	    do{ j--; } while(!queuecompare(q[j], v));
-	    t=q[i]; q[i]=q[j]; q[j]=t;
-	} while(j>i);
+        do
+        {
+            /*
+            do{ i++; } while(q[i].submitted<v.submitted);
+            do{ j--; } while(q[j].submitted>v.submitted);
+            */
+            do{ i++; } while(queuecompare(q[i], v));
+            do{ j--; } while(!queuecompare(q[j], v));
+            t=q[i]; q[i]=q[j]; q[j]=t;
+        } while(j>i);
 
-	q[j]=q[i]; q[i]=q[r]; q[r]=t;
+        q[j]=q[i]; q[i]=q[r]; q[r]=t;
 
-	queuesort(q, l, i-1);
-	queuesort(q, i+1, r);
+        queuesort(q, l, i-1);
+        queuesort(q, i+1, r);
     }
 }
 
@@ -330,28 +345,28 @@ struct queuent *listqueue(char *number)
         {
             q=readqueuefile(d->d_name);
 
-	    getqueueinfo(&q);
+            getqueueinfo(&q);
 
             if(gq_checkit(q, number))
-	    {
-		if(index == size-1)
-		{
-		    size<<=1;
+            {
+                if(index == size-1)
+                {
+                    size<<=1;
 
-		    if(conf.debug>2)
-		    {
-		        printf("Reallocating, now need %d bytes for %d\n",
-			    size*sizeof(struct queuent *), size);
-		    }
+                    if(conf.debug>2)
+                    {
+                        printf("Reallocating, now need %d bytes for %d\n",
+                            size*sizeof(struct queuent *), size);
+                    }
 
-		    list=realloc(list, size*sizeof(struct queuent));
-		}
+                    list=realloc(list, size*sizeof(struct queuent));
+                }
 
-		if(strcmp(number, "*")!=0)
-		    q_lock(q);
+                if(strcmp(number, "*")!=0)
+                    q_lock(q);
 
-		list[index++]=q;
-	    }
+                list[index++]=q;
+            }
         }
     }
     closedir(dir);
@@ -373,19 +388,19 @@ struct queuent readqueuefile(char *fn)
 
     if(fn[0]!='/')
     {
-	strcpy(filename, fn);
+        strcpy(filename, fn);
     }
     else
     {
-	strcpy(filename, conf.qdir);
-	strcat(filename, "/");
-	strcat(filename, fn);
+        strcpy(filename, conf.qdir);
+        strcat(filename, "/");
+        strcat(filename, fn);
     }
 
     if(NULL== (f=fopen(filename, "r")))
     {
-	perror(filename);
-	exit(1);
+        perror(filename);
+        exit(1);
     }
 
     fgets(buf, BUFLEN, f);
@@ -441,12 +456,12 @@ int readytodeliver(struct queuent q)
 
     if(fuz>conf.maxqueuetime)
     {
-	if(conf.debug>2)
-	    printf("Deleting %s, too old...\n", q.qid);
+        if(conf.debug>2)
+            printf("Deleting %s, too old...\n", q.qid);
 
-	logqueue(q, EXP_LOG, NULL);
-	dequeue(q.qid);
-	ret=0;
+        logqueue(q, EXP_LOG, NULL);
+        dequeue(q.qid);
+        ret=0;
     }
 
     return(ret);
@@ -480,12 +495,12 @@ char *fntoqid(char *fn)
 
     for(i=strlen(fn)-1; i>0; i--)
     {
-	if(fn[i]=='q')
-	    break;
+        if(fn[i]=='q')
+            break;
     }
 
     if(conf.debug>2)
-	printf("fntoqid(%s) found %s\n", fn, fn+i);
+        printf("fntoqid(%s) found %s\n", fn, fn+i);
 
     return(fn+i);
 }
@@ -506,28 +521,28 @@ int storequeue(int s, struct queuent q, int flags)
 
         qf=fopen(fn, "w");
         fprintf(qf, "%d\n%s\n%s\n%d\n", q.priority, q.to, q.message,
-	    (int)q.submitted);
+            (int)q.submitted);
         fclose(qf);
 
-	strcpy(q.qid, fntoqid(fn));
+        strcpy(q.qid, fntoqid(fn));
 
         sprintf(buf, "Queued to %s, thank you\n", q.qid);
 
-	if(conf.debug>1)
-	    printf("Queued %s for %s\n", fn, q.to);
+        if(conf.debug>1)
+            printf("Queued %s for %s\n", fn, q.to);
 
-	if(conf.debug>2)
-	    printf("Qid is now %s\n", q.qid);
+        if(conf.debug>2)
+            printf("Qid is now %s\n", q.qid);
         logqueue(q, QUE_LOG, NULL);
     }
     else
     {
         strcpy(buf, MESG_BADTIME);
 
-	if(conf.debug>1)
-	    printf("Attempted to page %s, bad time\n", q.to);
+        if(conf.debug>1)
+            printf("Attempted to page %s, bad time\n", q.to);
 
-	ret=1;
+        ret=1;
     }
 
     if(! (flags & STORE_QUIET))
@@ -573,7 +588,7 @@ void printqueue(void)
     printf("There are %d items in the queue\n\n", j);
 
     for(i=0; i<j; i++)
-	displayq(q[i]);
+        displayq(q[i]);
 
     cleanqueuelist(q);
 }
