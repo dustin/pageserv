@@ -1,13 +1,23 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: modem.c,v 2.14 1998/01/10 01:32:25 dustin Exp $
+ * $Id: modem.c,v 2.15 1998/02/27 04:30:56 dustin Exp $
  */
+
+#include <config.h>
 
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+
+#ifdef HAVE_SYS_TIME_H
+#include <sys/time.h>
+#endif
+
+#ifdef HAVE_SYS_SELECT_H
+#include <sys/select.h>
+#endif
 
 #include <tap.h>
 #include <pageserv.h>
@@ -40,11 +50,51 @@ int any_openterm(struct terminal term)
     return(s);
 }
 
+/*
+ * This won't be very accurate, but it'll serve the purpose.
+ */
+
+int _waitondesc(int fd, int timeout)
+{
+    fd_set fdset, tfdset;
+    struct timeval t;
+    int ret;
+    time_t start;
+
+    FD_ZERO(&tfdset);
+    FD_SET(fd, &tfdset);
+
+    fdset=tfdset;
+
+    t.tv_sec=timeout;
+    t.tv_usec=0;
+
+    start=time(NULL);
+    if( select(fd+1, &fdset, NULL, NULL, &t) > 0)
+    {
+        ret=time(NULL)-start;
+    }
+    else
+    {
+	ret=timeout;
+    }
+
+    return(ret);
+}
+
 int s_modem_waitforchar(int s, char what, int timeout)
 {
     char c;
+
     do
     {
+	timeout-=_waitondesc(s, timeout);
+	if(timeout<1)
+	{
+	    _ndebug(2, ("s_modem_waitfor timed out, returning -1\n"));
+	    return(-1);
+        }
+
         if(read(s, &c, 1)<=0)
             return(-1);
 	_ndebug(2, ("%c", c));
@@ -62,6 +112,13 @@ int s_modem_waitfor(int s, char *what, int timeout)
 
     while(i < (int)strlen(what))
     {
+	timeout-=_waitondesc(s, timeout);
+	if(timeout<1)
+	{
+	    _ndebug(2, ("s_modem_waitfor timed out, returning -1\n"));
+	    return(-1);
+	}
+
 	size=read(s, &c, 1);
 	if(size>0)
 	{
@@ -92,6 +149,11 @@ int s_modem_connect(int s, char *number)
     _ndebug(3, ("Wrote %d bytes\n", i));
 
     i=s_modem_waitfor(s, "OK", 10);
+    if(i<0)
+    {
+	_ndebug(2, ("init failed\n"));
+	return(-1);
+    }
 
     /* Take a nap before trying to write again */
 
@@ -101,7 +163,12 @@ int s_modem_connect(int s, char *number)
     i=puttext(s, buf);
     _ndebug(3, ("Wrote %d bytes\n", i));
 
-    i=s_modem_waitfor(s, "CONNECT", 10);
+    i=s_modem_waitfor(s, "CONNECT", 30);
+    if(i<0)
+    {
+	_ndebug(2, ("connect failed\n"));
+	return(-1);
+    }
 
     usleep(2600);
 

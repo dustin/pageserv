@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: serial.c,v 2.11 1998/01/11 08:05:50 dustin Exp $
+ * $Id: serial.c,v 2.12 1998/02/27 04:30:59 dustin Exp $
  */
 
 /*
@@ -145,6 +145,7 @@ int p_openterm(struct terminal t)
         if( s_modem_connect(s, buf) < 0)
 	{
 	    close(s);
+            p_unlock(t.ts);
 	    s=-1;
 	}
     }
