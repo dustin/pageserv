@@ -2137,7 +2137,7 @@ test "$no_create" = yes || ${CONFIG_SHELL-/bin/sh} $CONFIG_STATUS || exit 1
 echo "Would you like to make depend now?"
 read theanswer
 
-theanswer=`echo $theanswer | cut -b1`
+theanswer=`echo $theanswer | cut -c1`
 if test $theanswer = "y"
 then
     make depend
