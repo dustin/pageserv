@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.7 1997/03/13 00:31:17 dustin Exp $
+ * $Id: queue.c,v 1.8 1997/03/14 21:33:32 dustin Exp $
  */
 
 #include <stdio.h>
@@ -21,7 +21,7 @@ char *newtmp(void)
 
     if(tmp[0]==0)
     {
-	strncpy(tmp, "AA" , 2);
+        strncpy(tmp, "AA" , 2);
     }
     else
     {
@@ -29,8 +29,8 @@ char *newtmp(void)
 
         if(tmp[1]>'Z')
         {
-	    tmp[0]++;
-	    tmp[1]='A';
+            tmp[0]++;
+            tmp[1]='A';
         }
     }
 
@@ -71,7 +71,7 @@ int storequeue(int s, struct queuent q, int flags)
     }
     else
     {
-	strcpy(buf, MESG_BADTIME);
+        strcpy(buf, MESG_BADTIME);
     }
 
     if(! (flags & STORE_QUIET))
@@ -91,8 +91,8 @@ int queuedepth(void)
 
     while( (d=readdir(dir))!=NULL)
     {
-	if(d->d_name[0]=='q')
-	    i++;
+        if(d->d_name[0]=='q')
+            i++;
     }
     closedir(dir);
     return(i);
@@ -113,23 +113,23 @@ void printqueue(void)
 
     while( (d=readdir(dir))!=NULL)
     {
-	if(d->d_name[0]=='q')
-	{
-	    f=fopen(d->d_name, "r");
+        if(d->d_name[0]=='q')
+        {
+            f=fopen(d->d_name, "r");
 
-	    fgets(buf, BUFLEN, f);
-	    sscanf(buf, "%d", &q.priority);
-	    fgets(q.to, TOLEN, f);
-	    fgets(q.message, BUFLEN, f);
-	    kw(q.to);
-	    kw(q.message);
-	    strcpy(q.qid, d->d_name);
+            fgets(buf, BUFLEN, f);
+            sscanf(buf, "%d", &q.priority);
+            fgets(q.to, TOLEN, f);
+            fgets(q.message, BUFLEN, f);
+            kw(q.to);
+            kw(q.message);
+            strcpy(q.qid, d->d_name);
 
-	    fclose(f);
+            fclose(f);
 
-	    printf("%s:\n\tPriority:  %d\tTo %s   %d bytes\n\n",
-	        q.qid, q.priority, q.to, strlen(q.message));
-	}
+            printf("%s:\n\tPriority:  %d\tTo %s   %d bytes\n\n",
+                q.qid, q.priority, q.to, strlen(q.message));
+        }
     }
     closedir(dir);
 }
@@ -148,22 +148,22 @@ struct queuent dofarkle()
 
     while( (d=readdir(dir))!=NULL)
     {
-	if(d->d_name[0]=='q')
-	{
-	    f=fopen(d->d_name, "r");
+        if(d->d_name[0]=='q')
+        {
+            f=fopen(d->d_name, "r");
 
-	    fgets(buf, BUFLEN, f);
-	    sscanf(buf, "%d", &q.priority);
-	    fgets(q.to, TOLEN, f);
-	    fgets(q.message, BUFLEN, f);
-	    kw(q.to);
-	    kw(q.message);
-	    strcpy(q.qid, d->d_name);
+            fgets(buf, BUFLEN, f);
+            sscanf(buf, "%d", &q.priority);
+            fgets(q.to, TOLEN, f);
+            fgets(q.message, BUFLEN, f);
+            kw(q.to);
+            kw(q.message);
+            strcpy(q.qid, d->d_name);
 
-	    fclose(f);
+            fclose(f);
 
-	    break;
-	}
+            break;
+        }
     }
     closedir(dir);
     unlink(q.qid);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: utility.c,v 1.4 1997/03/12 16:44:05 dustin Exp $
+ * $Id: utility.c,v 1.5 1997/03/14 21:33:34 dustin Exp $
  */
 
 #include <ctype.h>
@@ -17,11 +17,11 @@ char *kw(char *in)
 
     while(isspace(in[strlen(in)-1]))
     {
-	/* bounds checking */
+        /* bounds checking */
         if(strlen(in)==0)
             return(in);
 
-	in[strlen(in)-1]=0x00;
+        in[strlen(in)-1]=0x00;
     }
 
     return(in);

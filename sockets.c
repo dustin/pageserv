@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: sockets.c,v 1.3 1997/03/11 06:58:30 dustin Exp $
+ * $Id: sockets.c,v 1.4 1997/03/14 21:33:32 dustin Exp $
  */
 
 #include <stdio.h>
@@ -27,8 +27,8 @@ int initialize(void)
 
     if((s = socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
-	perror("server: socket");
-	exit(1);
+        perror("server: socket");
+        exit(1);
     }
 
     memset((char *) &sin, 0x00, sizeof(sin));
@@ -37,18 +37,18 @@ int initialize(void)
     sin.sin_addr.s_addr = htonl(INADDR_ANY);
 
     setsockopt(s, SOL_SOCKET, SO_REUSEADDR,
-	(char *)&reuse, sizeof(int));
+        (char *)&reuse, sizeof(int));
 
     if( bind(s, (struct sockaddr *) &sin, sizeof(sin)) < 0)
     {
-	perror("server: bind");
-	exit(1);
+        perror("server: bind");
+        exit(1);
     }
 
     if(listen(s, 5) < 0)
     {
-	perror("server: listen");
-	exit(1);
+        perror("server: listen");
+        exit(1);
     }
 
     return(s);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.11 1997/03/14 16:09:36 dustin Exp $
+ * $Id: userdb.c,v 1.12 1997/03/14 21:33:33 dustin Exp $
  */
 
 #include <stdio.h>
@@ -22,20 +22,20 @@ void getnormtimes(int times, int *ret)
 
     if(bit_set(times, 0))
     {
-	/* handle full-timers */
-	if( (times & 0xFFFFFFFF) == 0xFFFFFFFF)
-	{
-	    ret[0]=ret[1]=0;
-	    allones=1;
-	}
-	else
-	{
+        /* handle full-timers */
+        if( (times & 0xFFFFFFFF) == 0xFFFFFFFF)
+        {
+            ret[0]=ret[1]=0;
+            allones=1;
+        }
+        else
+        {
             for(i=0; bit_set(times, i) && BC; i++);
-	    ret[1]=i;
+            ret[1]=i;
 
             for(; bit_set(times, i)==0 && BC; i++);
-	    ret[0]=i;
-	}
+            ret[0]=i;
+        }
     }
     else
     {
@@ -43,7 +43,7 @@ void getnormtimes(int times, int *ret)
         ret[0]=i;
 
         for(; bit_set(times, i) && BC; i++);
-	ret[1]=i;
+        ret[1]=i;
     }
 
     if(allones==0)
@@ -75,7 +75,7 @@ int check_time(int priority, char *whom)
 
     if(priority==PR_HIGH)
     {
-	ret=1;
+        ret=1;
     }
     else
     {
@@ -109,8 +109,8 @@ struct user getuser(char *name)
 
     if( (db=dbm_open(USERDB, O_RDONLY, 0644)) == NULL)
     {
-	perror(USERDB);
-	exit(1);
+        perror(USERDB);
+        exit(1);
     }
 
     u=open_getuser(db, name);
@@ -133,7 +133,7 @@ struct user open_getuser(DBM *db, char *name)
 
     if(d.dptr!=NULL)
     {
-	memcpy( (void *)&u, (void *)d.dptr, sizeof(u));
+        memcpy( (void *)&u, (void *)d.dptr, sizeof(u));
     }
 
     return(u);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: protocol.c,v 1.12 1997/03/14 19:07:24 dustin Exp $
+ * $Id: protocol.c,v 1.13 1997/03/14 21:33:31 dustin Exp $
  */
 
 #include <stdio.h>
@@ -18,14 +18,14 @@ int gettext(int s, char *buf)
     int size;
     if( (size=recv(s, buf, BUFLEN-1, 0)) >0)
     {
-	buf[size]=0x00;
-	kw(buf);
-	return(size);
+        buf[size]=0x00;
+        kw(buf);
+        return(size);
     }
     else
     {
-	/* Pipe breaking bastard */
-	exit(0);
+        /* Pipe breaking bastard */
+        exit(0);
     }
     return(size);
 }
@@ -37,15 +37,15 @@ int gettextcr(int s, char *buf)
     /* eat any extra CR's and LF's */
     while( (recv(s, buf, 1, 0)) >0)
     {
-	if(buf[size-1]!='\r' && buf[size-1]!='\n')
-	    break;
+        if(buf[size-1]!='\r' && buf[size-1]!='\n')
+            break;
     }
 
     while( (size+=recv(s, buf+size, 1, 0)) >0)
     {
-	buf[size]=0x00;
-	if(buf[size-1]=='\r' || buf[size-1]=='\n')
-	    break;
+        buf[size]=0x00;
+        if(buf[size-1]=='\r' || buf[size-1]=='\n')
+            break;
     }
 
     kw(buf);
@@ -88,11 +88,11 @@ void p_epage(int s)
 
     if(tolower(buf2[0])=='h')
     {
-	q.priority=PR_HIGH;
+        q.priority=PR_HIGH;
     }
     else
     {
-	q.priority=PR_NORMAL;
+        q.priority=PR_NORMAL;
     }
 
     strcpy(q.to, buf1);
@@ -104,7 +104,7 @@ void p_epage(int s)
     }
     else
     {
-	puttext(s, MESG_NOUSER);
+        puttext(s, MESG_NOUSER);
     }
 }
 
@@ -129,7 +129,7 @@ void p_mash(int s)
     }
     else
     {
-	puttext(s, MESG_NOUSER);
+        puttext(s, MESG_NOUSER);
     }
 }
 
@@ -149,17 +149,17 @@ void p_farkle(int s)
 
     if(queuedepth()>0)
     {
-	q=dofarkle();
-	u=getuser(q.to);
-	if(u.name[0]!=0x00)
-	{
-	    sprintf(buf, "%s\n%s\n%s\n", u.pageid, u.statid, q.message);
-	    puttext(s, buf);
-	}
+        q=dofarkle();
+        u=getuser(q.to);
+        if(u.name[0]!=0x00)
+        {
+            sprintf(buf, "%s\n%s\n%s\n", u.pageid, u.statid, q.message);
+            puttext(s, buf);
+        }
     }
     else
     {
-	puttext(s, MESG_NOQUEUE);
+        puttext(s, MESG_NOQUEUE);
     }
 }
 
@@ -172,8 +172,8 @@ void p_quit(int s)
 void process(int s, char *cmd)
 {
     static char *commands[P_MAX+1]={
-	"mash", "farkle",
-	"depth", "quit", "epage", "apage"
+        "mash", "farkle",
+        "depth", "quit", "epage", "apage"
     };
 
     char buf[BUFLEN];
@@ -183,40 +183,40 @@ void process(int s, char *cmd)
 
     for(i=0; i<=P_MAX; i++)
     {
-	if(strcmp(cmd, commands[i])==0)
-	{
+        if(strcmp(cmd, commands[i])==0)
+        {
             c=i;
-	    break;
-	}
+            break;
+        }
     }
 
     if(c == P_UNKNOWN)
     {
-	sprintf(buf, "Unknown command: %s\n", cmd);
+        sprintf(buf, "Unknown command: %s\n", cmd);
         send(s, buf, strlen(buf), 0);
-	exit(0);
+        exit(0);
     }
 
     /* process command */
 
     switch(c)
     {
-	case P_MASH:
-	    p_mash(s); break;
+        case P_MASH:
+            p_mash(s); break;
 
-	case P_DEPTH:
-	    p_depth(s); break;
+        case P_DEPTH:
+            p_depth(s); break;
 
-	case P_FARKLE:
-	    p_farkle(s); break;
+        case P_FARKLE:
+            p_farkle(s); break;
 
-	case P_EPAGE:
-	    p_epage(s); break;
+        case P_EPAGE:
+            p_epage(s); break;
 
-	case P_APAGE:
-	    p_apage(s); break;
+        case P_APAGE:
+            p_apage(s); break;
 
         case P_QUIT:
-	    p_quit(s);
+            p_quit(s);
     }
 }

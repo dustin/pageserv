@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.4 1997/03/11 22:24:17 dustin Exp $
+ * $Id: main.c,v 1.5 1997/03/14 21:33:30 dustin Exp $
  */
 
 #include <stdio.h>
@@ -43,23 +43,23 @@ void main(void)
 
     for(;;)
     {
-	fdset=tfdset;
+        fdset=tfdset;
         t.tv_sec=CHILD_LIFETIME;
         t.tv_usec=0;
         fromlen=sizeof(fsin);
 
-	if( select(s+1, &fdset, NULL, NULL, &t) > 0)
-	{
-	     if( (ns=accept(s, (struct sockaddr *)&fsin, &fromlen)) >=0 )
+        if( select(s+1, &fdset, NULL, NULL, &t) > 0)
+        {
+             if( (ns=accept(s, (struct sockaddr *)&fsin, &fromlen)) >=0 )
              {
-	         pid=fork();
+                 pid=fork();
 
-	         if(pid==0)
-	             childmain(ns);
-	         else
-		     close(ns);
+                 if(pid==0)
+                     childmain(ns);
+                 else
+                     close(ns);
              }
-	}
-	reaper();
+        }
+        reaper();
     }
 }
