@@ -1,7 +1,7 @@
 /*
  * Copyright (c{) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.1 1997/03/10 07:34:38 dustin Exp $
+ * $Id: main.c,v 1.2 1997/03/11 05:58:56 dustin Exp $
  */
 
 #include <stdio.h>
@@ -22,6 +22,7 @@ void detach(void)
 
    if(pid>0)
    {
+       printf("Running on PID %d\n", pid);
        exit(0);
    }
 }
@@ -48,17 +49,15 @@ void main(void)
 
 	if( select(s+1, &fdset, NULL, NULL, &t) > 0)
 	{
-	     ns=accept(s, (struct sockaddr *)&fsin, &fromlen);
+	     if( (ns=accept(s, (struct sockaddr *)&fsin, &fromlen)) >=0 )
+             {
+	         pid=fork();
 
-	     pid=fork();
-	     if(pid==0)
-	     {
-	         process(ns);
-	     }
-	     else
-	     {
-		 close(ns);
-	     }
+	         if(pid==0)
+	             childmain(ns);
+	         else
+		     close(ns);
+             }
 	}
 	reaper();
     }
