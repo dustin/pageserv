@@ -1,12 +1,12 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 1.1 1997/03/13 02:49:45 dustin Exp $
+# $Id: Makefile.in,v 1.2 1997/03/13 04:44:06 dustin Exp $
 
 MAJOR=2
 MINOR=0
 PATCH=0
 VERSION=$(MAJOR).$(MINOR).$(PATCH)
 
-CC=cc
+CC=@CC@
 INCLUDES=-I..
 CFLAGS=-g $(INCLUDES) -DVERSION=\"$(VERSION)\"
 
