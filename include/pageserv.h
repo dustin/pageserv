@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.31 1997/06/22 07:43:25 dustin Exp $
+ * $Id: pageserv.h,v 1.32 1997/06/22 07:52:25 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -211,7 +211,9 @@ int f_exists(char *file);
 int getservsocket(int port);
 int gettext(int s, char *buf);
 int gettextcr(int s, char *buf);
+int p_lock(char *dev);
 int p_openterm(struct terminal t);
+int p_unlock(char *dev);
 int parseterms(void);
 int parseusers(void);
 int q_islocked(struct queuent q);
@@ -234,6 +236,7 @@ struct user open_getuser(DBM *db, char *key);
 struct user setpasswd(struct user u, char *passwd);
 void _pageserv_init(void);
 void _pageserv_main(modpass p);
+void checklocks(void);
 void cleanconfig(void);
 void cleanmylocks(void);
 void cleanqueuelist(struct queuent *list);
@@ -265,7 +268,6 @@ void showconfig(void);
 void showversion(void);
 void storeterm(DBM *db, struct terminal t);
 void storeuser(struct user u);
-void checklocks();
 
 /* client stuff */
 
