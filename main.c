@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.8 1997/03/26 07:26:15 dustin Exp $
+ * $Id: main.c,v 1.9 1997/03/29 00:48:51 dustin Exp $
  */
 
 #include <stdio.h>
@@ -29,16 +29,12 @@ void detach(void)
    }
 }
 
-void main(void)
+void daemon_main(void)
 {
     struct sockaddr_in fsin;
     int s, ns, fromlen, pid;
     fd_set fdset, tfdset;
     struct timeval t;
-
-    readconfig(CONFIGFILE);
-    if(conf.debug>0)
-        showconfig();
 
     if(conf.debug==0)
         detach();
@@ -79,5 +75,53 @@ void main(void)
         reaper();
     }
 
+}
+
+void rehash_main(void)
+{
+    int i;
+
+    i=parseusers();
+    printf("Parsed %d users.\n", i);
+
+    i=parseterms();
+    printf("Parsed %d terminal servers.\n", i);
+}
+
+void ldb_main(void)
+{
+    puts("Users:\n------------");
+    printusers();
+    puts("\nTerminals:\n------------");
+    printterms();
+}
+
+void pq_main(void)
+{
+    printqueue();
+}
+
+void main(int argc, char **argv)
+{
+
+    readconfig(CONFIGFILE);
+    getoptions(argc, argv);
+    if(conf.debug>0)
+        showconfig();
+    switch(conf.mode)
+    {
+	case MODE_DAEMON:
+	    daemon_main(); break;
+
+	case MODE_REHASH:
+	    rehash_main(); break;
+
+	case MODE_LDB:
+	    ldb_main(); break;
+
+	case MODE_PQ:
+	    pq_main(); break;
+
+    }
     cleanconfig();
 }

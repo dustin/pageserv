@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.15 1997/03/28 03:19:25 dustin Exp $
+ * $Id: userdb.c,v 1.16 1997/03/29 00:48:55 dustin Exp $
  */
 
 #include <stdio.h>
@@ -67,6 +67,31 @@ void printuser(struct user u)
 
     getnormtimes(u.times, times);
     printf("Normal:    %d to %d\n", times[0], times[1]);
+}
+
+void printusers(void)
+{
+    char buf[BUFLEN];
+    struct user u;
+    datum d;
+    DBM *db;
+
+    if( (db=dbm_open(conf.userdb, O_RDONLY, 0644)) ==NULL)
+    {
+        perror(conf.userdb);
+        exit(1);
+    }
+
+    for(d=dbm_firstkey(db); d.dptr!=NULL; d=dbm_nextkey(db))
+    {
+        strncpy(buf, d.dptr, d.dsize);
+        buf[d.dsize]=0x00;
+        u=open_getuser(db, buf);
+        printuser(u);
+        puts("--------");
+    }
+
+    dbm_close(db);
 }
 
 int check_time(int priority, char *whom)

@@ -1,13 +1,17 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.4 1997/03/28 23:13:50 dustin Exp $
+ * $Id: readconfig.c,v 1.5 1997/03/29 00:48:54 dustin Exp $
  */
 
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
+
+/* to get the mode names array from pageserv.h */
+#define IWANT_MODENAMES 1
+
 #include "pageserv.h"
 
 extern struct config conf;
@@ -94,6 +98,58 @@ void setdefaults(void)
 #error No getopt()!!!
 #endif /* HAVE_GETOPT */
 
+void showusage(char *cmd)
+{
+    printf("Usage:  %s [-b{d|r}] |\n", cmd);
+    printf("        %s [-p{l|q}]\n\n", cmd);
+
+    puts("-b is run modes, can be one of the following:");
+    puts("\td: starts a pager server");
+    puts("\tr: rehashes databases (doesn't start a server)");
+
+    puts("-p is print modes");
+    puts("\tl: lists databases");
+    puts("\tq: prints queue");
+}
+
+void getoptions(int argc, char **argv)
+{
+    int c;
+    extern char *optarg;
+    extern int optind;
+
+    while( (c=getopt(argc, argv, "b:p:")) != -1)
+    {
+	switch(c)
+	{
+	    case 'b':
+		switch(optarg[0])
+		{
+		    case 'd':
+			conf.mode=MODE_DAEMON; break;
+		    case 'r':
+			conf.mode=MODE_REHASH; break;
+                    default:
+			printf("Unknown run mode %c\n", optarg[0]);
+			exit(1); break;
+		} break;
+	    case 'p':
+		switch(optarg[0])
+		{
+		    case 'l':
+			conf.mode=MODE_LDB; break;
+                    case 'q':
+			conf.mode=MODE_PQ; break;
+                    default:
+			printf("Unknown print mode %c\n", optarg[0]);
+			exit(1); break;
+		} break;
+	    case '?':
+		showusage(argv[0]); exit(1); break;
+	}
+    }
+}
+
 void readconfig(char *file)
 {
     FILE *f;
@@ -141,8 +197,11 @@ void cleanconfig(void)
 void showconfig(void)
 {
     puts("Configuration:");
-    printf("\tServer:       %s\n\tUser db:      %s\n\tTerm db:      %s\n",
-	conf.servhost, conf.userdb, conf.termdb);
-    printf("\tQueue dir:    %s\n\tChild life:   %d\n\tDebug:        %d\n",
-	conf.qdir, conf.childlifetime, conf.debug);
+    printf("\tServer:       %s\n", conf.servhost);
+    printf("\tRunning mode: %s\n", modenames[conf.mode]);
+    printf("\tUser db:      %s\n", conf.userdb);
+    printf("\tTerm db:      %s\n", conf.termdb);
+    printf("\tQueue dir:    %s\n", conf.qdir);
+    printf("\tChild life:   %d\n", conf.childlifetime);
+    printf("\tDebug:        %d\n", conf.debug);
 }

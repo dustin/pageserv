@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.24 1997/03/28 23:13:49 dustin Exp $
+ * $Id: pageserv.h,v 1.25 1997/03/29 00:48:51 dustin Exp $
  */
 
 /* for DBM type */
@@ -64,6 +64,22 @@
 #define PR_HIGH   5
 #define PR_NORMAL 10
 
+/* run modes */
+
+#define MODE_DAEMON 0    /* daemonize */
+#define MODE_REHASH 1    /* rehash databases */
+#define MODE_LDB    2    /* list databases */
+#define MODE_PQ     3    /* print queue */
+
+#ifdef IWANT_MODENAMES
+static char *modenames[]={
+    "daemon",
+    "rehashing",
+    "listing database",
+    "print queue"
+};
+#endif
+
 /* store flags */
 #define STORE_NORMAL 0x00
 #define STORE_QUIET  0x01
@@ -93,6 +109,7 @@ struct terminal {
 };
 
 struct config {
+    int mode;           /* execution mode */
     int debug;
     int childlifetime;
     char *servhost;
@@ -134,6 +151,7 @@ void getoptions(int argc, char **argv);
 void printqueue(void);
 void printterm(struct terminal t);
 void printuser(struct user u);
+void printusers(void);
 void process(int s, char *cmd);
 void quit(int s);
 void readconfig(char *file);

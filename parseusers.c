@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parseusers.c,v 1.11 1997/03/28 03:19:23 dustin Exp $
+ * $Id: parseusers.c,v 1.12 1997/03/29 00:48:53 dustin Exp $
  */
 
 #include <stdio.h>
@@ -13,7 +13,7 @@
 
 #include "pageserv.h"
 
-struct config conf;
+extern struct config conf;
 
 struct user parseuser(char *line)
 {
@@ -100,18 +100,4 @@ int parseusers(void)
     dbm_close(db);
 
     return(i);
-}
-
-void main(void)
-{
-    int users;
-
-    readconfig(CONFIGFILE);
-    if(conf.debug>0)
-	showconfig();
-
-    users=parseusers();
-    printf("Parsed %d users.\n", users);
-
-    cleanconfig();
 }

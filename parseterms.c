@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parseterms.c,v 1.1 1997/03/28 03:19:22 dustin Exp $
+ * $Id: parseterms.c,v 1.2 1997/03/29 00:48:52 dustin Exp $
  */
 
 #include <stdio.h>
@@ -13,7 +13,7 @@
 
 #include "pageserv.h"
 
-struct config conf;
+extern struct config conf;
 
 struct terminal parseterm(char *line)
 {
@@ -65,18 +65,4 @@ int parseterms(void)
     dbm_close(db);
 
     return(i);
-}
-
-void main(void)
-{
-    int ts;
-
-    readconfig(CONFIGFILE);
-    if(conf.debug>0)
-	showconfig();
-
-    ts=parseterms();
-    printf("Parsed %d terminal servers.\n", ts);
-
-    cleanconfig();
 }
