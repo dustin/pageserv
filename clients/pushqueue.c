@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: pushqueue.c,v 2.7 1998/06/03 08:38:24 dustin Exp $
+ * $Id: pushqueue.c,v 2.8 1998/06/03 16:43:02 dustin Exp $
  */
 
 #include <stdio.h>
@@ -21,7 +21,8 @@
 static void usage(char *command)
 {
     printf("pushqueue version %s by Dustin Sallings\n", VERSION);
-    printf("Usage:  %s [-p priority] [-H host ] [ -P port]\n", command);
+    printf("Usage:  %s [-p priority] [-H host ] [-P port] [-d debug]\n",
+           command);
     puts("priority can be either high or normal");
 }
 
@@ -31,9 +32,9 @@ int main(int argc, char **argv)
     struct snpp_client *snpp;
     char *hostname="pager", *priority=NULL;
     char to[1024], msg[1024];
-    int port=1031;
+    int port=SNPP_PORT, debug=0;
 
-    while( (c=getopt(argc, argv, "p:H:P:")) != -1)
+    while( (c=getopt(argc, argv, "p:H:P:d:")) != -1)
     {
 	switch(c)
 	{
@@ -46,6 +47,9 @@ int main(int argc, char **argv)
 	    case 'P':
 		port=atoi(optarg);
 		break;
+            case 'd':
+                debug=atoi(optarg);
+                break;
 	    case '?':
 		usage(argv[0]);
 		exit(1); break;
@@ -55,6 +59,8 @@ int main(int argc, char **argv)
     snpp=snpp_connect(hostname, port);
     if(snpp==NULL)
 	return(75);
+
+    snpp->debug=debug;
 
     if(priority)
 	snpp->rawsend2(snpp, "priority", priority);

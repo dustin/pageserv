@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parsemail.c,v 2.9 1998/06/03 16:12:21 dustin Exp $
+ * $Id: parsemail.c,v 2.10 1998/06/03 16:42:59 dustin Exp $
  */
 
 #include <stdio.h>
@@ -32,7 +32,7 @@ extern int optind, opterr;
 static void usage(char *name)
 {
     fprintf(stderr, "Usage:\n%s [-p priority] [-H SNPPserver] [-P port] "
-                    "[-t tag] <to>\n", name);
+                    "[-t tag] [-d debug] <to>\n", name);
 }
 
 static char *getdata(int l, char *line)
@@ -48,27 +48,26 @@ static char *getdata(int l, char *line)
 int main(int argc, char **argv)
 {
     char line[LINELEN];
-    int c, r, port=1041;
+    int c, r, port=SNPP_PORT, debug=0;
     char *subject=NULL, *from=NULL, *to=NULL, *tag="Mail";
     char *priority=NULL, *hostname="pager";
     extern int optind;
     struct snpp_client *snpp;
 
-    while( (c=getopt(argc, argv, "H:P:p:t:")) != -1)
+    while( (c=getopt(argc, argv, "H:P:p:t:d:")) != -1)
     {
 	switch(c)
 	{
 	    case 'P':
-		port=atoi(optarg);
-		break;
+		port=atoi(optarg); break;
 	    case 'H':
-		hostname=optarg;
-		break;
+		hostname=optarg; break;
 	    case 'p':
-		priority=optarg;
-		break;
+		priority=optarg; break;
             case 't':
                 tag=optarg; break;
+            case 'd':
+                debug=atoi(optarg); break;
 	    case '?':
 		usage(argv[0]); exit(1); break;
 	}
@@ -86,6 +85,8 @@ int main(int argc, char **argv)
 	fputs("Error connecting to pager server\n", stderr);
 	return(75);
     }
+
+    snpp->debug=debug;
 
     to=argv[optind++];
 

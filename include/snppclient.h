@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1996-1998  Dustin Sallings
  *
- * $Id: snppclient.h,v 1.1 1998/06/03 08:38:38 dustin Exp $
+ * $Id: snppclient.h,v 1.2 1998/06/03 16:43:03 dustin Exp $
  */
 
 #ifndef _SNPP_CLIENT_H
@@ -14,6 +14,10 @@
 
 #define SNPP_BUF_LEN 4096  /* This number cannot be smaller than 16 or so */
 #define SNPP_BUF_THRESH (SNPP_BUF_LEN*4) /* shrink it if it gets this big */
+
+#ifndef SNPP_PORT
+# define SNPP_PORT 1031
+#endif
 
 /* Client structure */
 
