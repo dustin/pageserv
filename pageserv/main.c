@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.11 1997/04/14 05:46:20 dustin Exp $
+ * $Id: main.c,v 1.12 1997/04/15 21:51:04 dustin Exp $
  * $State: Exp $
  */
 
@@ -132,7 +132,8 @@ void daemon_main(void)
 		    }
                 }
 	    }
-	    else if(FD_ISSET(ws, &fdset) && conf.webserver)
+
+	    if(FD_ISSET(ws, &fdset) && conf.webserver)
 	    {
 		if(conf.debug>2)
 		    puts("Got a connection on the web port");

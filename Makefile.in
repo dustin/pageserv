@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 2.10 1997/04/14 04:33:32 dustin Exp $
+# $Id: Makefile.in,v 2.11 1997/04/15 21:51:02 dustin Exp $
 
 MAJOR=2
 MINOR=4
@@ -18,10 +18,11 @@ LDFLAGS=@LDFLAGS@ $(LIBS)
 DIRS=http delivery pageserv clients
 NAME=pageserv
 ARCHIVE=$(NAME)-$(VERSION)
-STUFF=configure configure.in Makefile.in README TODO sample include $(DIRS)
+STUFF=configure configure.in Makefile.in README TODO sample include \
+	webroot $(DIRS)
 JUNK=$(EXES) *.o *.core core
 AUTOJUNK=config.status config.cache config.log Makefile clients/Makefile \
-	delivery/Makefile pageserv/Makefile include/config.h
+	delivery/Makefile pageserv/Makefile http/Makefile include/config.h
 
 all:
 	rm -f pageserv/pageserv
