@@ -8,6 +8,7 @@ Developed under:
 
 Tested (though it's probably been a while) on the following platforms:
 
+    AIX 4.1
     BSDi 2.1
     DEC Digital Unix 3.2
     FreeBSD 2.1.5
@@ -29,4 +30,4 @@ Documentation:
 
 ----------------------------------------
 Copyright (c) 1997  Dustin Sallings
-$Id: README,v 2.3 1997/07/30 02:12:31 dustin Exp $
+$Id: README,v 2.4 1997/09/10 07:59:58 dustin Exp $
