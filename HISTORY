@@ -1,3 +1,12 @@
+
+Mon Dec 29 00:50:09 PST 1997
+module configs all moved under modules.*
+
+debugging should now be done via the _ndebug macro, which takes two
+arguments, the debug level, and the arguments to pass to printf
+
+--------------------
+
 This isn't much of a history, but it may be if we start using it.
 
     I'm working on SQL based user and terminal databases right now using
@@ -26,4 +35,4 @@ As of release_2_9_3, there are multiple developers, starting with
 spberry@iastate.edu
 
 ----------------------------------------
-$Id: HISTORY,v 2.3 1997/10/10 08:23:59 dustin Exp $
+$Id: HISTORY,v 2.4 1997/12/29 08:54:45 dustin Exp $

@@ -3,7 +3,7 @@ Overall:
     * hosts.access
     * Completely internal delivery stuff (no need for -bq all the time)
     * Management login to manage crap
-    * Msql based databases
+    * SQL based databases
     * support numeric pagers
     * make it so that I can run the server as root to get secure ports, but
       it actually serves as a pager user of some sort
@@ -32,4 +32,4 @@ Technical:
 
 ----------------------------------------
 Copyright (c) 1997  Dustin Sallings
-$Id: TODO,v 2.29 1997/08/20 13:47:56 dustin Exp $
+$Id: TODO,v 2.30 1997/12/29 08:54:46 dustin Exp $
