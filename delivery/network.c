@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: network.c,v 2.4 1997/04/09 21:09:01 dustin Exp $
+ * $Id: network.c,v 2.5 1997/04/10 04:04:37 dustin Exp $
  * $State: Exp $
  */
 
@@ -58,24 +58,24 @@ struct sockaddr_in sin;
         exit(1);
     }
 
-    if((s=socket(AF_INET, SOCK_STREAM, 0))<0)
-    {
-        perror("socket");
-        exit(1);
-    }
-
-    sin.sin_family = AF_INET;
-    sin.sin_port=htons(port);
-    bcopy(hp->h_addr, &sin.sin_addr, hp->h_length);
-
-    l.l_onoff  = 1;
-    l.l_linger = 60;
-    setsockopt(s, SOL_SOCKET, SO_LINGER, (char *)&l, sizeof(l));
-
     success=0;
 
     for(i=0; i<conf.maxconattempts; i++)
     {
+        if((s=socket(AF_INET, SOCK_STREAM, 0))<0)
+        {
+            perror("socket");
+            exit(1);
+        }
+
+        sin.sin_family = AF_INET;
+        sin.sin_port=htons(port);
+        bcopy(hp->h_addr, &sin.sin_addr, hp->h_length);
+
+        l.l_onoff  = 1;
+        l.l_linger = 60;
+        setsockopt(s, SOL_SOCKET, SO_LINGER, (char *)&l, sizeof(l));
+
         if(connect(s, (struct sockaddr *)&sin, sizeof(sin))<0)
         {
 	    if(conf.debug>2)
