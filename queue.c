@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.1 1997/03/11 06:02:07 dustin Exp $
+ * $Id: queue.c,v 1.2 1997/03/11 06:48:15 dustin Exp $
  */
 
 #include <stdio.h>
@@ -10,6 +10,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/socket.h>
 
 #include "pageserv.h"
 
@@ -49,6 +50,24 @@ char *newqfile(void)
        sprintf(fn, "%s/q%s%d", QUEDIR, newtmp(), pid);
    }
 
-   printf("Will queue to %s\n", fn);
    return(fn);
+}
+
+int storequeue(int s, char *whom, char *message)
+{
+    char buf[BUFLEN], *fn;
+    FILE *q;
+
+    fn=newqfile();
+
+    q=fopen(fn, "w");
+
+    fprintf(q, "%s\n%s\n", whom, message);
+
+    fclose(q);
+
+    sprintf(buf, "Queued to %s, thank you\n", fn);
+    puttext(s, buf);
+
+    return(0);
 }
