@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: network.c,v 2.5 1997/04/10 04:04:37 dustin Exp $
+ * $Id: network.c,v 2.6 1997/04/10 04:15:52 dustin Exp $
  * $State: Exp $
  */
 
@@ -79,7 +79,7 @@ struct sockaddr_in sin;
         if(connect(s, (struct sockaddr *)&sin, sizeof(sin))<0)
         {
 	    if(conf.debug>2)
-		printf("Error getting modem, %d attempt, sleeping...\n", i);
+		printf("Error getting modem, attempt %d, sleeping...\n", i+1);
 
 	    sleep(conf.conattemptsleep);
         }
