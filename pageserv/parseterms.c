@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parseterms.c,v 1.11 1998/12/28 02:56:57 dustin Exp $
+ * $Id: parseterms.c,v 1.12 1999/12/06 08:02:12 dustin Exp $
  */
 
 #include <stdio.h>
@@ -23,12 +23,14 @@ parseterm(char *line)
 	struct terminal t;
 	char           *tmp, *delim;
 
+	/* Zero it out */
 	memset(&t, 0x00, sizeof(struct terminal));
 
 	delim = rcfg_lookup(conf.cf, "databases.textdelim");
 	if (delim == NULL)
 		delim = " \t";
 
+	/* Number to dial */
 	tmp = strtok(line, delim);
 	if (tmp == NULL) {
 		return (t);
@@ -41,6 +43,7 @@ parseterm(char *line)
 		}
 	}
 
+	/* Flags */
 	tmp = strtok(NULL, delim);
 	if (tmp == NULL) {
 		return (t);
@@ -48,6 +51,7 @@ parseterm(char *line)
 		t.flags = atoi(tmp);
 	}
 
+	/* Terminal server/device to dial from */
 	tmp = strtok(NULL, delim);
 	if (tmp == NULL) {
 		return (t);
@@ -60,6 +64,7 @@ parseterm(char *line)
 		}
 	}
 
+	/* port number */
 	tmp = strtok(NULL, delim);
 	if (tmp == NULL) {
 		return (t);
@@ -67,6 +72,7 @@ parseterm(char *line)
 		t.port = atoi(tmp);
 	}
 
+	/* predial stuff */
 	tmp = strtok(NULL, delim);
 	if (tmp == NULL) {
 		return (t);
@@ -79,6 +85,7 @@ parseterm(char *line)
 		}
 	}
 
+	/* Init string */
 	tmp = strtok(NULL, delim);
 	if (tmp == NULL) {
 		_ndebug(2, ("Using default init %s\n", DEF_INIT));
@@ -90,6 +97,14 @@ parseterm(char *line)
 		} else {
 			strcpy(t.init, tmp);
 		}
+	}
+
+	/* Message Length */
+	tmp = strtok(NULL, delim);
+	if (tmp == NULL) {
+		return (t);
+	} else {
+		t.max_msg_len = atoi(tmp);
 	}
 
 	return (t);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: termdb.c,v 1.14 1998/12/28 02:57:01 dustin Exp $
+ * $Id: termdb.c,v 1.15 1999/12/06 08:02:15 dustin Exp $
  * $State: Exp $
  */
 
@@ -32,6 +32,7 @@ void printterm(struct terminal t)
     printf("Predial:    %s\n", t.predial);
     printf("Port:       %d\n", t.port);
     printf("Flags:      %d\n", t.flags);
+    printf("MaxLen:     %d\n", t.max_msg_len);
 }
 
 static void dbm_erasetermdb(void)

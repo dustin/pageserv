@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.79 1999/06/08 07:25:46 dustin Exp $
+ * $Id: pageserv.h,v 1.80 1999/12/06 08:02:10 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -216,6 +216,7 @@ struct terminal {
     char init[INITLEN];
     int  flags;
     int  port;
+	int  max_msg_len;
 };
 
 struct namedfunc {
