@@ -1,12 +1,16 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: urlparse.c,v 1.2 1997/04/18 20:27:36 dustin Exp $
+ * $Id: urlparse.c,v 1.3 1997/04/18 20:40:13 dustin Exp $
  */
 
 #include <pageserv.h>
 #include <http.h>
+
+#include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
+#include <sys/socket.h>
 
 extern struct config conf;
 
@@ -111,7 +115,7 @@ void _http_parseargs(int s, struct http_request *r)
 
     for(i=0; i<count; i++)
     {
-	if(st=strchr(list[i], '='))
+	if( (st=strchr(list[i], '=')) )
 	{
 	    *st=0x00;
 	    _http_unescape(v=st+1);

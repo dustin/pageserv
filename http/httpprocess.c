@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpprocess.c,v 1.8 1997/04/18 20:27:34 dustin Exp $
+ * $Id: httpprocess.c,v 1.9 1997/04/18 20:40:10 dustin Exp $
  */
 
 #define IWANTDOCINFO 1
@@ -23,7 +23,7 @@ extern struct config conf;
 void http_senddoc(int s, struct http_request r)
 {
     FILE *f;
-    char buf[2048], buf2[BUFLEN];
+    char buf[2048];
     struct stat st;
 
     strcpy(buf, conf.webroot);
@@ -50,8 +50,6 @@ void http_senddoc(int s, struct http_request r)
 
 void http_process_get(int s, struct http_request r)
 {
-    struct http_list *tmp;
-
     if(r.special==1)
     {
 	_http_parseargs(s, &r);

@@ -1,11 +1,15 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: sendpage.c,v 1.1 1997/04/18 20:27:35 dustin Exp $
+ * $Id: sendpage.c,v 1.2 1997/04/18 20:40:12 dustin Exp $
  */
 
 #include <pageserv.h>
 #include <http.h>
+
+#include <ctype.h>
+#include <sys/types.h>
+#include <sys/socket.h>
 
 extern struct config conf;
 
