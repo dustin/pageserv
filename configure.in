@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 2.19 1997/07/09 07:24:08 dustin Exp $
+dnl $Id: configure.in,v 2.20 1997/07/23 06:02:58 dustin Exp $
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(pageserv)
 AC_CONFIG_HEADER(include/config.h)
@@ -51,6 +51,7 @@ dnl Checks for libraries.
 if test "$OS" != "irix"
 then
     AC_CHECK_LIB(crypt, crypt)
+    AC_CHECK_LIB(db, main)
     AC_CHECK_LIB(ndbm, main)
     AC_CHECK_LIB(nsl, main)
     AC_CHECK_LIB(socket, main)
