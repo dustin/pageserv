@@ -1,7 +1,7 @@
 /*
  * Copyright (c)  1996-1998  Dustin Sallings
  *
- * $Id: snpplogin.c,v 1.1 1998/01/20 04:29:45 dustin Exp $
+ * $Id: snpplogin.c,v 1.2 1998/01/20 06:00:49 dustin Exp $
  */
 
 #include <config.h>
@@ -69,7 +69,7 @@ char *snpp_login(int s, char *what)
     if(strlen(usr.passwd)<(size_t)13)
     {
 	free(u);
-	puttext(s, ILLEGALLOGIN);
+	puttext(s, INVALIDLOGIN);
 	return(NULL);
     }
 
@@ -88,7 +88,7 @@ char *snpp_login(int s, char *what)
     return(u);
 }
 
-static void snpp_displayqlong(int s, char *quename)
+static void snpp_displayqlong(int s, char *quename, char *username)
 {
     struct queuent q;
     char buf[BUFLEN];
@@ -98,6 +98,12 @@ static void snpp_displayqlong(int s, char *quename)
     if(q.to[0]==0x00)
     {
 	puttext(s, "550 No such queue entry\n");
+	return;
+    }
+
+    if( strcmp(q.to, username)!=0 )
+    {
+	puttext(s, "550 That's not yours.\n");
 	return;
     }
 
@@ -133,7 +139,7 @@ void snpp_showUserQ(int s, char *user, char *arg)
 
     if(strlen(arg)>(size_t)0)
     {
-	snpp_displayqlong(s, arg);
+	snpp_displayqlong(s, arg, user);
 	return;
     }
 
