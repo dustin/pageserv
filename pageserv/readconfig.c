@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.26 1997/08/11 06:59:21 dustin Exp $
+ * $Id: readconfig.c,v 1.27 1997/08/24 21:12:18 dustin Exp $
  */
 
 #include <readconfig.h>
@@ -135,26 +135,26 @@ int getlogFacility(char *facility)
 {
     int i;
     static struct { char *name; int value; } fcs[]={
-      "auth",         LOG_AUTH,
-      "cron",         LOG_CRON,
-      "daemon",       LOG_DAEMON,
-      "kern",         LOG_KERN,
-      "lpr",          LOG_LPR,
-      "mail",         LOG_MAIL,
-      "news",         LOG_NEWS,
-      "security",     LOG_AUTH,
-      "syslog",       LOG_SYSLOG,
-      "user",         LOG_USER,
-      "uucp",         LOG_UUCP,
-      "local0",       LOG_LOCAL0,
-      "local1",       LOG_LOCAL1,
-      "local2",       LOG_LOCAL2,
-      "local3",       LOG_LOCAL3,
-      "local4",       LOG_LOCAL4,
-      "local5",       LOG_LOCAL5,
-      "local6",       LOG_LOCAL6,
-      "local7",       LOG_LOCAL7,
-      NULL,           LOG_LOCAL7,  /* Default is to log local7 */
+      { "auth",         LOG_AUTH   },
+      { "cron",         LOG_CRON   },
+      { "daemon",       LOG_DAEMON },
+      { "kern",         LOG_KERN   },
+      { "lpr",          LOG_LPR    },
+      { "mail",         LOG_MAIL   },
+      { "news",         LOG_NEWS   },
+      { "security",     LOG_AUTH   },
+      { "syslog",       LOG_SYSLOG },
+      { "user",         LOG_USER   },
+      { "uucp",         LOG_UUCP   },
+      { "local0",       LOG_LOCAL0 },
+      { "local1",       LOG_LOCAL1 },
+      { "local2",       LOG_LOCAL2 },
+      { "local3",       LOG_LOCAL3 },
+      { "local4",       LOG_LOCAL4 },
+      { "local5",       LOG_LOCAL5 },
+      { "local6",       LOG_LOCAL6 },
+      { "local7",       LOG_LOCAL7 },
+      { NULL,           LOG_LOCAL7 } /* Default is to log local7 */
     };
 
     if(facility==NULL)
