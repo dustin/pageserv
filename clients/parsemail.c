@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parsemail.c,v 1.1 1997/03/14 00:52:51 dustin Exp $
+ * $Id: parsemail.c,v 1.2 1997/03/14 05:59:12 dustin Exp $
  */
 
 #include <stdio.h>
@@ -18,6 +18,7 @@ char *getdata(int l, char *line)
 
     ret=(char *)malloc(strlen(line));
     strcpy(ret, line+l);
+    ckw(ret);
     return(ret);
 }
 
