@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: snppmain.c,v 1.18 1998/01/14 06:34:47 dustin Exp $
+ * $Id: snppmain.c,v 1.19 1998/01/18 00:27:55 dustin Exp $
  */
 
 #include <config.h>
@@ -16,6 +16,9 @@
 #include <ctype.h>
 #include <signal.h>
 #include <sys/types.h>
+#include <assert.h>
+
+#include <readconfig.h>
 
 #if TIME_WITH_SYS_TIME
 # include <sys/time.h>
@@ -46,7 +49,7 @@ module mod_snppserv={
     0
 };
 
-static char *snpp_pageid[SNPP_NID];
+static char **snpp_pageid=NULL;
 static char *snpp_message=NULL;
 static int  snpp_nid=0;
 static int  snpp_priority=PR_NORMAL;
@@ -185,15 +188,35 @@ static void snpp_holduntil(int s, char *time)
 
 static void snpp_setpageid(int s, char *id)
 {
+    static int size, max;
+
+    if(snpp_pageid==NULL)
+    {
+	_ndebug(4, ("Initializing snpp_pageid\n"));
+	size=4;
+	max=rcfg_lookupInt(conf.cf, "modules.snpp.maxbroadcast");
+	snpp_pageid=malloc(size*sizeof(char **));
+    }
+
+    _ndebug(5, ("Trying conf.udb.u_exists(%s) (%d bytes) for %d\n", id,
+        strlen(id), snpp_nid));
+
     if(conf.udb.u_exists(id))
     {
-        if(snpp_nid>=SNPP_NID)
+        if((max>0) && (snpp_nid>=SNPP_NID) )
         {
             puttext(s, "552 Maximum Entries exceeded.\n");
             return;
         }
         else
         {
+	    if(snpp_nid==size-1)
+	    {
+		size<<=1;
+		_ndebug(4, ("Growing snpp_pageid to %d\n", size));
+		snpp_pageid=realloc(snpp_pageid, size*sizeof(char **));
+		assert(snpp_pageid);
+	    }
             snpp_pageid[snpp_nid++]=strdup(id);
             puttext(s, "250 Pager ID Accepted\n");
         }

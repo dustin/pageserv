@@ -1,11 +1,11 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 1.4 1998/01/11 08:05:59 dustin Exp $
+# $Id: Makefile.in,v 1.5 1998/01/18 00:27:54 dustin Exp $
 
 SHELL=/bin/sh
 CC=@CC@
 YACC=@YACC@
 LEX=@LEX@
-INCLUDES=-I@top_srcdir@/include
+INCLUDES=-I@top_srcdir@/include -I@top_srcdir@/readconfig
 CFLAGS=$(INCLUDES) -DVERSION=\"$(VERSION)\" @CFLAGS@
 AR=@AR@ cr
 RANLIB=@RANLIB@
