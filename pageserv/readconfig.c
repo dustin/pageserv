@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.37 1998/06/29 01:07:02 dustin Exp $
+ * $Id: readconfig.c,v 1.38 1998/12/26 08:43:33 dustin Exp $
  */
 
 #include <readconfig.h>
@@ -35,6 +35,9 @@ static void setdefaults(void)
 #ifdef HAVE_SQL
         { "sql", sql_userdbInit },
 #endif /* have SQL */
+#ifdef HAVE_LDAP
+		{ "ldap", ldap_userdbInit },
+#endif /* have LDAP */
 	{ NULL, NULL }
     };
     char *userdb;

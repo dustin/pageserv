@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.74 1998/07/23 15:42:45 dustin Exp $
+ * $Id: pageserv.h,v 1.75 1998/12/26 08:43:29 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -366,6 +366,10 @@ int snprintf(char *s, size_t n, const char *format, ...);
 /* This doesn't even get defined if HAVE_NIS isn't set */
 #ifdef HAVE_NIS
 void nis_userdbInit(void);
+#endif
+
+#ifdef HAVE_LDAP
+void ldap_userdbInit(void);
 #endif
 
 #endif /* PAGESERV_H */

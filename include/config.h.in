@@ -39,6 +39,12 @@
 #define HAVE_NIS
 #endif
 
+#undef HAVE_LDAP_H
+
+#if defined(HAVE_LDAP_H)
+# define HAVE_LDAP 1
+#endif
+
 /* See how we're going to handle vsnprintf */
 
 #undef HAVE_VSNPRINTF
