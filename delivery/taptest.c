@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: taptest.c,v 2.1 1997/03/30 06:16:59 dustin Exp $
+ * $Id: taptest.c,v 2.2 1997/03/30 06:50:16 dustin Exp $
  */
 
 #include <stdio.h>
@@ -15,21 +15,6 @@ void main(void)
 {
     int s;
 
-    s=openhost("liv-lex-1.ipa.net.", 6001);
-    s_modem_connect(s, "9,1.800.455.2698");
-    puts("I got connected.  :)");
-    s_tap_init(s);
-
-    if( s_tap_send(s, "1106710", "See Dustin implement TAP  :)  It's nasty, but it works.") == 0)
-	puts(":) Message was successful");
-    else
-	puts(":( Message was unsuccessful");
-
-    s_tap_end(s);
-    puts("Disco-necting");
-    close(s);
-
-/*
     s=openhost("liv-lex-1.ipa.net.", 6001);
     s_modem_connect(s, "9,783.6426");
     puts("I got connected.  :)");
@@ -49,6 +34,7 @@ void main(void)
     puts("Disco-necting");
     close(s);
 
+/*
     sleep(5);
 
     s=openhost("liv-lex-1.ipa.net.", 6001);
