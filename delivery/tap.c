@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  SPY Internetworking
  *
- * $Id: tap.c,v 2.14 1997/09/04 06:18:11 dustin Exp $
+ * $Id: tap.c,v 2.15 1997/09/08 13:53:01 dustin Exp $
  */
 
 #include <stdio.h>
@@ -64,7 +64,7 @@ int s_tap_init(int s, int flags)
 	if(conf.debug>3)
 	    puts("flag TAP_INITCR is set, sending a CR");
 
-	usleep(2600);
+	usleep(500000);
 	puttext(s, "\r");
     }
 
