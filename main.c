@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.10 1997/03/29 01:22:00 dustin Exp $
+ * $Id: main.c,v 1.11 1997/03/29 08:24:06 dustin Exp $
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
 #include <sys/types.h>

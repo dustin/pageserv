@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.26 1997/03/29 01:22:01 dustin Exp $
+ * $Id: pageserv.h,v 1.27 1997/03/29 08:24:07 dustin Exp $
  */
 
 /* for DBM type */
@@ -154,6 +154,7 @@ void getnormtimes(int times, int *ret);
 void getoptions(int argc, char **argv);
 void printqueue(void);
 void printterm(struct terminal t);
+void printterms(void);
 void printuser(struct user u);
 void printusers(void);
 void process(int s, char *cmd);

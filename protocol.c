@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: protocol.c,v 1.15 1997/03/26 07:26:17 dustin Exp $
+ * $Id: protocol.c,v 1.16 1997/03/29 08:24:09 dustin Exp $
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include <sys/types.h>

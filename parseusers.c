@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parseusers.c,v 1.12 1997/03/29 00:48:53 dustin Exp $
+ * $Id: parseusers.c,v 1.13 1997/03/29 08:24:08 dustin Exp $
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <ndbm.h>
 #include <ctype.h>
 #include <sys/types.h>

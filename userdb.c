@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.16 1997/03/29 00:48:55 dustin Exp $
+ * $Id: userdb.c,v 1.17 1997/03/29 08:24:11 dustin Exp $
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <ndbm.h>
 #include <fcntl.h>

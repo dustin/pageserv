@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.6 1997/03/29 01:22:02 dustin Exp $
+ * $Id: readconfig.c,v 1.7 1997/03/29 08:24:10 dustin Exp $
  */
 
 #include <stdio.h>
@@ -134,7 +134,6 @@ void getoptions(int argc, char **argv)
 {
     int c;
     extern char *optarg;
-    extern int optind;
 
     while( (c=getopt(argc, argv, "vb:p:d:")) != -1)
     {
