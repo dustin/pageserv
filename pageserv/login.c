@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: login.c,v 1.10 1997/07/07 08:48:42 dustin Exp $
+ * $Id: login.c,v 1.11 1997/07/08 04:25:21 dustin Exp $
  * $State: Exp $
  */
 
@@ -89,6 +89,8 @@ Please hang up and try again\n", str[0]);
 
 void p_getpasswd(int s, char *to)
 {
+/* If there's no termio.h, we'll just echo it. */
+#ifdef HAVE_TERMIO_H
     struct termios t, bak;
 
     if(conf.debug>2)
@@ -108,14 +110,17 @@ void p_getpasswd(int s, char *to)
 	perror("tcsetattr");
 	exit(1);
     }
+#endif /* termio.h */
 
     gettextcr(s, to);
 
+#ifdef HAVE_TERMIO_H
     if(tcsetattr(0, TCSANOW, &bak))
     {
         perror("tcsetattr");
         exit(1);
     }
+#endif /* termio.h */
 }
 
 void login_usermain(int s, struct user u)
