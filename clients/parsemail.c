@@ -1,17 +1,23 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parsemail.c,v 2.1 1997/04/01 22:29:46 dustin Exp $
+ * $Id: parsemail.c,v 2.2 1997/04/19 23:38:31 dustin Exp $
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <ctype.h>
 
 #include <pageserv.h>
 
 #define LINELEN 2048
+
+void usage(char *name)
+{
+    fprintf(stderr, "Usage:\n%s [-p priority] <to>\n", name);
+}
 
 char *getdata(int l, char *line)
 {
@@ -27,16 +33,32 @@ char *getdata(int l, char *line)
 void main(int argc, char **argv)
 {
     char line[LINELEN];
-    int priority;
+    int priority, c;
     char *subject="(no subject)", *from=NULL, *to=NULL;
-
-    if(argc<2)
-    {
-	exit(0);
-    }
+    extern int optind;
 
     priority=PR_NORMAL;
-    to=argv[1];
+
+    while( (c=getopt(argc, argv, "p:")) != -1)
+    {
+	switch(c)
+	{
+	    case 'p':
+		if(tolower(argv[2][0])=='h')
+		    priority=PR_HIGH; break;
+	    case '?':
+		usage(argv[0]); exit(1); break;
+	}
+    }
+
+    if(optind>=argc)
+    {
+	fputs("Error, too few arguments\n", stderr);
+	usage(argv[0]);
+	exit(1);
+    }
+
+    to=argv[optind++];
 
     while(!feof(stdin))
     {
