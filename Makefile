@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile,v 1.8 1997/03/12 06:00:33 dustin Exp $
+# $Id: Makefile,v 1.9 1997/03/12 06:49:53 dustin Exp $
 
 MAJOR=2
 MINOR=0
@@ -16,12 +16,13 @@ LIBS=
 
 LDFLAGS=-g $(LIBS)
 
-SERV_OBJS=sockets.o main.o utility.o kids.o queue.o protocol.o
+SERV_OBJS=sockets.o main.o utility.o kids.o queue.o protocol.o userdb.o
 PQ_OBJS=pqueue.o utility.o queue.o
 PU_OBJS=parseusers.o userdb.o
+LU_OBJS=listusers.o userdb.o
 SOURCES=sockets.c main.c utility.c kids.c queue.c protocol.c pqueue.c \
-	parseusers.c userdb.c
-EXES=pageserv pqueue parseusers
+	parseusers.c userdb.c listusers.c
+EXES=pageserv pqueue parseusers listusers
 NAME=pageserv
 ARCHIVE=$(NAME)-$(VERSION)
 STUFF=$(SOURCES) pageserv.h Makefile
@@ -37,6 +38,9 @@ pqueue: $(PQ_OBJS)
 
 parseusers: $(PU_OBJS)
 	$(CC) -o $@ $(PU_OBJS) $(LDFLAGS)
+
+listusers: $(LU_OBJS)
+	$(CC) -o $@ $(LU_OBJS) $(LDFLAGS)
 
 tgz: $(ARCHIVE).tar.gz
 

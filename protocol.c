@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: protocol.c,v 1.4 1997/03/11 20:26:55 dustin Exp $
+ * $Id: protocol.c,v 1.5 1997/03/12 06:49:56 dustin Exp $
  */
 
 #include <stdio.h>
@@ -36,7 +36,14 @@ void p_queueup(int s)
     puttext(s, PROMPT_MESS);
     gettext(s, buf2);
 
-    storequeue(s, PR_NORMAL, buf1, buf2);
+    if(u_exists(buf1))
+    {
+        storequeue(s, PR_NORMAL, buf1, buf2);
+    }
+    else
+    {
+	puttext(s, MESG_NOUSER);
+    }
 }
 
 void p_depth(int s)
@@ -50,13 +57,18 @@ void p_depth(int s)
 void p_farkle(int s)
 {
     struct queuent q;
+    struct user u;
     char buf[BUFLEN];
 
     if(queuedepth()>0)
     {
 	q=dofarkle();
-	sprintf(buf, "%s\n%s\n\n", q.to, q.message);
-	puttext(s, buf);
+	u=getuser(q.to);
+	if(u.name[0]!=0x00)
+	{
+	    sprintf(buf, "%s\n%s\n%s\n", u.pageid, u.statid, q.message);
+	    puttext(s, buf);
+	}
     }
     else
     {

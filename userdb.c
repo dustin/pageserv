@@ -1,11 +1,13 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.2 1997/03/12 06:04:01 dustin Exp $
+ * $Id: userdb.c,v 1.3 1997/03/12 06:49:58 dustin Exp $
  */
 
 #include <stdio.h>
+#include <string.h>
 #include <ndbm.h>
+#include <fcntl.h>
 
 #include "pageserv.h"
 
@@ -26,4 +28,60 @@ void storeuser(DBM *db, struct user u)
     d.dsize=sizeof(u);
 
     dbm_store(db, k, d, DBM_REPLACE);
+}
+
+struct user getuser(char *name)
+{
+    DBM *db;
+    struct user u;
+
+    if( (db=dbm_open(USERDB, O_RDONLY, 0644)) == NULL)
+    {
+	perror(USERDB);
+	exit(1);
+    }
+
+    u=open_getuser(db, name);
+
+    dbm_close(db);
+
+    return(u);
+}
+
+struct user open_getuser(DBM *db, char *name)
+{
+    datum d, k;
+    struct user u;
+
+    memset((void *)&u, 0x00, sizeof(u));
+
+    printf("Lookup up user ``%s''\n", name);
+
+    k.dptr=name;
+    k.dsize=strlen(name);
+    d=dbm_fetch(db, k);
+
+    if(d.dptr!=NULL)
+    {
+	memcpy( (void *)&u, (void *)d.dptr, sizeof(u));
+    }
+
+    return(u);
+}
+
+int u_exists(char *name)
+{
+    datum d, k;
+    DBM *db;
+
+    db=dbm_open(USERDB, O_RDONLY, 0644);
+
+    k.dptr=name;
+    k.dsize=strlen(name);
+
+    d=dbm_fetch(db, k);
+
+    dbm_close(db);
+
+    return(d.dptr!=NULL);
 }
