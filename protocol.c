@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: protocol.c,v 1.9 1997/03/13 04:25:59 dustin Exp $
+ * $Id: protocol.c,v 1.10 1997/03/13 05:29:00 dustin Exp $
  */
 
 #include <stdio.h>
@@ -9,6 +9,7 @@
 #include <ctype.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <netinet/in.h>
 
 #include "pageserv.h"
 

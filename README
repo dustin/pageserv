@@ -1,0 +1,15 @@
+Pageserv by Dustin Sallings
+
+Tested on the following platforms:
+
+BSDi 2.1
+DEC Digital Unix 3.2
+FreeBSD 2.1.5
+HP-UX B.10.20
+PC NetBSD 1.2
+RedHat Linux 4.1
+SGI Irix 6.2
+Sun Solaris 2.5.1
+Sun SunOS 4.1.3_u1
+
+$Id: README,v 1.1 1997/03/13 05:28:59 dustin Exp $
