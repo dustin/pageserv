@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parsemail.c,v 2.13 1998/10/27 18:31:25 dustin Exp $
+ * $Id: parsemail.c,v 2.14 2001/08/08 07:13:49 dustin Exp $
  */
 
 #include <stdio.h>
@@ -126,6 +126,9 @@ main(int argc, char **argv)
 		printf("Page failed for some unknown reason, deferring...\n");
 		r = 75;
 	}
+
+	snpp->quit(snpp);
+	snpp->destroy(snpp);
 
 	free(from);
 	free(subject);
