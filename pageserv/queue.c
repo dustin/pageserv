@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.47 1998/03/05 08:04:13 dustin Exp $
+ * $Id: queue.c,v 1.48 1998/03/06 03:13:14 dustin Exp $
  */
 
 #include <stdio.h>
@@ -482,7 +482,7 @@ int _splitsq(int s, struct queuent q, int flags)
     char buf[BUFLEN], current[BUFLEN];
     int ret=0, maxlen, p, done=0;
 
-    maxlen=rcfg_lookupInt(conf.cf, "tuning.maxMessageLenth");
+    maxlen=rcfg_lookupInt(conf.cf, "tuning.maxMessageLength");
     if(maxlen==0)
 	maxlen=250;
 
@@ -529,7 +529,7 @@ int storequeue(int s, struct queuent q, int flags)
 
     _ndebug(3, ("Running storequeue()\n"));
 
-    maxlen=rcfg_lookupInt(conf.cf, "tuning.maxMessageLenth");
+    maxlen=rcfg_lookupInt(conf.cf, "tuning.maxMessageLength");
     if(maxlen==0)
 	maxlen=250;
 
@@ -537,7 +537,16 @@ int storequeue(int s, struct queuent q, int flags)
 
     if(strlen(q.message)>maxlen)
     {
-	return(_splitsq(s, q, flags));
+	if(rcfg_lookupInt(conf.cf, "tuning.wrapMessages")==1)
+	{
+            _ndebug(4, ("Doing wrapping.\n"));
+	    return(_splitsq(s, q, flags));
+	}
+	else
+	{
+            _ndebug(4, ("Doing trunctation.\n"));
+	    q.message[maxlen-1]=0x00;
+	}
     }
 
     if(check_time(q))
