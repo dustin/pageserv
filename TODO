@@ -1,6 +1,5 @@
 Overall:
 
-    * Bigger queue files (connect from where, etc...)
     * hosts.access
     * Completely internal delivery stuff (no need for -bq all the time)
     * Management login to manage crap
@@ -31,4 +30,4 @@ Technical:
 
 ----------------------------------------
 Copyright (c) 1997  Dustin Sallings
-$Id: TODO,v 2.27 1997/08/07 07:21:53 dustin Exp $
+$Id: TODO,v 2.28 1997/08/09 06:33:25 dustin Exp $
