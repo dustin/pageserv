@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: kids.c,v 1.4 1997/03/11 06:47:23 dustin Exp $
+ * $Id: kids.c,v 1.5 1997/03/12 22:54:07 dustin Exp $
  */
 
 #include <signal.h>
@@ -45,7 +45,7 @@ void childmain(int s)
     signal(SIGALRM, onalarm);
 
     puttext(s, PROMPT_CMD);
-    gettext(s, buf);
+    gettextcr(s, buf);
     process(s, buf);
 
     exit(0);

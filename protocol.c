@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: protocol.c,v 1.6 1997/03/12 17:49:48 dustin Exp $
+ * $Id: protocol.c,v 1.7 1997/03/12 22:54:10 dustin Exp $
  */
 
 #include <stdio.h>
@@ -27,30 +27,87 @@ int gettext(int s, char *buf)
     }
 }
 
+int gettextcr(int s, char *buf)
+{
+    int size=1;
+
+    /* eat any extra CR's and LF's */
+    while( (recv(s, buf, 1, 0)) >0)
+    {
+	if(buf[size-1]!='\r' && buf[size-1]!='\n')
+	    break;
+    }
+
+    while( (size+=recv(s, buf+size, 1, 0)) >0)
+    {
+	buf[size]=0x00;
+	if(buf[size-1]=='\r' || buf[size-1]=='\n')
+	    break;
+    }
+
+    kw(buf);
+    return(size);
+}
+
+/* This is broken, but pretty */
+
+void p_apage(int s)
+{
+    struct queuent q;
+    int size=0, ack, blah;
+
+    blah=1;
+    setsockopt(s, SOL_SOCKET, SO_RCVLOWAT,
+    (char *)&blah, sizeof(int));
+
+    blah=1;
+    setsockopt(s, SOL_SOCKET, SO_RCVTIMEO,
+    (char *)&blah, sizeof(int));
+
+    size+=recv(s, (char *)&q, sizeof(q), 0);
+    printf("Received %d bytes, wanted %d\n", size, sizeof(q));
+
+    ack=htonl(1);
+
+    send(s, &ack, sizeof(ack), 0);
+
+    q.priority=ntohl(q.priority);
+
+    if(u_exists(q.to))
+    {
+        ack=storequeue(s, q, STORE_QUIET);
+    }
+}
+
 void p_epage(int s)
 {
     char buf1[BUFLEN], buf2[BUFLEN], buf3[BUFLEN];
-    int priority;
+    struct queuent q;
 
     puttext(s, PROMPT_ID);
-    gettext(s, buf1);
+    gettextcr(s, buf1);
     puttext(s, PROMPT_PRI);
-    gettext(s, buf2);
+    gettextcr(s, buf2);
     puttext(s, PROMPT_MESS);
-    gettext(s, buf3);
+    gettextcr(s, buf3);
 
     if(tolower(buf2[0])=='h')
     {
-	priority=PR_HIGH;
+	q.priority=PR_HIGH;
     }
     else
     {
-	priority=PR_NORMAL;
+	q.priority=PR_NORMAL;
     }
+
+    strcpy(q.to, buf1);
+    strcpy(q.message, buf3);
+
+    printf("EPAGE:  %s %s %s\n", buf1, buf2, buf3);
 
     if(u_exists(buf1))
     {
-        storequeue(s, priority, buf1, buf3);
+        storequeue(s, q, STORE_NORMAL);
     }
     else
     {
@@ -61,15 +118,23 @@ void p_epage(int s)
 void p_queueup(int s)
 {
     char buf1[BUFLEN], buf2[BUFLEN];
+    struct queuent q;
 
     puttext(s, PROMPT_ID);
-    gettext(s, buf1);
+    gettextcr(s, buf1);
     puttext(s, PROMPT_MESS);
-    gettext(s, buf2);
+    gettextcr(s, buf2);
+
+    printf("Received:\n``%s''\n``%s''\n", buf1, buf2);
+
+    q.priority=PR_NORMAL;
+
+    strcpy(q.to, buf1);
+    strcpy(q.message, buf2);
 
     if(u_exists(buf1))
     {
-        storequeue(s, PR_NORMAL, buf1, buf2);
+        storequeue(s, q, STORE_NORMAL);
     }
     else
     {
@@ -111,7 +176,7 @@ void process(int s, char *cmd)
 {
     static char *commands[P_MAX+1]={
 	"mash", "farkle",
-	"depth", "quit", "epage"
+	"depth", "quit", "epage", "apage"
     };
 
     char buf[BUFLEN];
@@ -150,6 +215,9 @@ void process(int s, char *cmd)
 
 	case P_EPAGE:
 	    p_epage(s); break;
+
+	case P_APAGE:
+	    p_apage(s); break;
 
         case P_QUIT:
 	    quit(s);
