@@ -5,6 +5,7 @@ Developed under:
     PC NetBSD 1.2
     SGI Irix 6.2
     Sun Solaris 2.5.1
+    Sun SunOS 4.1.3_u1
 
 Tested on the following platforms:
 
@@ -28,4 +29,5 @@ Documentation:
     All of my documentation ends in .c
 
 ----------------------------------------
-$Id: README,v 2.0 1997/03/30 05:57:48 dustin Exp $
+Copyright (c) 1997  Dustin Sallings
+$Id: README,v 2.1 1997/03/30 06:38:22 dustin Exp $

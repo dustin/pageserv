@@ -1,8 +1,8 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 2.0 1997/03/30 05:57:47 dustin Exp $
+# $Id: Makefile.in,v 2.1 1997/03/30 06:38:22 dustin Exp $
 
 MAJOR=2
-MINOR=2
+MINOR=3
 PATCH=0
 VERSION=$(MAJOR).$(MINOR).$(PATCH)
 
@@ -18,14 +18,16 @@ LDFLAGS=-g $(LIBS)
 DIRS=pageserv clients delivery
 NAME=pageserv
 ARCHIVE=$(NAME)-$(VERSION)
-STUFF=$(SOURCES) pageserv.h configure configure.in Makefile.in \
-	README config.h.in sample.config $(DIRS)
+STUFF=configure configure.in Makefile.in README TODO sample include $(DIRS)
 JUNK=$(EXES) *.o *.core core
 AUTOJUNK=config.status config.cache config.log Makefile clients/Makefile \
 	delivery/Makefile pageserv/Makefile config.h
 
 all:
-	for i in $(DIRS) ; do cd $$i && $(MAKE) all ; cd .. ; done
+	for i in $(DIRS) ; \
+	do cd $$i && $(MAKE) VERSION=\"$(VERSION)\" all ; \
+	cd .. ; \
+	done
 
 depend:
 	for i in $(DIRS) ; do cd $$i && $(MAKE) depend ; cd .. ; done

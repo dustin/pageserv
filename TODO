@@ -1,0 +1,23 @@
+Overall:
+
+    * Make compliant with SNPP (RFC1861)
+    * Add signal trapping for server to clean up pid file and manually
+      free memory, possibly one to reload the config too, why not?
+    * Queue expiration
+    * Queue postponing
+
+Delivery:
+
+    * Internalize delivery and remove farkle protocol command
+    * Local modem support
+
+Clients:
+
+    * Cleaner client stuff
+    * use getopt() in pushqueue code, I already know if I've got it,
+      might as well use it.
+    * CGI client
+
+----------------------------------------
+Copyright (c) 1997  Dustin Sallings
+$Id: TODO,v 2.1 1997/03/30 06:38:23 dustin Exp $
