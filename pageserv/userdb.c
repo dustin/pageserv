@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.21 1998/02/26 17:17:53 dustin Exp $
+ * $Id: userdb.c,v 1.22 1998/02/27 08:35:51 dustin Exp $
  */
 
 #include <stdio.h>
@@ -225,7 +225,7 @@ void dumpuser(struct user u, char *delim)
 				       u.pageid, delim,
 				       u.statid, delim,
 				       times[0], delim,
-				       times[1], delim);
+				       times[1]);
     }
 
 }
