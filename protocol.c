@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: protocol.c,v 1.8 1997/03/12 23:07:13 dustin Exp $
+ * $Id: protocol.c,v 1.9 1997/03/13 04:25:59 dustin Exp $
  */
 
 #include <stdio.h>
@@ -55,15 +55,7 @@ int gettextcr(int s, char *buf)
 void p_apage(int s)
 {
     struct queuent q;
-    int size=0, ack, blah;
-
-    blah=1;
-    setsockopt(s, SOL_SOCKET, SO_RCVLOWAT,
-    (char *)&blah, sizeof(int));
-
-    blah=1;
-    setsockopt(s, SOL_SOCKET, SO_RCVTIMEO,
-    (char *)&blah, sizeof(int));
+    int size=0, ack;
 
     size+=recv(s, (char *)&q, sizeof(q), 0);
     printf("Received %d bytes, wanted %d\n", size, sizeof(q));
