@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: signals.c,v 1.2 1997/04/01 05:57:11 dustin Exp $
+ * $Id: signals.c,v 1.3 1997/04/01 06:57:08 dustin Stab $
  */
 
 #include <stdio.h>
@@ -14,7 +14,7 @@
 
 extern struct config conf;
 
-serv_sigint(int sig)
+RETSIGTYPE serv_sigint(int sig)
 {
     if(conf.debug>0)
 	puts("Exit type signal caught, shutting down...");
@@ -24,7 +24,7 @@ serv_sigint(int sig)
     exit(0);
 }
 
-serv_sighup(int sig)
+RETSIGTYPE serv_sighup(int sig)
 {
     cleanconfig();
     readconfig(CONFIGFILE);

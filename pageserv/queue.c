@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.6 1997/04/01 05:42:00 dustin Exp $
+ * $Id: queue.c,v 1.7 1997/04/01 06:57:07 dustin Exp $
  */
 
 #include <stdio.h>
@@ -54,7 +54,7 @@ int gq_checkit(struct queuent q, char *number)
 
 int queuecompare(const struct queuent *a, const struct queuent *b)
 {
-    return( a->submitted > b->submitted );
+    return( a->submitted >= b->submitted );
 }
 
 void cleanqueuelist(struct queuent *list)
@@ -271,9 +271,7 @@ void printqueue(void)
     q=listqueue("*");
 
     for(i=0; q[i].to[0] != 0x00; i++)
-    {
 	displayq(q[i]);
-    }
 
     cleanqueuelist(q);
 }
@@ -293,17 +291,7 @@ struct queuent dofarkle()
     {
         if(d->d_name[0]=='q')
         {
-            f=fopen(d->d_name, "r");
-
-            fgets(buf, BUFLEN, f);
-            sscanf(buf, "%d", &q.priority);
-            fgets(q.to, TOLEN, f);
-            fgets(q.message, BUFLEN, f);
-            kw(q.to);
-            kw(q.message);
-            strcpy(q.qid, d->d_name);
-
-            fclose(f);
+            q=readqueuefile(d->d_name);
 
             break;
         }
