@@ -1,15 +1,15 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 1.6 1997/04/13 22:00:58 dustin Exp $
+# $Id: Makefile.in,v 1.7 1997/04/13 22:12:15 dustin Exp $
 
 SHELL=/bin/sh
 CC=@CC@
 YACC=@YACC@
 INCLUDES=-I@top_srcdir@/include
-CFLAGS=-g $(INCLUDES) -DVERSION=\"$(VERSION)\" @CFLAGS@
+CFLAGS=$(INCLUDES) -DVERSION=\"$(VERSION)\" @CFLAGS@
 
 LIBS=@LIBS@
 
-LDFLAGS=-g $(LIBS)
+LDFLAGS=@LDFLAGS@ $(LIBS)
 
 LDELIVER=@top_srcdir@/delivery/deliver.a
 SERV_OBJS=sockets.o main.o utility.o kids.o queue.o protocol.o userdb.o \

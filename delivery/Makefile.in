@@ -1,17 +1,17 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 2.5 1997/04/13 22:00:36 dustin Exp $
+# $Id: Makefile.in,v 2.6 1997/04/13 22:12:12 dustin Exp $
 
 SHELL=/bin/sh
 CC=@CC@
 YACC=@YACC@
 INCLUDES=-I@top_srcdir@/include
-CFLAGS=-g $(INCLUDES) -DVERSION=\"$(VERSION)\" @CFLAGS@
+CFLAGS=$(INCLUDES) -DVERSION=\"$(VERSION)\" @CFLAGS@
 AR=@AR@ cr
 RANLIB=@RANLIB@
 
 LIBS=@LIBS@
 
-LDFLAGS=-g $(LIBS)
+LDFLAGS=@LDFLAGS@ $(LIBS)
 
 LDELIVER_OBJS=tap.o network.o modem.o
 SOURCES=tap.c network.c network.c modem.c

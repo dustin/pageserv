@@ -1,14 +1,14 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 2.2 1997/04/13 22:00:23 dustin Exp $
+# $Id: Makefile.in,v 2.3 1997/04/13 22:12:09 dustin Exp $
 
 SHELL=/bin/sh
 CC=@CC@
 INCLUDES=-I@top_srcdir@/include
-CFLAGS=-g $(INCLUDES) -DVERSION=\"$(VERSION)\" @CFLAGS@
+CFLAGS=$(INCLUDES) -DVERSION=\"$(VERSION)\" @CFLAGS@
 
 LIBS=@LIBS@
 
-LDFLAGS=-g $(LIBS)
+LDFLAGS=@LDFLAGS@ $(LIBS)
 
 PUSH_OBJS=pushqueue.o client.o
 EMAIL_OBJS=parsemail.o client.o
