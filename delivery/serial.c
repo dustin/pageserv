@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: serial.c,v 2.18 1999/06/08 07:25:31 dustin Exp $
+ * $Id: serial.c,v 2.19 1999/06/08 07:44:44 dustin Exp $
  */
 
 /*
@@ -120,11 +120,11 @@ p_lock(char *dev)
 		ret = -1;
 		break;
 	case PID_NOT_OWNER:
-		_ndebug(2, ("Found a valid lockfile, but I'm not the owner."));
+		_ndebug(2, ("Found a valid lockfile, but I'm not the owner.\n"));
 		ret = -1;
 		break;
 	case PID_STALE:
-		_ndebug(2, ("Found stale lockfile."));
+		_ndebug(2, ("Found stale lockfile.\n"));
 		if(unlink(lockfile)<0) {
 			/* We can't pass through if we couldn't unlink */
 			return(-1);
