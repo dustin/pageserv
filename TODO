@@ -5,7 +5,7 @@ Overall:
     * hosts.access
     * Completely internal delivery stuff (no need for -bq all the time)
     * Management login to manage crap
-    * NIS based databases
+    * Msql based databases
     * support numeric pagers
     * make it so that I can run the server as root to get secure ports, but
       it actually serves as a pager user of some sort
@@ -14,7 +14,6 @@ Delivery:
 
     * have timeouts actually time out
     * clean stuff
-    * Device locking
 
 Clients:
 
@@ -33,4 +32,4 @@ Technical:
 
 ----------------------------------------
 Copyright (c) 1997  Dustin Sallings
-$Id: TODO,v 2.23 1997/06/20 09:11:55 dustin Exp $
+$Id: TODO,v 2.24 1997/06/30 05:15:39 dustin Exp $
