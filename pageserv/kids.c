@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: kids.c,v 1.7 1997/12/29 07:44:49 dustin Exp $
+ * $Id: kids.c,v 1.8 1997/12/29 08:55:01 dustin Exp $
  */
 
 #include <signal.h>
@@ -42,11 +42,12 @@ int _pageserv_socket(void)
 
 void _pageserv_init(void)
 {
-    mod_pageserv.s=getservsocket(conf.pageport);
-
-    if(mod_pageserv.s>=0)
+    if(conf.pageserv==1)
     {
-	mod_pageserv.listening=1;
+        mod_pageserv.s=getservsocket(conf.pageport);
+
+        if(mod_pageserv.s>=0)
+	    mod_pageserv.listening=1;
     }
 }
 
@@ -70,10 +71,7 @@ void reaper(void)
 
 void child_onalarm()
 {
-    if(conf.debug>2)
-    {
-	puts("Received alarm, exiting.");
-    }
+    _ndebug(2, ("Received alarm, exiting.\n"));
     exit(0);
 }
 
@@ -92,8 +90,7 @@ void _pageserv_main(modpass p)
     if (setsockopt(s, IPPROTO_TCP, TCP_NODELAY, (char *)&flag,
 	sizeof(int)) <0)
     {
-	if(conf.debug>0)
-	    puts("Looks like we're sticking with ol' Nagle.");
+	_ndebug(0, ("Looks like we're sticking with ol' Nagle.\n"));
     }
 
     /* Cheezy welcome banner */

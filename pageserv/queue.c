@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.34 1997/09/04 06:18:47 dustin Exp $
+ * $Id: queue.c,v 1.35 1997/12/29 08:55:03 dustin Exp $
  */
 
 #include <stdio.h>
@@ -43,9 +43,7 @@ void cleanmylocks()
                 fscanf(f, "%d", &i);
                 if(i==pid)
                 {
-                    if(conf.debug>0)
-                        printf("Getting rid of %s\n", d->d_name);
-
+		    _ndebug(0, ("Getting rid of %s\n", d->d_name));
                     unlink(d->d_name);
                 }
                 fclose(f);
@@ -72,8 +70,7 @@ void runqueue(void)
 
     for(t=0; termlist[t]!=NULL; t++)
     {
-        if(conf.debug>0)
-            printf("Queue for %s:\n", termlist[t]);
+	_ndebug(0, ("Queue for %s:\n", termlist[t]));
         q=listqueue(termlist[t]);
 
         for(i=0; q[i].to[0] != NULL; i++);
@@ -101,24 +98,21 @@ void runqueue(void)
 
                         if( (s_tap_send(s, q[i].u.pageid, q[i].message)) == 0)
                         {
-                            if(conf.debug>0)
-                                printf("Delivery of %s successful\n",
-                                        q[i].qid);
+			    _ndebug(0, ("Delivery of %s successful\n",
+			        q[i].qid));
                             logqueue(q[i], SUC_LOG, NULL);
                             dequeue(q[i].qid);
                             usleep(2600);
                         }
                         else
                         {
-                            if(conf.debug>0)
-                                printf("Delivery of %s unsuccessful\n",
-                                        q[i].qid);
+			    _ndebug(0, ("Delivery of %s unsuccessful\n",
+			        q[i].qid));
                             logqueue(q[i], FAIL_LOG, MESG_TAPFAIL);
                             q_unlock(q[i]);
                         }
-                        if(conf.debug>2)
-                            printf("\t%d to %s  ``%s''\n", i, q[i].to,
-                                    q[i].message);
+			_ndebug(2, ("\t%d to %s  ``%s''\n", i, q[i].to,
+			    q[i].message));
                     } /* for loop */
 
                     cleanqueuelist(q);
@@ -133,8 +127,7 @@ void runqueue(void)
             } /* got port */
             else
             {
-                if(conf.debug>2)
-                    puts("Didn't get the port");
+		_ndebug(2, ("Didn't get the port\n"));
             }
         }
 
@@ -184,15 +177,13 @@ void dequeue(char *qid)
             break;
 
         default:
-            if(conf.debug>0)
-                printf("I don't know what the hell to do with %s\n", qid);
+	    _ndebug(0, ("I don't know what the hell to do with %s\n", qid));
             qid[0]=NULL;
     }
 
     if(qid[0]!=NULL)
     {
-        if(conf.debug>0)
-            printf("Unlinking file: %s\n", buf);
+	_ndebug(0, ("Unlinking file: %s\n", buf));
         unlink(buf);
 
         /* Nasty lock handler */
@@ -202,8 +193,7 @@ void dequeue(char *qid)
         if(*tmp=='q')
         {
             *tmp='l';
-            if(conf.debug>0)
-                printf("Unlinking file: %s\n", buf);
+	    _ndebug(0, ("Unlinking file: %s\n", buf));
             unlink(buf);
         } /* lock handler */
     } /* all delete handler */
@@ -249,8 +239,7 @@ int q_lock(struct queuent q)
     tmp[0]='l';
     strcat(buf, tmp);
 
-    if(conf.debug>0)
-        printf("Locked %s with %s\n", q.qid, buf);
+    _ndebug(0, ("Locked %s with %s\n", q.qid, buf));
 
     f=fopen(buf, "w");
     if(f==NULL)
@@ -275,8 +264,7 @@ int q_unlock(struct queuent q)
     tmp[0]='l';
     strcat(buf, tmp);
 
-    if(conf.debug>0)
-        printf("Unlocking %s with %s\n", q.qid, buf);
+    _ndebug(0, ("Unlocking %s with %s\n", q.qid, buf));
 
     return(unlink(buf));
 }
@@ -364,11 +352,8 @@ struct queuent *listqueue(char *number)
                 {
                     size<<=1;
 
-                    if(conf.debug>2)
-                    {
-                        printf("Reallocating, now need %d bytes for %d\n",
-                            size*sizeof(struct queuent *), size);
-                    }
+		    _ndebug(2, ("Reallocating, now need %d bytes for %d\n",
+			size*sizeof(struct queuent *), size));
 
                     list=realloc(list, size*sizeof(struct queuent));
                 }
@@ -488,13 +473,11 @@ int readytodeliver(struct queuent q)
     time(&t);
     fuz=(t-lt)/60;
 
-    if(conf.debug>2)
-        printf("fuz is %d\n", fuz);
+    _ndebug(2, ("fuz is %d\n", fuz));
 
     if(fuz>conf.maxqueuetime)
     {
-        if(conf.debug>2)
-            printf("Deleting %s, too old...\n", q.qid);
+	_ndebug(2, ("Deleting %s, too old...\n", q.qid));
 
         logqueue(q, EXP_LOG, NULL);
         dequeue(q.qid);
@@ -541,8 +524,7 @@ char *fntoqid(char *fn)
             break;
     }
 
-    if(conf.debug>2)
-        printf("fntoqid(%s) found %s\n", fn, fn+i);
+    _ndebug(2, ("fntoqid(%s) found %s\n", fn, fn+i));
 
     return(fn+i);
 }
@@ -553,8 +535,7 @@ int storequeue(int s, struct queuent q, int flags)
     int ret=0;
     FILE *qf;
 
-    if(conf.debug>3)
-        puts("Running storequeue()");
+    _ndebug(3, ("Running storequeue()\n"));
 
     if(check_time(q))
     {
@@ -576,19 +557,16 @@ int storequeue(int s, struct queuent q, int flags)
 
         sprintf(buf, "Queued to %s, thank you\n", q.qid);
 
-        if(conf.debug>1)
-            printf("Queued %s for %s\n", fn, q.to);
+	_ndebug(1, ("Queued %s for %s\n", fn, q.to));
+	_ndebug(2, ("Qid is now %s\n", q.qid));
 
-        if(conf.debug>2)
-            printf("Qid is now %s\n", q.qid);
         logqueue(q, QUE_LOG, NULL);
     }
     else
     {
         strcpy(buf, MESG_BADTIME);
 
-        if(conf.debug>1)
-            printf("Attempted to page %s, bad time\n", q.to);
+	_ndebug(1, ("Attempted to page %s, bad time\n", q.to));
 
         ret=1;
     }

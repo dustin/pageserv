@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: protocol.c,v 1.8 1997/08/27 06:10:27 dustin Exp $
+ * $Id: protocol.c,v 1.9 1997/12/29 08:55:02 dustin Exp $
  */
 
 #include <stdio.h>
@@ -21,8 +21,7 @@ void p_epage(int s, modpass p)
     char buf1[BUFLEN], buf2[BUFLEN], buf3[BUFLEN];
     struct queuent q;
 
-    if(conf.debug>1)
-	puts("Entering p_epage");
+    _ndebug(1, ("Entering p_epage\n"));
 
     puttext(s, PROMPT_ID);
     gettextcr(s, buf1);
@@ -60,8 +59,7 @@ void p_mash(int s, modpass p)
     char buf1[BUFLEN], buf2[BUFLEN];
     struct queuent q;
 
-    if(conf.debug>1)
-	puts("Entering p_mash");
+    _ndebug(1, ("Entering p_mash\n"));
 
     puttext(s, PROMPT_ID);
     gettextcr(s, buf1);
@@ -87,8 +85,7 @@ void p_depth(int s, modpass p)
 {
     char buf[BUFLEN];
 
-    if(conf.debug>1)
-	puts("Entering p_depth");
+    _ndebug(1, ("Entering p_depth\n"));
 
     sprintf(buf, "%d items in the queue\n", queuedepth());
     puttext(s, buf);
@@ -102,14 +99,12 @@ void p_farkle(int s, modpass p)
 
     if(conf.farkle==0)
     {
-        if(conf.debug>1)
-	    puts("Tried to farkle, configured out...");
+	_ndebug(1, ("Tried to farkle, configured out...\n"));
 	puttext(s, MESG_NOFARKLE);
 	return;
     }
 
-    if(conf.debug>1)
-	puts("Entering p_farkle");
+    _ndebug(1, ("Entering p_farkle\n"));
 
     if(queuedepth()>0)
     {
@@ -129,8 +124,7 @@ void p_farkle(int s, modpass p)
 
 void p_quit(int s, modpass p)
 {
-    if(conf.debug>1)
-	puts("Entering p_quit");
+    _ndebug(1, ("Entering p_quit\n"));
 
     puttext(s, MESG_QUIT);
     exit(0);
@@ -161,15 +155,13 @@ void process(int s, char *cmd, modpass p)
     {
         sprintf(buf, "Unknown command: %s\n", cmd);
 
-	if(conf.debug>1)
-	    puts(buf);
+	_ndebug(1, ("%s", buf));
 
         send(s, buf, strlen(buf), 0);
         exit(0);
     }
 
-    if(conf.debug>1)
-	printf("Received ``%s'' command\n", cmd);
+    _ndebug(1, ("Received ``%s'' command\n", cmd));
 
     /* process command */
 

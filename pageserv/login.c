@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: login.c,v 1.14 1997/08/11 03:54:56 dustin Exp $
+ * $Id: login.c,v 1.15 1997/12/29 08:55:01 dustin Exp $
  */
 
 #include <config.h>
@@ -92,8 +92,7 @@ void p_getpasswd(int s, char *to)
 #ifdef HAVE_TERMIO_H
     struct termios t, bak;
 
-    if(conf.debug>2)
-	printf("Doing p_getpasswd\n");
+    _ndebug(2, ("Doing p_getpasswd\n"));
 
     if(tcgetattr(0, &bak))
     {
@@ -222,8 +221,7 @@ void p_login(int s)
 
     if(checkpass(u.passwd, buf))
     {
-	if(conf.debug>2)
-	    printf("Login for user ``%s''\n", u.name);
+	_ndebug(2, ("Login for user ``%s''\n", u.name));
 
         if(strcmp(u.name, "admin")==0)
             login_adminmain(s, u);

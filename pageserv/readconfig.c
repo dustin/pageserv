@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.30 1997/12/29 07:44:50 dustin Exp $
+ * $Id: readconfig.c,v 1.31 1997/12/29 08:55:05 dustin Exp $
  */
 
 #include <readconfig.h>
@@ -238,78 +238,46 @@ void rdconfig(char *file)
     /* Hook up with some log facility action */
     conf.log_que=getlogFacility(rcfg_lookup(cf, "log.facility"));
 
-    tmp=rcfg_lookup(cf, "databases.userdb");
-    if(tmp)
-	conf.userdb=tmp;
+    #define storeIfFoundS(a, b) tmp=rcfg_lookup(cf, a); \
+	if(tmp) \
+	{ \
+	   _ndebug(3, ("Storing %s (%s)\n", a, tmp)); \
+	   b=tmp; \
+        } \
+	else \
+	{ \
+	    _ndebug(3, ("%s not found in config, will be default\n", a)); \
+	}
 
-    tmp=rcfg_lookup(cf, "databases.termdb");
-    if(tmp)
-	conf.termdb=tmp;
+    #define storeIfFoundI(a, b) tmp=rcfg_lookup(cf, a); \
+	if(tmp) \
+	{ \
+	   _ndebug(3, ("Storing %s (%s)\n", a, tmp)); \
+	   b=atoi(tmp); \
+        } \
+	else \
+	{ \
+	    _ndebug(3, ("%s not found in config, will be default\n", a)); \
+	}
 
-    tmp=rcfg_lookup(cf, "etc.pidfile");
-    if(tmp)
-	conf.pidfile=tmp;
-
-    tmp=rcfg_lookup(cf, "etc.queuedir");
-    if(tmp)
-	conf.qdir=tmp;
-
-    tmp=rcfg_lookup(cf, "etc.gmtOffset");
-    if(tmp)
-	conf.gmtoffset=atoi(tmp);
-
-    tmp=rcfg_lookup(cf, "modules.pageserv.protocols.farkle");
-    if(tmp)
-	conf.farkle=atoi(tmp);
-
-    tmp=rcfg_lookup(cf, "modules.webserver.run");
-    if(tmp)
-	conf.webserver=atoi(tmp);
-
-    tmp=rcfg_lookup(cf, "modules.pageserv.run");
-    if(tmp)
-	conf.pageserv=atoi(tmp);
-
-    tmp=rcfg_lookup(cf, "modules.pageserv.port");
-    if(tmp)
-	conf.pageport=atoi(tmp);
-
-    tmp=rcfg_lookup(cf, "modules.webserver.docroot");
-    if(tmp)
-	conf.webroot=tmp;
-
-    tmp=rcfg_lookup(cf, "modules.webserver.port");
-    if(tmp)
-	conf.webport=atoi(tmp);
-
-    tmp=rcfg_lookup(cf, "modules.snpp.run");
-    if(tmp)
-	conf.snppserver=atoi(tmp);
-
-    tmp=rcfg_lookup(cf, "modules.snpp.port");
-    if(tmp)
-	conf.snppport=atoi(tmp);
-
-    tmp=rcfg_lookup(cf, "tuning.debug");
-    if(tmp)
-	conf.debug=atoi(tmp);
-
-    tmp=rcfg_lookup(cf, "tuning.childLifetime");
-    if(tmp)
-	conf.childlifetime=atoi(tmp);
-
-    tmp=rcfg_lookup(cf, "tuning.queueLifeTime");
-    if(tmp)
-	conf.maxqueuetime=atoi(tmp);
-
-    tmp=rcfg_lookup(cf, "tuning.modemGrabAttempts");
-    if(tmp)
-	conf.maxconattempts=atoi(tmp);
-
-    tmp=rcfg_lookup(cf, "tuning.modemGrabSleep");
-    if(tmp)
-	conf.conattemptsleep=atoi(tmp);
-
+    storeIfFoundI("tuning.debug", conf.debug);
+    storeIfFoundS("databases.userdb", conf.userdb);
+    storeIfFoundS("databases.termdb", conf.termdb);
+    storeIfFoundS("etc.pidfile", conf.pidfile);
+    storeIfFoundS("etc.queuedir", conf.qdir);
+    storeIfFoundI("etc.gmtOffset", conf.gmtoffset);
+    storeIfFoundI("modules.pageserv.protocols.farkle", conf.farkle);
+    storeIfFoundI("modules.webserver.run", conf.webserver);
+    storeIfFoundI("modules.pageserv.run", conf.pageserv);
+    storeIfFoundI("modules.pageserv.port", conf.pageport);
+    storeIfFoundS("modules.webserver.docroot", conf.webroot);
+    storeIfFoundI("modules.webserver.port", conf.webport);
+    storeIfFoundI("modules.snpp.run", conf.snppserver);
+    storeIfFoundI("modules.snpp.port", conf.snppport);
+    storeIfFoundI("tuning.childLifetime", conf.childlifetime);
+    storeIfFoundI("tuning.queueLifeTime", conf.maxqueuetime);
+    storeIfFoundI("tuning.modemGrabAttempts", conf.maxconattempts);
+    storeIfFoundI("tuning.modemGrabSleep", conf.conattemptsleep);
 
     setdefaults();
     initmodules();
@@ -333,6 +301,7 @@ void showconfig(void)
     char *tmp;
 
     puts("Configuration:");
+    printf("\tConf file:    %s\n", CONFIGFILE);
     printf("\tServer:       %s\n", conf.servhost);
     printf("\tRunning mode: %s\n", modenames[conf.mode]);
     printf("\tUser db:      %s\n", conf.userdb);
