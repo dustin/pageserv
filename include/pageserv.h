@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.17 1997/04/09 21:09:05 dustin Exp $
+ * $Id: pageserv.h,v 1.18 1997/04/10 06:22:54 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -44,6 +44,8 @@
 #define PROMPT_ID   "ID: "
 #define PROMPT_MESS "Message: "
 #define PROMPT_PRI  "Priority: "
+#define PROMPT_UN   "Username: "
+#define PROMPT_PW   "Password: "
 
 /* paths */
 #define QUEDIR "/tmp"
@@ -75,8 +77,9 @@
 #define P_QUIT     3
 #define P_EPAGE    4
 #define P_APAGE    5
+#define P_LOGIN    6
 
-#define P_MAX      5
+#define P_MAX      6
 
 /* priorities */
 
@@ -91,6 +94,7 @@
 #define MODE_PQ     3    /* print queue */
 #define MODE_VERS   4    /* print version info */
 #define MODE_RUNQ   5    /* Run the queue */
+#define MODE_KILL   6    /* Kill off the daemon. */
 
 /* log types */
 
@@ -106,7 +110,8 @@ static char *modenames[]={
     "listing database",
     "print queue",
     "printing version info",
-    "running queue"
+    "running queue",
+    "killing server"
 };
 #endif
 
@@ -118,6 +123,7 @@ static char *modenames[]={
 
 struct user {
     char name[NAMELEN];
+    char passwd[14];
     char pageid[IDLEN];
     char statid[STATLEN];
     int  times;
@@ -205,6 +211,7 @@ void getnormtimes(int times, int *ret);
 void getoptions(int argc, char **argv);
 void getqueueinfo( struct queuent *q );
 void logqueue(struct queuent q, int type, char *reason);
+void p_login(int s);
 void printqueue(void);
 void printterm(struct terminal t);
 void printterms(void);
