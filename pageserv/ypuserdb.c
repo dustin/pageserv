@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: ypuserdb.c,v 1.3 1997/08/11 08:17:12 dustin Exp $
+ * $Id: ypuserdb.c,v 1.4 1997/08/27 07:09:23 dustin Exp $
  */
 
 #include <config.h>
@@ -30,7 +30,7 @@ int nis_u_exists(char *name)
     char *data;
     int yperr, len;
 
-    yperr=yp_match(domainname, "pageserv.users", name,
+    yperr=yp_match(domainname, conf.userdb, name,
 	  strlen(name), &data, &len);
 
     if(!yperr)
@@ -47,7 +47,7 @@ struct user nis_getuser(char *name)
 
     memset(&u, 0x00, sizeof(u));
 
-    yperr=yp_match(domainname, "pageserv.users", name,
+    yperr=yp_match(domainname, conf.userdb, name,
 	  strlen(name), &data, &len);
 
     if(!yperr)
@@ -75,7 +75,7 @@ char **nis_listusers(char *term)
 
     ret=malloc(size * sizeof(char *));
 
-    yperr=yp_first(domainname, "pageserv.users", &key,
+    yperr=yp_first(domainname, conf.userdb, &key,
           &keylen, &val, &vallen);
 
     while(!yperr)
@@ -107,7 +107,7 @@ char **nis_listusers(char *term)
 	    ret=realloc(ret, size*sizeof(char *));
 	}
 
-	yperr=yp_next(domainname, "pageserv.users", key, keylen,
+	yperr=yp_next(domainname, conf.userdb, key, keylen,
 	      &key, &keylen, &val, &vallen);
     }
     ret[index]=NULL;
@@ -131,6 +131,9 @@ void nis_eraseuserdb(void)
 
 void nis_userdbInit(void)
 {
+    char *data;
+    int len, yperr;
+
     domainname=rcfg_lookup(conf.cf, "etc.nisdomain");
     if(domainname==NULL)
     {
@@ -138,6 +141,17 @@ void nis_userdbInit(void)
     }
 
     yp_bind(domainname);
+
+    yperr=yp_match(domainname, conf.userdb, "blah",
+	  4, &data, &len);
+
+    if(yperr==YPERR_MAP)
+    {
+	fprintf(stderr,
+		"Warning, table %s not found in NIS, setting to %s\n",
+		conf.userdb, NIS_DEFAULTUDB);
+	conf.userdb=NIS_DEFAULTUDB;
+    }
 
     conf.udb.u_exists=nis_u_exists;
     conf.udb.getuser=nis_getuser;

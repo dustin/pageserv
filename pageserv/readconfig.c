@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.27 1997/08/24 21:12:18 dustin Exp $
+ * $Id: readconfig.c,v 1.28 1997/08/27 07:09:22 dustin Exp $
  */
 
 #include <readconfig.h>
@@ -21,6 +21,22 @@ extern struct config conf;
 
 void setdefaults(void)
 {
+    /* This is a *little* inclear, but here I list all known types of
+     * user database, so that I can just check to see what's configured
+     * in
+     */
+    struct { char *name;
+	     void (*func)(void);
+    } userdbtypes[]={
+#ifdef HAVE_NIS
+	{ "nis", nis_userdbInit },
+#endif /* have NIS */
+	{ "dbm", dbm_userdbInit },
+	{ NULL, NULL }
+    };
+    char *userdb;
+    int i=0;
+
     if(conf.servhost == NULL)
 	conf.servhost=REMHOST;
 
@@ -39,14 +55,28 @@ void setdefaults(void)
     if(conf.webroot == NULL)
 	conf.webroot= WEBROOT;
 
-#ifdef HAVE_NIS
-    if( rcfg_lookupInt(conf.cf, "databases.nis_userdb") == 1 )
-        nis_userdbInit();
+    userdb=rcfg_lookup(conf.cf, "databases.userdbType");
+
+    /* Check to make sure this is configured in somewhere */
+    if(userdb)
+    {
+        for(i=0; userdbtypes[i].name != NULL; i++)
+        {
+	    if(strcmp(userdbtypes[i].name, userdb)==0)
+	        break;
+        }
+    }
+
+    if( (userdbtypes[i].func == NULL) || (userdb==NULL) )
+    {
+	fputs("Unknown, or unconfigured user database type, using dbm\n",
+              stderr);
+	dbm_userdbInit();
+    }
     else
-        dbm_userdbInit();
-#else /* Don't have NIS */
-    dbm_userdbInit();
-#endif
+    {
+	userdbtypes[i].func();
+    }
 }
 
 #ifndef HAVE_GETOPT
@@ -203,11 +233,11 @@ void rdconfig(char *file)
     /* Hook up with some log facility action */
     conf.log_que=getlogFacility(rcfg_lookup(cf, "log.facility"));
 
-    tmp=rcfg_lookup(cf, "etc.userdb");
+    tmp=rcfg_lookup(cf, "databases.userdb");
     if(tmp)
 	conf.userdb=tmp;
 
-    tmp=rcfg_lookup(cf, "etc.termdb");
+    tmp=rcfg_lookup(cf, "databases.termdb");
     if(tmp)
 	conf.termdb=tmp;
 
@@ -287,11 +317,18 @@ void showconfig(void)
 {
     int i;
     module *m;
+    char *tmp;
 
     puts("Configuration:");
     printf("\tServer:       %s\n", conf.servhost);
     printf("\tRunning mode: %s\n", modenames[conf.mode]);
     printf("\tUser db:      %s\n", conf.userdb);
+
+    /* Find out the configured user database type */
+    tmp=rcfg_lookup(conf.cf, "databases.userdbType");
+    tmp=tmp?tmp:"dbm";
+    printf("\tUser db type: %s\n", tmp);
+
     printf("\tTerm db:      %s\n", conf.termdb);
     printf("\tQueue dir:    %s\n", conf.qdir);
     printf("\tPID file:     %s\n", conf.pidfile);
