@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  SPY Internetworking
  *
- * $Id: tap.c,v 2.21 1998/07/14 05:48:09 dustin Exp $
+ * $Id: tap.c,v 2.22 1998/07/14 06:47:33 dustin Exp $
  */
 
 #include <stdio.h>
@@ -40,15 +40,6 @@ static char *tap_sent_checksum(int sum)
     charsum[0]=48+ sum - (int)(sum/16) * 16;
 
     return(charsum);
-}
-
-static void chardump(char *s)
-{
-    int i;
-
-    for(i=0; s[i]!=0; i++) {
-	printf("%d:\t%2d (%c)\n", i, (int)s[i], s[i]);
-    }
 }
 
 int s_tap_init(int s, int flags)
