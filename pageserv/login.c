@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: login.c,v 1.9 1997/04/21 16:54:44 dustin Exp $
+ * $Id: login.c,v 1.10 1997/07/07 08:48:42 dustin Exp $
  * $State: Exp $
  */
 
@@ -23,6 +23,14 @@
 #include <sys/time.h>
 #endif
 
+#ifdef HAVE_TERMIO_H
+#include <termio.h>
+#endif
+
+#ifdef HAVE_FCNTL_H
+#include <fcntl.h>
+#endif
+
 #include <sys/socket.h>
 #include <netinet/in.h>
 
@@ -37,8 +45,8 @@ void makesalt(char *s, int n, long v)
 
     while(--n>=0)
     {
-	*s++=c[v&0x3f];
-	v>>=6;
+        *s++=c[v&0x3f];
+        v>>=6;
     }
 }
 
@@ -63,20 +71,51 @@ int getynresult(int s, char *str)
 
     switch(tolower(str[0]))
     {
-	case 'y':
-	    flag=1;
-	    break;
-	case 'n':
-	    flag=2;
-	    break;
-	default:
-	    sprintf(buf, "Um, I said y or n, you said %c.  \
+        case 'y':
+            flag=1;
+            break;
+        case 'n':
+            flag=2;
+            break;
+        default:
+            sprintf(buf, "Um, I said y or n, you said %c.  \
 Please hang up and try again\n", str[0]);
-	    puttext(s, buf);
-	    exit(0);
+            puttext(s, buf);
+            exit(0);
     }
 
     return(flag);
+}
+
+void p_getpasswd(int s, char *to)
+{
+    struct termios t, bak;
+
+    if(conf.debug>2)
+	printf("Doing p_getpasswd\n");
+
+    if(tcgetattr(0, &bak))
+    {
+	perror("tcgetattr");
+	exit(1);
+    }
+
+    t=bak;
+
+    t.c_lflag &= ~ECHO;
+    if(tcsetattr(0, TCSANOW, &t))
+    {
+	perror("tcsetattr");
+	exit(1);
+    }
+
+    gettextcr(s, to);
+
+    if(tcsetattr(0, TCSANOW, &bak))
+    {
+        perror("tcsetattr");
+        exit(1);
+    }
 }
 
 void login_usermain(int s, struct user u)
@@ -99,48 +138,48 @@ void login_usermain(int s, struct user u)
 
     if(flag==1)
     {
-	/* zero it out */
-	u.times=0;
+        /* zero it out */
+        u.times=0;
 
-	puttext(s, "Earliest time to receive normal pages [0-23] (24 hour):  ");
-	gettextcr(s, buf);
-	sscanf(buf, "%d", &times[0]);
+        puttext(s, "Earliest time to receive normal pages [0-23] (24 hour):  ");
+        gettextcr(s, buf);
+        sscanf(buf, "%d", &times[0]);
 
-	puttext(s, "Latest time to receive normal pages [0-23] (24 hour):  ");
-	gettextcr(s, buf);
-	sscanf(buf, "%d", &times[1]);
+        puttext(s, "Latest time to receive normal pages [0-23] (24 hour):  ");
+        gettextcr(s, buf);
+        sscanf(buf, "%d", &times[1]);
 
-	if(times[0]==times[1])
-	{
-	    puttext(s, "You will receive normal priority pages at any time\n");
-	    u.times=0xFFFFFFFF;
-	}
-	else
-	{
-	    if(times[0]==0)
-		times[0]=23;
+        if(times[0]==times[1])
+        {
+            puttext(s, "You will receive normal priority pages at any time\n");
+            u.times=0xFFFFFFFF;
+        }
+        else
+        {
+            if(times[0]==0)
+                times[0]=23;
 
-	    if(times[0]<times[1])
-	    {
-		for(i=times[0]; i<times[1] ; i++)
-		{
-		    u.times=set_bit(u.times, i);
-		}
-	    }
-	    else
-	    {
-		for(i=times[0]; i<24 ; i++)
-		{
-		    u.times=set_bit(u.times, i);
-		}
+            if(times[0]<times[1])
+            {
+                for(i=times[0]; i<times[1] ; i++)
+                {
+                    u.times=set_bit(u.times, i);
+                }
+            }
+            else
+            {
+                for(i=times[0]; i<24 ; i++)
+                {
+                    u.times=set_bit(u.times, i);
+                }
 
-		for(i=0; i<times[1] ; i++)
-		{
-		    u.times=set_bit(u.times, i);
-		}
-	    } /* end of early >= late */
-	}     /* end of specific time setting stuff */
-	changes++;
+                for(i=0; i<times[1] ; i++)
+                {
+                    u.times=set_bit(u.times, i);
+                }
+            } /* end of early >= late */
+        }     /* end of specific time setting stuff */
+        changes++;
     }         /* setting times */
 
     puttext(s, "Would you like to change your password?  [yn]:  ");
@@ -149,26 +188,31 @@ void login_usermain(int s, struct user u)
 
     if(flag==1)
     {
-	puttext(s, "Enter new password here:  ");
-	gettextcr(s, buf);
+        puttext(s, "Enter new password here:  ");
+        gettextcr(s, buf);
 
-	u=setpasswd(u, buf);
+        u=setpasswd(u, buf);
 
-	changes++;
+        changes++;
     } /* password change */
 
     if(changes>0)
     {
-	sprintf(buf, "There were %d changes, storing data.\n", changes);
-	puttext(s, buf);
-	storeuser(u);
+        sprintf(buf, "There were %d changes, storing data.\n", changes);
+        puttext(s, buf);
+        storeuser(u);
     }
     else
     {
-	puttext(s, "No changes made.\n");
+        puttext(s, "No changes made.\n");
     }
 
     puttext(s, "Thank you for shopping\n");
+}
+
+void login_adminmain(int s, struct user u)
+{
+    puttext(s, "Admin stuff not supported yet.\n");
 }
 
 void p_login(int s)
@@ -181,30 +225,38 @@ void p_login(int s)
 
     if(u_exists(buf))
     {
-	u=getuser(buf);
+        u=getuser(buf);
     }
     else
     {
-	puttext(s, MESG_NOUSER);
-	exit(0);
+        puttext(s, MESG_NOUSER);
+        exit(0);
     }
 
     if(strlen(u.passwd)<13)
     {
-	puttext(s, "Password has not been setup for this account.\n");
-	exit(0);
+        puttext(s, "Password has not been setup for this account.\n");
+        exit(0);
     }
 
     puttext(s, PROMPT_PW);
-    gettextcr(s, buf);
+    /* gettextcr(s, buf); */
+
+    p_getpasswd(s, buf);
 
     if(checkpass(u.passwd, buf))
     {
-	login_usermain(s, u);
+	if(conf.debug>2)
+	    printf("Login for user ``%s''\n", u.name);
+
+        if(strcmp(u.name, "admin")==0)
+            login_adminmain(s, u);
+        else
+            login_usermain(s, u);
     }
     else
     {
-	puttext(s, MESG_BADPASSWD);
-	exit(0);
+        puttext(s, MESG_BADPASSWD);
+        exit(0);
     }
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.15 1997/04/16 19:44:20 dustin Exp $
+ * $Id: main.c,v 1.16 1997/07/07 08:48:43 dustin Exp $
  * $State: Exp $
  */
 
@@ -230,8 +230,8 @@ void changepasswd(void)
     u=getuser(buf);
 
     fputs("User's new password:  ", stdout);
-    fgets(buf, BUFLEN, stdin);
-    kw(buf);
+    p_getpasswd(1, buf);
+    putchar('\n');
 
     u=setpasswd(u, buf);
     storeuser(u);
