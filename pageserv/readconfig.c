@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.4 1997/04/01 05:42:01 dustin Exp $
+ * $Id: readconfig.c,v 1.5 1997/04/02 06:20:30 dustin Exp $
  */
 
 #include <stdio.h>
@@ -16,7 +16,7 @@
 
 extern struct config conf;
 
-#define COMMANDS "DT"
+#define COMMANDS "DTP"
 
 int isin(char c, char *s)
 {
@@ -70,7 +70,15 @@ void T_command(char s, char *arg)
     switch(s)
     {
 	case 'l': conf.childlifetime=atoi(arg); break;
-	case 'q': conf.maxqueuetime=atoi(arg); break;
+	case 'Q': conf.maxqueuetime=atoi(arg); break;
+    }
+}
+
+void P_command(char s, char *arg)
+{
+    switch(s)
+    {
+	case 'f': conf.farkle=atoi(arg); break;
     }
 }
 
@@ -86,6 +94,7 @@ void docommand(int l, char c, char s, char *arg)
     {
 	case 'D': D_command(s, arg);  break;
 	case 'T': T_command(s, arg);  break;
+	case 'P': P_command(s, arg);  break;
     }
 }
 
@@ -194,6 +203,7 @@ void readconfig(char *file)
 
     conf.childlifetime=CHILD_LIFETIME;
     conf.maxqueuetime=MAX_QUEUETIME;
+    conf.farkle=DEFAULT_FARKLE;
 
     f=fopen(file, "r");
     if(f==NULL)
@@ -238,6 +248,7 @@ void showconfig(void)
     printf("\tTerm db:      %s\n", conf.termdb);
     printf("\tQueue dir:    %s\n", conf.qdir);
     printf("\tPID file:     %s\n", conf.pidfile);
+    printf("\tFarkle        %d\n", conf.farkle);
     printf("\tChild life:   %d\n", conf.childlifetime);
     printf("\tMax queue tm: %d\n", conf.maxqueuetime);
     printf("\tDebug:        %d\n", conf.debug);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: protocol.c,v 1.2 1997/03/30 05:59:52 dustin Exp $
+ * $Id: protocol.c,v 1.3 1997/04/02 06:20:29 dustin Exp $
  */
 
 #include <stdio.h>
@@ -122,6 +122,14 @@ void p_farkle(int s)
     struct queuent q;
     struct user u;
     char buf[BUFLEN];
+
+    if(conf.farkle==0)
+    {
+        if(conf.debug>1)
+	    puts("Tried to farkle, configured out...");
+	puttext(s, MESG_NOFARKLE);
+	return;
+    }
 
     if(conf.debug>1)
 	puts("Entering p_farkle");

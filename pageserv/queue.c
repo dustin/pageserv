@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.10 1997/04/01 22:30:00 dustin Exp $
+ * $Id: queue.c,v 1.11 1997/04/02 06:20:30 dustin Exp $
  */
 
 #include <stdio.h>
@@ -46,11 +46,12 @@ void runqueue(void)
             for(i=0; q[i].to[0] != NULL; i++)
 	    {
 		getqueueinfo(&q[i]);
+
 		if( (s_tap_send(s, q[i].u.pageid, q[i].message)) == 0)
 		{
 		    if(conf.debug>0)
 			printf("Delivery of %s successful\n", q[i].qid);
-		    unlink(q[i].qid);
+		    dequeue(q[i].qid);
 		}
 		else
 		{
@@ -61,12 +62,41 @@ void runqueue(void)
                     printf("\t%d to %s  ``%s''\n", i, q[i].to, q[i].message);
             }
 	    s_tap_end(s);
+	    close(s);
 	    sleep(1); /* sleep it off */
 	}
 
         cleanqueuelist(q);
     }
     cleantermlist(termlist);
+}
+
+void dequeue(char *qid)
+{
+    char buf[BUFLEN];
+
+    switch(qid[0])
+    {
+	case 'q':
+	    strcpy(buf, conf.qdir);
+	    strcat(buf, "/");
+	    strcat(buf, qid);
+	    break;
+	case '/':
+	    strcpy(buf, qid);
+	    break;
+        default:
+	    if(conf.debug>0)
+		printf("I don't know what the hell to do with %s\n", qid);
+	    qid[0]=NULL;
+    }
+
+    if(qid[0]!=NULL)
+    {
+	if(conf.debug>0)
+	    printf("Unlinking file: %s\n", buf);
+        unlink(buf);
+    }
 }
 
 int gq_checkit(struct queuent q, char *number)
@@ -232,7 +262,24 @@ char *newtmp(void)
 
 int readytodeliver(struct queuent q)
 {
-    return(1);
+    int fuz, ret=1;
+    time_t t;
+
+    time(&t);
+    fuz=(t-q.submitted)/60;
+
+    if(conf.debug>2)
+        printf("fuz is %d\n", fuz);
+
+    if(fuz>conf.maxqueuetime)
+    {
+	if(conf.debug>2)
+	    printf("Deleting %s, too old...\n", q.qid);
+	dequeue(q.qid);
+	ret=0;
+    }
+
+    return(ret);
 }
 
 void getqueueinfo( struct queuent *q )
@@ -355,6 +402,6 @@ struct queuent dofarkle()
         }
     }
     closedir(dir);
-    unlink(q.qid);
+    dequeue(q.qid);
     return(q);
 }
