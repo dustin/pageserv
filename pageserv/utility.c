@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: utility.c,v 1.13 1997/07/14 06:03:10 dustin Exp $
+ * $Id: utility.c,v 1.14 1997/07/31 03:28:01 dustin Exp $
  * $State: Exp $
  */
 
@@ -11,10 +11,24 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
+#include <sys/wait.h>
 
 #include <pageserv.h>
 
 extern struct config conf;
+
+/* Please note, this is only a place holder for the real function */
+
+int checkpidfile(char *filename)
+{
+    if(access(filename, F_OK)!=0)
+    {
+        return(PID_NOFILE);
+    }
+
+    /* This is a lie, but I don't want to go through all that right now */
+    return(PID_STALE);
+}
 
 void quicksort(char **a, int l, int r)
 {
