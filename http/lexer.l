@@ -2,7 +2,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: lexer.l,v 1.5 1997/07/14 00:19:00 dustin Exp $
+ * $Id: lexer.l,v 1.6 1997/07/14 06:02:50 dustin Exp $
  */
 
 #include <config.h>
@@ -30,7 +30,7 @@ FUNC    &[_A-Za-z][_A-Za-z0-9]*
 %%
 {THING} { _http_lex_showthing(yytext); }
 {FUNC}  { _http_lex_dofunc(yytext); }
-.|\n    { _parse_strlen=addtostr(_parse_strlen, _parse_sendstr,  yytext); }
+.|\n    { _parse_sendstr=addtostr(&_parse_strlen, _parse_sendstr,  yytext); }
 
 %%
 
@@ -57,12 +57,12 @@ void _parse_maketimelist(int frwhen)
 
     for(i=0; i<24; i++)
     {
-	if(i==times[frwhen])
-	    sprintf(buf, "<option selected>%d\n", i);
-	else
-	    sprintf(buf, "<option>%d\n", i);
+        if(i==times[frwhen])
+            sprintf(buf, "<option selected>%d\n", i);
+        else
+            sprintf(buf, "<option>%d\n", i);
 
-	_parse_strlen=addtostr(_parse_strlen, _parse_sendstr, buf);
+        _parse_sendstr=addtostr(&_parse_strlen, _parse_sendstr, buf);
     }
 }
 
@@ -77,8 +77,8 @@ void _parse_listTerms(void)
 
     for(i=0; terms[i]!=NULL; i++)
     {
-	sprintf(buf, "<option>%s\n", terms[i]);
-	_parse_strlen=addtostr(_parse_strlen, _parse_sendstr, buf);
+        sprintf(buf, "<option>%s\n", terms[i]);
+        _parse_sendstr=addtostr(&_parse_strlen, _parse_sendstr, buf);
     }
 
     cleantermlist(terms);
@@ -94,53 +94,92 @@ void _parse_selectTimeL(void)
     _parse_maketimelist(LATE);
 }
 
+void _parse_tableUserList(void)
+{
+    char **users;
+    char **terms;
+    char buf[1024];
+    struct user u;
+    int i, j;
+
+    terms=listterms();
+    stringListSort(terms);
+
+    _parse_sendstr=addtostr(&_parse_strlen, _parse_sendstr,
+        "<table border=\"3\">\n");
+
+    _parse_sendstr=addtostr(&_parse_strlen, _parse_sendstr,
+        "<tr><td>Username</td><td>Terminal</td></tr>\n");
+
+    for(j=0; terms[j]!=NULL; j++)
+    {
+        users=listusers(terms[j]);
+        stringListSort(users);
+
+        for(i=0; users[i]!=NULL; i++)
+        {
+            u=getuser(users[i]);
+            sprintf(buf, "<tr><td>%s</td><td>%s</td></tr>\n", users[i],
+                u.statid);
+            _parse_sendstr=addtostr(&_parse_strlen, _parse_sendstr, buf);
+        }
+
+        cleanuserlist(users);
+    }
+
+    _parse_sendstr=addtostr(&_parse_strlen, _parse_sendstr, "</table>");
+
+    cleantermlist(terms);
+}
+
 void _http_lex_dofunc(char *func)
 {
     int i;
     struct namedfunc f[]={
-	{ "&selectTimeE", _parse_selectTimeE },
-	{ "&selectTimeL", _parse_selectTimeL },
-	{ "&selectListTerms", _parse_listTerms },
-	{ NULL, NULL }
+        { "&selectTimeE", _parse_selectTimeE },
+        { "&selectTimeL", _parse_selectTimeL },
+        { "&selectListTerms", _parse_listTerms },
+        { "&tableUserList", _parse_tableUserList },
+        { NULL, NULL }
     };
 
     if(conf.debug>2)
-	printf("_http_lex_dofunc got %s\n", func);
+        printf("_http_lex_dofunc got %s\n", func);
 
     if(execnamedfunc(func, f)<0)
-        _parse_strlen=addtostr(_parse_strlen, _parse_sendstr, func);
+        _parse_sendstr=addtostr(&_parse_strlen, _parse_sendstr, func);
 }
 
 void _http_lex_showthing(char *thing)
 {
     int i;
     static char *parse_vars[]={
-	"$version",
-	"$user",
-	NULL
+        "$version",
+        "$user",
+        NULL
     };
 
     if(conf.debug>2)
-	printf("_http_lex_showthing got %s\n", thing);
+        printf("_http_lex_showthing got %s\n", thing);
 
     for(i=0; parse_vars[i]!=NULL; i++)
     {
-	if(strcmp(parse_vars[i], thing)==0)
-	    break;
+        if(strcmp(parse_vars[i], thing)==0)
+            break;
     }
 
     switch(i)
     {
-	case 0:
-	    _parse_strlen=addtostr(_parse_strlen, _parse_sendstr, VERSION);
-	    break;
+        case 0:
+            _parse_sendstr=addtostr(&_parse_strlen, _parse_sendstr, VERSION);
+            break;
         case 1:
-	    _parse_strlen=addtostr(_parse_strlen, _parse_sendstr,
-	        _parse_r.auth.name);
+            _parse_sendstr=addtostr(&_parse_strlen, _parse_sendstr,
+                _parse_r.auth.name);
             break;
 
-	default:
-	    _parse_strlen=addtostr(_parse_strlen, _parse_sendstr, thing);
+        default:
+            _parse_sendstr=addtostr(&_parse_strlen, _parse_sendstr, thing);
     }
 }
 
@@ -169,9 +208,9 @@ void _http_parse(int s, struct http_request r)
     yylex();
 
     if(yyin)
-	fclose(yyin);
+        fclose(yyin);
 
-    _parse_strlen=addtostr(_parse_strlen, _parse_sendstr, HTTP_FOOTER);
+    _parse_sendstr=addtostr(&_parse_strlen, _parse_sendstr, HTTP_FOOTER);
 
 
     if(r.version>0)
