@@ -1,8 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: serial.c,v 2.6 1997/08/02 01:48:45 dustin Exp $
- * $State: Exp $
+ * $Id: serial.c,v 2.7 1997/08/20 06:04:54 dustin Exp $
  */
 
 /*
@@ -154,7 +153,7 @@ int p_openport(char *port)
 
 	return(-1);
     }
-    s=open(port, O_RDWR|O_NOCTTY|O_NDELAY, 0);
+    s=open(port, O_RDWR|O_NOCTTY, 0);
 
     if(conf.debug>2)
 	printf("Serial port attached for ``%s'', fd %d\n", port, s);
