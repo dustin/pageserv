@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: serial.c,v 2.4 1997/07/23 06:03:14 dustin Exp $
+ * $Id: serial.c,v 2.5 1997/07/23 23:51:56 dustin Exp $
  * $State: Exp $
  */
 
@@ -142,7 +142,7 @@ int p_openterm(struct terminal t)
 int p_openport(char *port)
 {
     int s;
-    struct termios tm, tm_old;
+    struct termios tm;
 
     if(conf.debug>3)
 	printf("Called p_openport(%s);\n", port);
@@ -154,7 +154,7 @@ int p_openport(char *port)
 
 	return(-1);
     }
-s=open(port, O_RDWR|O_NOCTTY, 0);
+    s=open(port, O_RDWR|O_NOCTTY|O_NDELAY, 0);
 
     if(conf.debug>2)
 	printf("Serial port attached for ``%s'', fd %d\n", port, s);
@@ -162,25 +162,23 @@ s=open(port, O_RDWR|O_NOCTTY, 0);
     if(tcgetattr(s, &tm)<0)
 	perror("tcgetattr");
 
-    tm_old=tm;
+    if (cfsetispeed(&tm, B2400) == -1)
+	perror("cfsetispeed");
+    if (cfsetospeed(&tm, B2400) == -1)
+	perror("cfsetospeed");
 
     tm.c_cc[VMIN]=1;
     tm.c_cc[VTIME]=0;
 
     tm.c_iflag &= ~(BRKINT | IGNPAR | PARMRK | INPCK | ISTRIP |
 	INLCR | IGNCR | ICRNL | IXON | ICANON);
-    tm.c_iflag |= (IGNBRK | IGNPAR | ISTRIP);
+    tm.c_iflag |= (IGNBRK | ISTRIP | IXON);
 
     tm.c_oflag=0;
     tm.c_lflag=0;
 
     tm.c_cflag &= ~(CSTOPB | CSIZE | PARODD);
-    tm.c_cflag |= (HUPCL | CREAD | CS7 | PARENB | CLOCAL);
-
-    if (cfsetispeed(&tm, B2400) == -1)
-	perror("cfsetispeed");
-    if (cfsetospeed(&tm, B2400) == -1)
-	perror("cfsetospeed");
+    tm.c_cflag |= (CREAD | CS7 | PARENB | CLOCAL | CRTSCTS);
 
     if (tcflush(s, TCIFLUSH) == -1)
 	perror("tcflush");

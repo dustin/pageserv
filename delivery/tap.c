@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  SPY Internetworking
  *
- * $Id: tap.c,v 2.10 1997/06/19 08:24:35 dustin Exp $
+ * $Id: tap.c,v 2.11 1997/07/23 23:51:57 dustin Exp $
  * $State: Exp $
  */
 
@@ -59,7 +59,6 @@ int s_tap_init(int s)
     if(conf.debug>0)
         puts("Initializing TAP");
 
-    i=puttext(s, "\r");
     s_modem_waitfor(s, "ID=", 2);
 
     sprintf(buf, "%cPG1\r", C_ESC);
