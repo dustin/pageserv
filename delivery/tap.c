@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  SPY Internetworking
  *
- * $Id: tap.c,v 2.18 1998/01/11 08:05:51 dustin Exp $
+ * $Id: tap.c,v 2.19 1998/07/11 06:16:10 dustin Exp $
  */
 
 #include <stdio.h>
@@ -22,8 +22,7 @@ static int tap_checksum(char *string)
 {
     int i, sum=0;
 
-    for(i=0; string[i]!=0; i++)
-    {
+    for(i=0; string[i]!=0; i++) {
 	sum+=string[i] - ( (int)(string[i]/128) * 128);
     }
 
@@ -48,9 +47,7 @@ void chardump(char *s)
     int i;
 
     for(i=0; s[i]!=0; i++)
-    {
 	printf("%d:\t%2d (%c)\n", i, (int)s[i], s[i]);
-    }
 }
 
 int s_tap_init(int s, int flags)
@@ -61,16 +58,14 @@ int s_tap_init(int s, int flags)
 
     /* If configured to do so, pimp slap it with a CR right away */
 
-    if(flags & TAP_INITCR)
-    {
+    if(flags & TAP_INITCR) {
 	_ndebug(3, ("flag TAP_INITCR is set, sending a CR\n"));
 
 	usleep(500000);
 	puttext(s, "\r");
     }
 
-    if( s_modem_waitfor(s, "ID=", 2) < 0)
-    {
+    if( s_modem_waitfor(s, "ID=", 2) < 0) {
 	_ndebug(2, ("Error:  s_modem_waitfor(%d, \"ID=\", 2);\n", s));
 	return(-1);
     }
@@ -79,8 +74,7 @@ int s_tap_init(int s, int flags)
     puttext(s, buf);
 
     sprintf(buf, "%c[p", C_ESC);
-    if( s_modem_waitfor(s, buf, 10) < 0)
-    {
+    if( s_modem_waitfor(s, buf, 10) < 0) {
 	_ndebug(2, ("Error:  s_modem_waitfor(%d, \"%s\", 2);\n", s, buf));
 	return(-1);
     }
@@ -102,10 +96,8 @@ static int charfound(char *string, char *chars)
 {
     int i;
 
-    for(i=0; chars[i]!=0x00; i++)
-    {
-	if(strchr(string, chars[i])!=NULL)
-	{
+    for(i=0; chars[i]!=0x00; i++) {
+	if(strchr(string, chars[i])!=NULL) {
 	    return(chars[i]);
 	}
     }
@@ -132,11 +124,9 @@ int s_tap_send(int s, char *id, char *message)
     /* Lets see if we won. */
 
     c=0;
-    while( (c=charfound(buf, search)) ==0 )
-    {
+    while( (c=charfound(buf, search)) ==0 ) {
 	i=read(s, buf, BUFLEN);
-	if(i>0)
-	{
+	if(i>0) {
 	    buf[i]=0x00;
 	    _ndebug(2, ("%s\n", buf));
 	}
@@ -144,12 +134,9 @@ int s_tap_send(int s, char *id, char *message)
 
     usleep(1700);
 
-    if(c==C_ACK || c==C_ESC)
-    {
+    if(c==C_ACK || c==C_ESC) {
 	return(0);
-    }
-    else
-    {
+    } else {
 	_ndebug(2, (":( Received character %xh\n", c));
 	return(1);
     }
