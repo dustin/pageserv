@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: snppmisc.c,v 1.6 1998/01/14 06:43:24 dustin Exp $
+ * $Id: snppmisc.c,v 1.7 1998/01/20 04:29:47 dustin Exp $
  */
 
 #include <snpp.h>
@@ -44,6 +44,8 @@ void snpp_help(int s)
     "\tSend the queued message",
     "RESEt",
     "\tReset all input crap, get ready to go again.",
+    "LOGIn <username> <passwd>",
+    "\tLogin for special features, etc...",
     "QUIT",
     "\tExits",
     NULL

@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 1.6 1998/01/18 11:36:26 dustin Exp $
+# $Id: Makefile.in,v 1.7 1998/01/20 04:29:44 dustin Exp $
 
 SHELL=/bin/sh
 CC=@CC@
@@ -14,8 +14,8 @@ LIBS=@LIBS@
 
 LDFLAGS=@LDFLAGS@ $(LIBS)
 
-LSNPP_OBJS=snppmain.o snppparse.o snppmisc.o
-SOURCES=snppmain.c snppparse.c snppmisc.c
+LSNPP_OBJS=snppmain.o snppparse.o snppmisc.o snpplogin.o
+SOURCES=snppmain.c snppparse.c snppmisc.c snpplogin.c
 
 # Lint stuff
 LINT=@LINT@

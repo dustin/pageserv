@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: snppmain.c,v 1.20 1998/01/18 10:03:58 dustin Exp $
+ * $Id: snppmain.c,v 1.21 1998/01/20 04:29:46 dustin Exp $
  */
 
 #include <config.h>
@@ -51,6 +51,7 @@ module mod_snppserv={
 
 static char **snpp_pageid=NULL;
 static char *snpp_message=NULL;
+static char *snpp_logname=NULL;
 static int  snpp_nid=0;
 static int  snpp_priority=PR_NORMAL;
 static int  snpp_holdtime=0;
@@ -288,6 +289,12 @@ static void snpp_cleanstuff(void)
         free(snpp_message);
         snpp_message=NULL;
     }
+
+    if(snpp_logname)
+    {
+	free(snpp_logname);
+	snpp_logname=NULL;
+    }
 }
 
 static void snpp_send(int s, struct sockaddr_in fsin)
@@ -398,6 +405,14 @@ static void _snpp_main(modpass p)
 
             case SNPP_HOLD:
                 snpp_holduntil(s, snpp_arg(buf));
+		break;
+
+	    case SNPP_LOGI:
+		snpp_logname=snpp_login(s, snpp_arg(buf));
+		break;
+
+	    case SNPP_SHOWQ:
+		snpp_showUserQ(s, snpp_logname, snpp_arg(buf));
 		break;
 
             case -1:
