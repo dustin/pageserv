@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.13 1997/04/02 06:20:03 dustin Exp $
+ * $Id: pageserv.h,v 1.14 1997/04/02 16:54:13 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -37,6 +37,7 @@
 #define MESG_BADTIME "User is not accepting normal priority pages now\n\n\n"
 #define MESG_WELCOME "Welcome to Dustin's pager server version %s.\n"
 #define MESG_NOFARKLE "Sorry, but farkle is not supported.\n\n\n"
+#define MESG_TAPFAIL "TAP failure, will keep trying until it expires"
 
 /* prompts */
 #define PROMPT_CMD  "CMD: "
@@ -85,6 +86,12 @@
 #define MODE_VERS   4    /* print version info */
 #define MODE_RUNQ   5    /* Run the queue */
 
+/* log types */
+
+#define QUE_LOG     0
+#define SUC_LOG     1
+#define FAIL_LOG    2
+#define EXP_LOG     3
 #ifdef IWANT_MODENAMES
 static char *modenames[]={
     "daemon",
@@ -133,6 +140,7 @@ struct config {
     int childlifetime;
     int maxqueuetime;
     int farkle;
+    int log_que;
     char *servhost;
     char *userdb;
     char *termdb;
@@ -149,6 +157,7 @@ struct config {
 RETSIGTYPE serv_sighup(int sig);
 RETSIGTYPE serv_sigint(int sig);
 char **listterms(void);
+char *fntoqid(char *fn);
 char *kw(char *in);
 char *newqfile(void);
 int bit_set(int bmap, int which);
@@ -184,6 +193,7 @@ void eraseuserdb(void);
 void getnormtimes(int times, int *ret);
 void getoptions(int argc, char **argv);
 void getqueueinfo( struct queuent *q );
+void logqueue(struct queuent q, int type, char *reason);
 void printqueue(void);
 void printterm(struct terminal t);
 void printterms(void);

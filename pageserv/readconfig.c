@@ -1,13 +1,14 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.5 1997/04/02 06:20:30 dustin Exp $
+ * $Id: readconfig.c,v 1.6 1997/04/02 16:54:17 dustin Exp $
  */
 
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
+#include <syslog.h>
 
 /* to get the mode names array from pageserv.h */
 #define IWANT_MODENAMES 1
@@ -204,6 +205,7 @@ void readconfig(char *file)
     conf.childlifetime=CHILD_LIFETIME;
     conf.maxqueuetime=MAX_QUEUETIME;
     conf.farkle=DEFAULT_FARKLE;
+    conf.log_que=LOG_LOCAL7|LOG_INFO;
 
     f=fopen(file, "r");
     if(f==NULL)
@@ -251,5 +253,6 @@ void showconfig(void)
     printf("\tFarkle        %d\n", conf.farkle);
     printf("\tChild life:   %d\n", conf.childlifetime);
     printf("\tMax queue tm: %d\n", conf.maxqueuetime);
+    printf("\tLog facility: %d\n", conf.log_que);
     printf("\tDebug:        %d\n", conf.debug);
 }

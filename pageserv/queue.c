@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.11 1997/04/02 06:20:30 dustin Exp $
+ * $Id: queue.c,v 1.12 1997/04/02 16:54:15 dustin Exp $
  */
 
 #include <stdio.h>
@@ -10,6 +10,7 @@
 #include <string.h>
 #include <dirent.h>
 #include <time.h>
+#include <syslog.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -51,12 +52,14 @@ void runqueue(void)
 		{
 		    if(conf.debug>0)
 			printf("Delivery of %s successful\n", q[i].qid);
+		    logqueue(q[i], SUC_LOG, NULL);
 		    dequeue(q[i].qid);
 		}
 		else
 		{
 		    if(conf.debug>0)
 			printf("Delivery of %s unsuccessful\n", q[i].qid);
+		    logqueue(q[i], FAIL_LOG, MESG_TAPFAIL);
 		}
 		if(conf.debug>2)
                     printf("\t%d to %s  ``%s''\n", i, q[i].to, q[i].message);
@@ -69,6 +72,28 @@ void runqueue(void)
         cleanqueuelist(q);
     }
     cleantermlist(termlist);
+}
+
+void logqueue(struct queuent q, int type, char *reason)
+{
+    openlog("pageserv", LOG_PID|LOG_NDELAY, LOG_LOCAL7);
+
+    switch(type)
+    {
+	case QUE_LOG:
+            syslog(conf.log_que, "%s got paged %d bytes qid %s", q.to,
+	        strlen(q.message), q.qid); break;
+	case SUC_LOG:
+            syslog(conf.log_que, "delivered %s %d bytes qid %s", q.to,
+	        strlen(q.message), q.qid); break;
+	case FAIL_LOG:
+            syslog(conf.log_que, "failed %s to %s: %s", q.qid,
+	        q.to, reason); break;
+	case EXP_LOG:
+            syslog(conf.log_que, "%s to %s expired, dequeuing", q.qid,
+	        q.to ); break;
+    }
+    closelog();
 }
 
 void dequeue(char *qid)
@@ -211,6 +236,7 @@ struct queuent readqueuefile(char *fn)
     else
     {
 	strcpy(filename, conf.qdir);
+	strcat(filename, "/");
 	strcat(filename, fn);
     }
 
@@ -229,7 +255,7 @@ struct queuent readqueuefile(char *fn)
 
     fgets(buf, BUFLEN, f);
     q.submitted=atoi(buf);
-    strcpy(q.qid, fn);
+    strcpy(q.qid, fntoqid(fn));
 
 
     fclose(f);
@@ -275,6 +301,8 @@ int readytodeliver(struct queuent q)
     {
 	if(conf.debug>2)
 	    printf("Deleting %s, too old...\n", q.qid);
+
+	logqueue(q, EXP_LOG, NULL);
 	dequeue(q.qid);
 	ret=0;
     }
@@ -304,6 +332,22 @@ char *newqfile(void)
    return(fn);
 }
 
+char *fntoqid(char *fn)
+{
+    int i;
+
+    for(i=strlen(fn)-1; i>0; i--)
+    {
+	if(fn[i]=='q')
+	    break;
+    }
+
+    if(conf.debug>2)
+	printf("fntoqid(%s) found %s\n", fn, fn+i);
+
+    return(fn+i);
+}
+
 int storequeue(int s, struct queuent q, int flags)
 {
     char buf[BUFLEN], *fn;
@@ -326,6 +370,12 @@ int storequeue(int s, struct queuent q, int flags)
 
 	if(conf.debug>1)
 	    printf("Queued %s for %s\n", fn, q.to);
+
+	strcpy(q.qid, fntoqid(fn));
+
+	if(conf.debug>2);
+	    printf("Qid is now %s\n", q.qid);
+        logqueue(q, QUE_LOG, NULL);
     }
     else
     {
