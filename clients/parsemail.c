@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parsemail.c,v 2.5 1998/03/18 16:31:59 dustin Exp $
+ * $Id: parsemail.c,v 2.6 1998/03/31 03:32:05 dustin Exp $
  */
 
 #include <stdio.h>
@@ -21,6 +21,9 @@
 #ifndef _ndebug
 #define _ndebug(a, b)
 #endif
+
+extern char *optarg;
+extern int optind, opterr;
 
 #include <pageserv.h>
 
