@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.18 1997/04/10 06:22:54 dustin Exp $
+ * $Id: pageserv.h,v 1.19 1997/04/11 03:45:44 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -27,6 +27,7 @@
 #define FNSIZE 256
 
 #define NAMELEN 15
+#define PWLEN   14
 #define IDLEN   9
 #define STATLEN 20
 
@@ -38,6 +39,7 @@
 #define MESG_WELCOME "Welcome to Dustin's pager server version %s.\n"
 #define MESG_NOFARKLE "Sorry, but farkle is not supported.\n\n\n"
 #define MESG_TAPFAIL "TAP failure, will keep trying until it expires"
+#define MESG_BADPASSWD "Password incorrect\n"
 
 /* prompts */
 #define PROMPT_CMD  "CMD: "
@@ -123,7 +125,7 @@ static char *modenames[]={
 
 struct user {
     char name[NAMELEN];
-    char passwd[14];
+    char passwd[PWLEN];
     char pageid[IDLEN];
     char statid[STATLEN];
     int  times;

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parseusers.c,v 1.3 1997/04/04 22:21:05 dustin Exp $
+ * $Id: parseusers.c,v 1.4 1997/04/11 03:45:52 dustin Exp $
  * $State: Exp $
  */
 
@@ -23,6 +23,8 @@ struct user parseuser(char *line)
     int early, late, i;
 
     u.times=0;
+
+    memset(&u.passwd, 0x00, PWLEN);
 
     sscanf(line, "%s %s %s %d %d", u.name, u.pageid, u.statid,
             &early, &late);

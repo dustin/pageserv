@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: login.c,v 1.1 1997/04/10 06:23:44 dustin Exp $
+ * $Id: login.c,v 1.2 1997/04/11 03:45:50 dustin Exp $
  * $State: Exp $
  */
 
+#include <crypt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -18,8 +19,37 @@
 
 extern struct config conf;
 
+/* real password, test password */
+#define checkpass(a, b) (strcmp(a, crypt(b, a)) == 0)
+
 void p_login(int s)
 {
-    puttext(s, "Logins not *quite* supported yet.\n");
-    exit(1);
+    char buf[BUFLEN];
+    struct user u;
+
+    puttext(s, PROMPT_UN);
+    gettextcr(s, buf);
+
+    if(u_exists(buf))
+    {
+	u=getuser(buf);
+    }
+    else
+    {
+	puttext(s, MESG_NOUSER);
+	exit(0);
+    }
+
+    puttext(s, PROMPT_PW);
+    gettextcr(s, buf);
+
+    if(checkpass(u.passwd, buf))
+    {
+	puttext(s, "Good password\n");
+    }
+    else
+    {
+	puttext(s, MESG_BADPASSWD);
+	exit(0);
+    }
 }
