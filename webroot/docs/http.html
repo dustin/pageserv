@@ -1,0 +1,56 @@
+<html><head><title>SNPP in pageserv</title></head>
+<body bgcolor="fFfFfF">
+
+<h2>HTPP</h2>
+
+Pageserv supports HTPP for most simple web services.  There's not a lot to
+document here from the user end since the content of the web root really
+defines what's in it, but there are a couple things that should be noted.
+
+<h2>MIME Types</h2>
+
+Pageserv's http module presently has no concept of mime types, instead, it
+just sends everything out as text/html.  This isn't *really* a problem, as
+pageserv shouldn't be used as a real web server, but it'd be nice to toss
+a graphic or something in here (or a text file for the RFCs), so it should
+be implemented eventually.
+
+<h2>Server Parsing</h2>
+
+There is simple server parsing that is subject to go through drastic changes
+before turning into whatever it will be.  The following variables can be
+included in a document:
+
+<ul>
+   <li>$<code>version</code></li>
+   <li>$<code>user</code></li>
+</ul>
+
+Which will print out the current server version and authenticated username
+respectively.
+
+<p>
+
+There's also functions (which really don't have much of a distinction yet,
+as you can't pass arguments to them), which include the following:
+
+<ul>
+    <li>&<code>selectTimeE</code></li>
+    <li>&<code>selectTimeL</code></li>
+    <li>&<code>selectListTerms</code></li>
+    <li>&<code>tableUserList</code></li>
+</ul>
+
+The first two, &<code>selectTimeE</code> and &<code>selectTimeL</code>, return
+a select input list for the early and late normal priority times for the
+currently authenticated user.
+
+<p>
+
+&<code>selectListTerms</code> produces a select input list for all known
+terminal servers.
+
+<p>
+
+&<code>tableUserList</code> produces an HTML table including all users and
+their information.
