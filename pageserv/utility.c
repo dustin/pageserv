@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: utility.c,v 1.19 1998/04/13 16:43:34 dustin Exp $
+ * $Id: utility.c,v 1.20 1998/06/03 08:38:49 dustin Exp $
  */
 
 #include <config.h>
@@ -139,6 +139,11 @@ int execnamedfunc(char *name, struct namedfunc *f)
     return(0);
 }
 
+/*
+ * Pass a pointer to an integer to keep up with the size,
+ * the destination (known) array pointer, and the thing you want to
+ * append.  Returns the resulting string.
+ */
 char *addtostr(int *size, char *dest, char *str)
 {
     int new=0;
