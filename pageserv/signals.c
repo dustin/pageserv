@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: signals.c,v 1.5 1997/04/29 17:53:45 dustin Exp $
+ * $Id: signals.c,v 1.6 1997/06/19 08:24:59 dustin Exp $
  * $State: Exp $
  */
 
@@ -52,6 +52,7 @@ void resetservtraps(void)
 RETSIGTYPE del_sigint(int sig)
 {
     cleanmylocks();
+    exit(1);
 }
 
 void resetdelivertraps(void)

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: utility.c,v 1.7 1997/04/16 19:44:23 dustin Exp $
+ * $Id: utility.c,v 1.8 1997/06/19 08:25:02 dustin Exp $
  * $State: Exp $
  */
 
@@ -19,7 +19,7 @@ extern struct config conf;
 int gettext(int s, char *buf)
 {
     int size;
-    if( (size=recv(s, buf, BUFLEN-1, 0)) >0)
+    if( (size=read(s, buf, BUFLEN-1)) >0)
     {
         buf[size]=0x00;
         kw(buf);
@@ -42,7 +42,7 @@ int gettextcr(int s, char *buf)
     int size=1, len=0;
 
     /* eat any extra CR's and LF's */
-    while( (len=recv(s, buf, 1, 0)) >0)
+    while( (len=read(s, buf, 1)) >0)
     {
 	if(buf[size-1]=='\r')
 	{
@@ -74,7 +74,7 @@ int gettextcr(int s, char *buf)
 	exit(0);
     }
 
-    while( (len=recv(s, buf+size, 1, 0)) >0)
+    while( (len=read(s, buf+size, 1)) >0)
     {
         if(len==0)
         {

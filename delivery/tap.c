@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  SPY Internetworking
  *
- * $Id: tap.c,v 2.9 1997/04/13 22:00:40 dustin Exp $
+ * $Id: tap.c,v 2.10 1997/06/19 08:24:35 dustin Exp $
  * $State: Exp $
  */
 
@@ -119,7 +119,7 @@ int s_tap_send(int s, char *id, char *message)
     c=0;
     while( (c=charfound(buf, search)) ==0 )
     {
-	i=recv(s, buf, BUFLEN, 0);
+	i=read(s, buf, BUFLEN);
 	if(i==0)
 	{
 	    if(conf.debug>0)

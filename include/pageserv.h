@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.27 1997/04/29 17:53:41 dustin Exp $
+ * $Id: pageserv.h,v 1.28 1997/06/19 08:24:45 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -15,7 +15,7 @@
 #include <module.h>
 
 /* Remote host for clients */
-#define REMHOST "localhost"
+#define REMHOST "molly.ipa.net"
 
 /* Port number to run on/connect to */
 #define PORT 1029
@@ -110,6 +110,11 @@
 #define FAIL_LOG    2
 #define EXP_LOG     3
 
+/* port types */
+
+#define PORT_NET    0
+#define PORT_DIRECT 1
+
 #ifdef IWANT_MODENAMES
 static char *modenames[]={
     "daemon",
@@ -185,7 +190,8 @@ struct config {
 
 /* macros */
 
-#define puttext(a, b) send(a, b, strlen(b), 0)
+/* #define puttext(a, b) send(a, b, strlen(b), 0) */
+#define puttext(a, b) write(a, b, strlen(b))
 
 /* prototypes */
 

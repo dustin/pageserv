@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.20 1997/04/29 18:14:32 dustin Exp $
+ * $Id: queue.c,v 1.21 1997/06/19 08:24:57 dustin Exp $
  * $State: Exp $
  */
 
@@ -80,7 +80,7 @@ void runqueue(void)
 	{
 	    term=getterm(termlist[t]);
 
-            s=s_openterm(term);
+            s=any_openterm(term);
 	    s_tap_init(s);
 
             for(i=0; q[i].to[0] != NULL; i++)
@@ -187,6 +187,10 @@ int gq_checkit(struct queuent q, char *number)
 	if(strcmp(number, "*") == 0)
 	{
 	    return(1);
+	}
+	else
+	{
+	    return(0);
 	}
     }
 
