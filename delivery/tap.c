@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  SPY Internetworking
  *
- * $Id: tap.c,v 2.11 1997/07/23 23:51:57 dustin Exp $
+ * $Id: tap.c,v 2.12 1997/08/02 01:26:21 dustin Exp $
  * $State: Exp $
  */
 
@@ -119,18 +119,15 @@ int s_tap_send(int s, char *id, char *message)
     while( (c=charfound(buf, search)) ==0 )
     {
 	i=read(s, buf, BUFLEN);
-	if(i==0)
+	if(i>0)
 	{
-	    if(conf.debug>0)
-		puts("Looks like they hung up...");
-	    return(1);
-	}
-	buf[i]=0x00;
-	if(conf.debug>2)
-	{
-	    /* printf("Received %d bytes\n", i); */
-	    fputs(buf, stdout);
-	    puts("");
+	    buf[i]=0x00;
+	    if(conf.debug>2)
+	    {
+		/* printf("Received %d bytes\n", i); */
+		fputs(buf, stdout);
+		puts("");
+	    }
 	}
     }
 

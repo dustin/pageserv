@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: modem.c,v 2.10 1997/06/22 07:56:36 dustin Exp $
+ * $Id: modem.c,v 2.11 1997/08/02 01:26:20 dustin Exp $
  * $State: Exp $
  */
 
@@ -64,21 +64,24 @@ int s_modem_waitforchar(int s, char what, int timeout)
 
 int s_modem_waitfor(int s, char *what, int timeout)
 {
-    int i;
+    int i, size;
     char c;
 
     i=0;
 
     while(i<strlen(what))
     {
-	read(s, &c, 1);
-	if(conf.debug>2)
-	    putchar(c);
+	size=read(s, &c, 1);
+	if(size>0)
+	{
+	    if(conf.debug>2)
+	        putchar(c);
 
-	if(c==what[i])
-	    i++;
-	else
-	    i=0;
+	    if(c==what[i])
+	        i++;
+	    else
+	        i=0;
+	}
     }
     return(0);
 }
@@ -95,6 +98,10 @@ int s_modem_connect(int s, char *number)
     i=s_modem_waitfor(s, "OK", 10);
     if(conf.debug>3)
         printf("Wrote %d bytes\n", i);
+
+    /* Take a nap before trying to write again */
+
+    usleep(2600);
 
     sprintf(buf, "atdt%s\r\n", number);
     i=puttext(s, buf);
