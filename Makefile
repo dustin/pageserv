@@ -1,9 +1,15 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile,v 1.1 1997/03/11 06:52:20 dustin Exp $
+# $Id: Makefile,v 1.2 1997/03/11 19:10:25 dustin Exp $
 
 CC=cc
 CFLAGS=-O2 -g -Wall
 LDFLAGS=-g
+
+MAJOR=2
+MINOR=2
+PATCH=2
+VERSION=$(MAJOR).$(MINOR).$(PATCH)
+
 SERV_OBJS=sockets.o main.o utility.o kids.o queue.o protocol.o
 SOURCES=sockets.c main.c utility.c kids.c queue.c protocol.c
 EXES=pageserv
