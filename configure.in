@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 2.29 1998/07/14 16:53:29 dustin Exp $
+dnl $Id: configure.in,v 2.30 1998/07/15 07:54:22 dustin Exp $
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(pageserv)
 AC_CONFIG_HEADER(include/config.h)
@@ -114,7 +114,7 @@ AC_C_BIGENDIAN
 dnl Checks for library functions.
 AC_TYPE_SIGNAL
 AC_CHECK_FUNCS(select socket herror getopt dlopen dlsym dlerror dlclose)
-AC_CHECK_FUNCS(yp_match vsprintf vsnprintf)
+AC_CHECK_FUNCS(yp_match vsprintf vsnprintf strerror)
 
 AC_OUTPUT(Makefile pageserv/Makefile clients/Makefile delivery/Makefile
 	http/Makefile snpp/Makefile readconfig/Makefile)
