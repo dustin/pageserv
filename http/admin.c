@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: admin.c,v 1.5 1997/07/14 06:10:53 dustin Exp $
+ * $Id: admin.c,v 1.6 1997/08/11 03:54:49 dustin Exp $
  */
 
 #include <pageserv.h>
@@ -74,7 +74,7 @@ void _http_doadduser(int s, struct http_request r)
     u=setpasswd(u, pass1);
     u.times=pack_timebits(times[0], times[1]);
 
-    if(u_exists(name))
+    if(conf.udb.u_exists(name))
     {
 	_http_adminerror(s, "User already exists");
 	return;
@@ -86,9 +86,9 @@ void _http_doadduser(int s, struct http_request r)
 	return;
     }
 
-    storeuser(u);
+    conf.udb.storeuser(u);
 
-    if(u_exists(name))
+    if(conf.udb.u_exists(name))
     {
 	_http_adminheader(s);
 	puttext(s, "<h2>User successfully added</h2>");
@@ -111,7 +111,7 @@ void _http_dodeluser(int s, struct http_request r)
 	 return;
      }
 
-     if(!u_exists(user))
+     if(!conf.udb.u_exists(user))
      {
 	 _http_adminerror(s, "Can't delete a nonexistant user.");
 	 return;
@@ -120,7 +120,7 @@ void _http_dodeluser(int s, struct http_request r)
      _http_adminheader(s);
      puttext(s, "<h2>Deleting a user</h2>");
 
-     if(deleteuser(user))
+     if(conf.udb.deleteuser(user))
      {
 	 puttext(s, "Successful");
      }

@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.44 1997/08/09 06:35:38 dustin Exp $
+ * $Id: pageserv.h,v 1.45 1997/08/11 03:54:53 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -182,6 +182,15 @@ struct namedfunc {
     void (*func)(void);
 };
 
+struct userDB {
+    char **(*listusers)(char *term);
+    void (*eraseuserdb)(void);
+    int  (*deleteuser)(char *name);
+    void (*storeuser)(struct user u);
+    struct user (*getuser)(char *name);
+    int (*u_exists)(char *name);
+};
+
 struct config {
     int mode;              /* execution mode */
     int debug;             /* debug level */
@@ -204,6 +213,8 @@ struct config {
     char *qdir;            /* path to queue directory */
     char *pidfile;         /* path to pid file */
     char *webroot;         /* path to webroot */
+
+    struct userDB udb;     /* The user database handlers */
 
     struct confType *cf;   /* The *real* config stuff */
 
@@ -276,6 +287,7 @@ void cleanmylocks(void);
 void cleanqueuelist(struct queuent *list);
 void cleantermlist(char **list);
 void cleanuserlist(char **list);
+void dbm_userdbInit(void);
 void dequeue(char *qid);
 void displayq(struct queuent q);
 void erasetermdb(void);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpauth.c,v 1.7 1997/08/05 23:56:34 dustin Exp $
+ * $Id: httpauth.c,v 1.8 1997/08/11 03:54:49 dustin Exp $
  */
 
 #include <config.h>
@@ -80,7 +80,7 @@ void _http_auth_require(int s, struct http_request r, char *authname)
     if(r.auth.name == NULL)
         _http_header_needauth(s, authname, r);
 
-    if(!u_exists(r.auth.name))
+    if(!conf.udb.u_exists(r.auth.name))
         _http_header_needauth(s, authname, r);
 
     if(r.auth.pass == NULL)
@@ -97,7 +97,7 @@ void _http_auth_require(int s, struct http_request r, char *authname)
             _http_header_needauth(s, authname, r);
     }
 
-    u=getuser(r.auth.name);
+    u=conf.udb.getuser(r.auth.name);
 
     if(strlen(u.passwd)>0)
     {

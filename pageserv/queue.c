@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.31 1997/08/09 06:35:47 dustin Exp $
+ * $Id: queue.c,v 1.32 1997/08/11 03:54:59 dustin Exp $
  * $State: Exp $
  */
 
@@ -512,7 +512,7 @@ int readytodeliver(struct queuent q)
 
 void getqueueinfo( struct queuent *q )
 {
-    q->u=getuser(q->to);
+    q->u=conf.udb.getuser(q->to);
 }
 
 char *newqfile(void)

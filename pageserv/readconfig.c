@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.24 1997/08/09 07:18:28 dustin Exp $
+ * $Id: readconfig.c,v 1.25 1997/08/11 03:55:00 dustin Exp $
  */
 
 #include <readconfig.h>
@@ -38,6 +38,8 @@ void setdefaults(void)
 
     if(conf.webroot == NULL)
 	conf.webroot= WEBROOT;
+
+    dbm_userdbInit();
 }
 
 #ifndef HAVE_GETOPT

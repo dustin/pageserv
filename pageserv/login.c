@@ -1,8 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: login.c,v 1.13 1997/07/10 06:55:48 dustin Exp $
- * $State: Exp $
+ * $Id: login.c,v 1.14 1997/08/11 03:54:56 dustin Exp $
  */
 
 #include <config.h>
@@ -177,7 +176,7 @@ void login_usermain(int s, struct user u)
     {
         sprintf(buf, "There were %d changes, storing data.\n", changes);
         puttext(s, buf);
-        storeuser(u);
+        conf.udb.storeuser(u);
     }
     else
     {
@@ -200,9 +199,9 @@ void p_login(int s)
     puttext(s, PROMPT_UN);
     gettextcr(s, buf);
 
-    if(u_exists(buf))
+    if(conf.udb.u_exists(buf))
     {
-        u=getuser(buf);
+        u=conf.udb.getuser(buf);
     }
     else
     {

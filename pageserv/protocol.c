@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: protocol.c,v 1.6 1997/07/10 06:47:43 dustin Exp $
+ * $Id: protocol.c,v 1.7 1997/08/11 03:54:58 dustin Exp $
  * $State: Exp $
  */
 
@@ -44,7 +44,7 @@ void p_epage(int s)
     strcpy(q.to, buf1);
     strcpy(q.message, buf3);
 
-    if(u_exists(buf1))
+    if(conf.udb.u_exists(buf1))
     {
         storequeue(s, q, STORE_NORMAL);
     }
@@ -72,7 +72,7 @@ void p_mash(int s)
     strcpy(q.to, buf1);
     strcpy(q.message, buf2);
 
-    if(u_exists(buf1))
+    if(conf.udb.u_exists(buf1))
     {
         storequeue(s, q, STORE_NORMAL);
     }
@@ -113,7 +113,7 @@ void p_farkle(int s)
     if(queuedepth()>0)
     {
         q=dofarkle();
-        u=getuser(q.to);
+        u=conf.udb.getuser(q.to);
         if(u.name[0]!=0x00)
         {
             sprintf(buf, "%s\n%s\n%s\n", u.pageid, u.statid, q.message);

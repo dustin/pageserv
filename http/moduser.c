@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: moduser.c,v 1.6 1997/07/10 06:55:45 dustin Exp $
+ * $Id: moduser.c,v 1.7 1997/08/11 03:54:50 dustin Exp $
  */
 
 #include <pageserv.h>
@@ -59,13 +59,13 @@ void _http_moduser_process(int s, struct http_request r)
     char *tmp, *passwd1, *passwd2;
     char buf[BUFLEN];
 
-    if(u_exists(r.auth.name))
+    if(conf.udb.u_exists(r.auth.name))
     {
         if(conf.debug>2)
             printf("Getting mod data for user ``%s'' for update\n",
                 r.auth.name);
 
-        u=getuser(r.auth.name);
+        u=conf.udb.getuser(r.auth.name);
     }
     else
     {
@@ -116,7 +116,7 @@ void _http_moduser_process(int s, struct http_request r)
     puttext(s, buf);
 
     puttext(s, "Storing changes<br>\n");
-    storeuser(u);
+    conf.udb.storeuser(u);
 }
 
 void _http_moduser(int s, struct http_request r)

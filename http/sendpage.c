@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: sendpage.c,v 1.4 1997/08/07 08:04:22 dustin Exp $
+ * $Id: sendpage.c,v 1.5 1997/08/11 03:54:51 dustin Exp $
  */
 
 #include <pageserv.h>
@@ -78,7 +78,7 @@ void _http_sendpage(int s, struct http_request r)
     if(conf.debug>2)
 	printf("Page being sent is ``%s''\n", tmp);
 
-    if(u_exists(q.to))
+    if(conf.udb.u_exists(q.to))
     {
 	if(storequeue(s, q, STORE_QUIET)>0)
 	{

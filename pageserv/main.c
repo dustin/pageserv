@@ -1,8 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.22 1997/08/09 06:35:45 dustin Exp $
- * $State: Exp $
+ * $Id: main.c,v 1.23 1997/08/11 03:54:57 dustin Exp $
  */
 
 #include <config.h>
@@ -190,7 +189,7 @@ void rehash_main(void)
 {
     int i;
 
-    eraseuserdb();
+    conf.udb.eraseuserdb();
     erasetermdb();
 
     i=parseusers();
@@ -260,13 +259,13 @@ void changepasswd(void)
     fgets(buf, BUFLEN, stdin);
     kw(buf);
 
-    if(!u_exists(buf))
+    if(!conf.udb.u_exists(buf))
     {
 	puts("No such user.");
 	exit(1);
     }
 
-    u=getuser(buf);
+    u=conf.udb.getuser(buf);
 
     fputs("User's new password:  ", stdout);
     fflush(stdout);
@@ -274,7 +273,7 @@ void changepasswd(void)
     putchar('\n');
 
     u=setpasswd(u, buf);
-    storeuser(u);
+    conf.udb.storeuser(u);
 
     puts("Password set.");
 }

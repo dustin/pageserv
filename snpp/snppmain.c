@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: snppmain.c,v 1.12 1997/08/09 07:18:57 dustin Exp $
+ * $Id: snppmain.c,v 1.13 1997/08/11 03:55:04 dustin Exp $
  */
 
 #include <config.h>
@@ -154,7 +154,7 @@ void snpp_holduntil(int s, char *time)
 
 void snpp_setpageid(int s, char *id)
 {
-    if(u_exists(id))
+    if(conf.udb.u_exists(id))
     {
         if(snpp_nid>=SNPP_NID)
         {

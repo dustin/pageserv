@@ -1,8 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.11 1997/08/07 13:49:26 dustin Exp $
- * $State: Exp $
+ * $Id: userdb.c,v 1.12 1997/08/11 03:55:01 dustin Exp $
  */
 
 #include <stdio.h>
@@ -206,7 +205,7 @@ int check_time(struct queuent q)
         time(&clock);
 	clock=(clock>q.soonest ? clock : q.soonest);
         t=localtime(&clock);
-        u=getuser(q.to);
+        u=conf.udb.getuser(q.to);
 
         ret=bit_set(u.times, t->tm_hour);
     }
@@ -298,4 +297,14 @@ int u_exists(char *name)
     dbm_close(db);
 
     return(d.dptr!=NULL);
+}
+
+void dbm_userdbInit(void)
+{
+    conf.udb.listusers=listusers;
+    conf.udb.eraseuserdb=eraseuserdb;
+    conf.udb.deleteuser=deleteuser;
+    conf.udb.storeuser=storeuser;
+    conf.udb.getuser=getuser;
+    conf.udb.u_exists=u_exists;
 }
