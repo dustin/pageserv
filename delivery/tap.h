@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * "$Id: tap.h,v 1.3 1997/03/30 01:34:56 dustin Exp $"
+ * "$Id: tap.h,v 2.0 1997/03/30 05:58:18 dustin Exp $"
  */
 
 #ifndef TAP_H

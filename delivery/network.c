@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: network.c,v 1.2 1997/03/30 01:34:55 dustin Exp $
+ * $Id: network.c,v 2.0 1997/03/30 05:58:17 dustin Exp $
  */
 
 /*
@@ -16,7 +16,7 @@
 #include <netinet/in.h>
 #include <netdb.h>
 
-#include "../pageserv.h"
+#include <pageserv.h>
 
 void net_timeout(void)
 {

@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: modem.c,v 1.1 1997/03/30 01:34:54 dustin Exp $
+ * $Id: modem.c,v 2.0 1997/03/30 05:58:16 dustin Exp $
  */
 
 #include <stdio.h>
 
 #include "tap.h"
-#include "../pageserv.h"
+#include <pageserv.h>
 
 int s_modem_waitfor(int s, char *what, int timeout)
 {
