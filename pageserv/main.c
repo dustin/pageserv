@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.38 1998/01/15 10:03:01 dustin Exp $
+ * $Id: main.c,v 1.39 1998/01/15 10:06:46 dustin Exp $
  */
 
 #include <config.h>
@@ -116,6 +116,10 @@ static void deliveryd_main(void)
 	{
 	    wait(&stat);
 	}
+
+	/* Exit if we can't see the pidfile */
+	if(access(conf.pidfile, F_OK)<0)
+	    exit(0);
     }
 }
 
