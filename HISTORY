@@ -1,4 +1,10 @@
 
+Thu Jan 15 02:19:08 PST 1998
+
+Internal queue running is now available.
+
+--------------------
+
 Mon Dec 29 00:50:09 PST 1997
 module configs all moved under modules.*
 
@@ -35,4 +41,4 @@ As of release_2_9_3, there are multiple developers, starting with
 spberry@iastate.edu
 
 ----------------------------------------
-$Id: HISTORY,v 2.4 1997/12/29 08:54:45 dustin Exp $
+$Id: HISTORY,v 2.5 1998/01/15 10:19:36 dustin Exp $
