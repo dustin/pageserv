@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.3 1997/03/12 06:49:58 dustin Exp $
+ * $Id: userdb.c,v 1.4 1997/03/12 06:50:20 dustin Exp $
  */
 
 #include <stdio.h>
@@ -54,8 +54,6 @@ struct user open_getuser(DBM *db, char *name)
     struct user u;
 
     memset((void *)&u, 0x00, sizeof(u));
-
-    printf("Lookup up user ``%s''\n", name);
 
     k.dptr=name;
     k.dsize=strlen(name);
