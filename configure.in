@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 2.22 1997/08/06 07:38:57 dustin Exp $
+dnl $Id: configure.in,v 2.23 1997/08/11 04:27:56 dustin Exp $
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(pageserv)
 AC_CONFIG_HEADER(include/config.h)
@@ -68,7 +68,7 @@ AC_HEADER_DIRENT
 AC_HEADER_STDC
 AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS(fcntl.h sys/time.h unistd.h crypt.h sys/select.h)
-AC_CHECK_HEADERS(termio.h dlfcn.h)
+AC_CHECK_HEADERS(termio.h dlfcn.h rpcsvc/ypclnt.h rpcsvc/yp_prot.h)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_TIME
@@ -78,6 +78,7 @@ AC_C_BIGENDIAN
 dnl Checks for library functions.
 AC_TYPE_SIGNAL
 AC_CHECK_FUNCS(select socket herror getopt dlopen dlsym dlerror dlclose)
+AC_CHECK_FUNCS(yp_match)
 
 AC_OUTPUT(Makefile pageserv/Makefile clients/Makefile delivery/Makefile
 	http/Makefile snpp/Makefile readconfig/Makefile)
