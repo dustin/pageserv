@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.34 1997/07/09 07:26:13 dustin Exp $
+ * $Id: pageserv.h,v 1.35 1997/07/10 06:47:08 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -27,9 +27,11 @@
 /* #define CONFIGFILE "/usr/local/etc/pageserv.conf" */
 #define CONFIGFILE "/tmp/pageserv.conf"
 
-#define BUFLEN 1000
+#define BUFLEN 1024
 #define TOLEN 40
 #define FNSIZE 256
+
+#define DEFAULT_STRLEN 1024
 
 #define NAMELEN 15
 #define PWLEN   14
@@ -84,10 +86,9 @@
 #define P_DEPTH    2
 #define P_QUIT     3
 #define P_EPAGE    4
-#define P_APAGE    5
-#define P_LOGIN    6
+#define P_LOGIN    5
 
-#define P_MAX      6
+#define P_MAX      5
 
 /* priorities */
 
@@ -193,7 +194,7 @@ struct config {
 /* macros */
 
 /* #define puttext(a, b) send(a, b, strlen(b), 0) */
-#define puttext(a, b) write(a, b, strlen(b))
+/* #define puttext(a, b) write(a, b, strlen(b)) */
 
 /* prototypes */
 
@@ -204,6 +205,7 @@ char *fntoqid(char *fn);
 char *kw(char *in);
 char *newqfile(void);
 int _pageserv_socket(void);
+int addtostr(int size, char *dest, char *str);
 int any_closeterm(int s, struct terminal t);
 int any_openterm(struct terminal t);
 int bit_set(int bmap, int which);
@@ -218,6 +220,7 @@ int p_unlock(char *dev);
 int pack_timebits(int early, int late);
 int parseterms(void);
 int parseusers(void);
+int puttext(int s, char *txt);
 int q_islocked(struct queuent q);
 int q_lock(struct queuent q);
 int q_unlock(struct queuent q);
