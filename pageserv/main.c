@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.33 1998/01/01 08:50:31 dustin Exp $
+ * $Id: main.c,v 1.34 1998/01/01 23:11:42 dustin Exp $
  */
 
 #include <config.h>
@@ -195,6 +195,8 @@ void rehash_main(void)
 {
     int i;
 
+    conf.udb.dbinit();
+
     conf.udb.eraseuserdb();
     erasetermdb();
 
@@ -249,6 +251,7 @@ void killserver(void)
 
 void ldb_main(void)
 {
+    conf.udb.dbinit();
     puts("Users:\n------------");
     printusers();
     puts("\nTerminals:\n------------");
@@ -260,6 +263,7 @@ void changepasswd(void)
     char buf[BUFLEN];
     struct user u;
 
+    conf.udb.dbinit();
     fputs("User's password to change:  ", stdout);
     fflush(stdout);
     fgets(buf, BUFLEN, stdin);

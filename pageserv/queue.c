@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.35 1997/12/29 08:55:03 dustin Exp $
+ * $Id: queue.c,v 1.36 1998/01/01 23:11:43 dustin Exp $
  */
 
 #include <stdio.h>
@@ -62,6 +62,7 @@ void runqueue(void)
     struct terminal term;
     int t, i, s;
 
+    conf.udb.dbinit();
     resetdelivertraps();
     termlist=listterms();
 
@@ -620,6 +621,7 @@ void printqueue(void)
     struct queuent *q;
     int i, j;
 
+    conf.udb.dbinit();
     q=listqueue("*");
 
     for(j=0; q[j].to[0] != 0x00; j++);
