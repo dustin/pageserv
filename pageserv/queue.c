@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.42 1998/01/22 10:40:34 dustin Exp $
+ * $Id: queue.c,v 1.43 1998/01/23 09:26:06 dustin Exp $
  */
 
 #include <stdio.h>
@@ -157,6 +157,10 @@ void logqueue(struct queuent q, int type, char *reason)
         case EXP_LOG:
             syslog(conf.log_que|LOG_NOTICE, "expired %s to %s:  dequeuing",
 	        q.qid, q.to ); break;
+        case DEQUE_LOG:
+            syslog(conf.log_que|LOG_INFO,
+                   "dequeued %s to %s, request by user", q.qid, q.to, reason);
+            break;
     }
     closelog();
 }
