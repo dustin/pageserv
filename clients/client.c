@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: client.c,v 2.7 1998/06/03 16:12:18 dustin Exp $
+ * $Id: client.c,v 2.8 1998/06/03 16:45:18 dustin Exp $
  */
 
 /*
@@ -318,7 +318,7 @@ static void _snpp_quit(struct snpp_client *snpp)
     snpp->destroy(snpp);
 }
 
-static int _imap_sendapage(struct snpp_client *snpp, char *whom, char *msg)
+static int _snpp_sendapage(struct snpp_client *snpp, char *whom, char *msg)
 {
     int r=0;
 
@@ -353,7 +353,7 @@ struct snpp_client *snpp_connect(char *hostname, int port)
     snpp->page=_snpp_page;
     snpp->message=_snpp_message;
 
-    snpp->sendAPage=_imap_sendapage;
+    snpp->sendAPage=_snpp_sendapage;
 
     snpp->rawsend=_snpp_client_send;
     snpp->rawsend2=_snpp_client_send2;
