@@ -15,10 +15,6 @@ Delivery:
 
 Clients:
 
-    * Cleaner client stuff
-    * Add more options to clients: remote host, options to parsemail,
-      etc...
-    * Clients should use snpp
     * .parsemail
 
 Technical:
@@ -29,4 +25,4 @@ Technical:
 
 ----------------------------------------
 Copyright (c) 1997  Dustin Sallings
-$Id: TODO,v 2.33 1998/02/27 07:46:53 dustin Exp $
+$Id: TODO,v 2.34 1998/06/03 08:38:10 dustin Exp $
