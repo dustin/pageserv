@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.17 1998/01/21 22:32:21 dustin Exp $
+ * $Id: userdb.c,v 1.18 1998/01/22 10:23:53 dustin Exp $
  */
 
 #include <stdio.h>
@@ -13,6 +13,7 @@
 #include <sys/types.h>
 
 #include <pageserv.h>
+#include <readconfig.h>
 
 extern struct config conf;
 
@@ -39,28 +40,34 @@ static char **dbm_listusers(char *term)
     DBM *db;
     char **ret;
     struct user u;
-    int size=4, index=0;
+    int size, index=0;
+
+    size=rcfg_lookupInt(conf.cf, "tuning.utableguess");
+    if(size<2)
+        size=4;
+
+    _ndebug(2, ("Table size guess is %d\n", size));
 
     ret=malloc(size * sizeof(char *));
 
     if( (db=dbm_open(conf.userdb, O_RDONLY, 0644)) ==NULL)
     {
         if(conf.debug>2)
-	    perror(conf.userdb);
+            perror(conf.userdb);
         return(NULL);
     }
 
     for(d=dbm_firstkey(db); d.dptr!=NULL; d=dbm_nextkey(db))
     {
-	val=dbm_fetch(db, d);
-	memcpy( (void *)&u, (void *)val.dptr, sizeof(u));
+        val=dbm_fetch(db, d);
+        memcpy( (void *)&u, (void *)val.dptr, sizeof(u));
 
-	if( (strcmp(u.statid, term) == 0) || (strcmp(term, "*") == 0) )
-	{
+        if( (strcmp(u.statid, term) == 0) || (strcmp(term, "*") == 0) )
+        {
             ret[index]=malloc(d.dsize+1);
             strncpy(ret[index], d.dptr, d.dsize);
             ret[index++][d.dsize]=0x00;
-	}
+        }
 
         if(index == size-1)
         {
@@ -115,18 +122,25 @@ static void dbm_eraseuserdb(void)
 {
     datum d;
     DBM *db;
+    char *tmp;
 
     if( (db=dbm_open(conf.userdb, O_RDWR, 0644)) ==NULL)
     {
-	/* There isn't one, just return */
-	return;
+        /* There isn't one, just return */
+        _ndebug(2, ("No user database.\n"));
+        return;
     }
 
     for(d=dbm_firstkey(db); d.dptr!=NULL; d=dbm_firstkey(db))
     {
-	if(conf.debug>2)
-	    printf("deleting %s\n", (char *)d.dptr);
-	dbm_delete(db, d);
+        if(conf.debug>2)
+        {
+            tmp=strdup((char *)d.dptr);
+            tmp[d.dsize]=0x00;
+            _ndebug(2, ("deleting %s\n", tmp));
+            free(tmp);
+        }
+        dbm_delete(db, d);
     }
 
     dbm_close(db);
@@ -139,8 +153,8 @@ static int dbm_u_exists(char *name)
 
     if( (db=dbm_open(conf.userdb, O_RDONLY, 0644)) ==NULL)
     {
-	perror(conf.userdb);
-	return(0);
+        perror(conf.userdb);
+        return(0);
     }
 
     k.dptr=name;
@@ -160,7 +174,7 @@ static int dbm_deleteuser(char *name)
 
     if( (db=dbm_open(conf.userdb, O_RDWR, 0644)) == NULL)
     {
-	return(-1);
+        return(-1);
     }
 
     d.dptr=name;
@@ -236,7 +250,7 @@ int check_time(struct queuent q)
     else
     {
         time(&clock);
-	clock=(clock>q.soonest ? clock : q.soonest);
+        clock=(clock>q.soonest ? clock : q.soonest);
         t=localtime(&clock);
         u=conf.udb.getuser(q.to);
 
@@ -270,6 +284,23 @@ static void dbm_storeuser(struct user u)
     }
 
     dbm_open_storeuser(db, u);
+
+    if(rcfg_lookupInt(conf.cf, "databases.userdbrhash"))
+    {
+        if(strlen(u.pageid)<(size_t)NAMELEN)
+        {
+            _ndebug(3, ("Doing reverse (%s) for %s\n", u.pageid,
+                        u.name));
+            strcpy(u.name, u.pageid);
+            dbm_open_storeuser(db, u);
+        }
+        else
+        {
+            _ndebug(3, ("Ignoring reverse for %s (too long)\n",
+                        u.name));
+        }
+    }
+
 
     dbm_close(db);
 }

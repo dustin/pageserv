@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parseterms.c,v 1.6 1997/09/12 05:30:53 dustin Exp $
+ * $Id: parseterms.c,v 1.7 1998/01/22 10:23:50 dustin Exp $
  */
 
 #include <stdio.h>
@@ -13,20 +13,94 @@
 #include <fcntl.h>
 
 #include <pageserv.h>
+#include <readconfig.h>
 
 extern struct config conf;
 
 struct terminal parseterm(char *line)
 {
     struct terminal t;
+    char *tmp, *delim;
 
-    t.number[0]=0x00;
-    t.flags=0;
-    t.ts[0]=0x00;
-    t.port=0;
+    memset(&t, 0x00, sizeof(struct terminal));
 
-    sscanf(line, "%s %d %s %d %s", t.number, &t.flags, t.ts, &t.port,
-        t.predial);
+    delim=rcfg_lookup(conf.cf, "databases.textdelim");
+    if(delim==NULL)
+        delim=" ";
+
+    tmp=strtok(line, delim);
+    if(tmp==NULL)
+    {
+        return(t);
+    }
+    else
+    {
+        if(strlen(tmp)>(size_t)STATLEN)
+        {
+            printf("Terminal ``%s'' is too long, skipping\n", tmp);
+            return(t);
+        }
+        else
+        {
+            strcpy(t.number, tmp);
+        }
+    }
+
+    tmp=strtok(NULL, delim);
+    if(tmp==NULL)
+    {
+        return(t);
+    }
+    else
+    {
+        t.flags=atoi(tmp);
+    }
+
+    tmp=strtok(NULL, delim);
+    if(tmp==NULL)
+    {
+        return(t);
+    }
+    else
+    {
+        if(strlen(tmp)>(size_t)FNSIZE)
+        {
+            printf("Port ``%s'' is too long, skipping\n", tmp);
+            return(t);
+        }
+        else
+        {
+            strcpy(t.ts, tmp);
+        }
+    }
+
+    tmp=strtok(NULL, delim);
+    if(tmp==NULL)
+    {
+        return(t);
+    }
+    else
+    {
+        t.port=atoi(tmp);
+    }
+
+    tmp=strtok(NULL, delim);
+    if(tmp==NULL)
+    {
+        return(t);
+    }
+    else
+    {
+        if(strlen(tmp)>(size_t)STATLEN)
+        {
+            printf("Predial ``%s'' is too long, skipping\n", tmp);
+            return(t);
+        }
+        else
+        {
+            strcpy(t.predial, tmp);
+        }
+    }
 
     return(t);
 }
@@ -56,14 +130,17 @@ int parseterms(void)
         if( (buf[0]!='#') && (!isspace(buf[0])) )
         {
             t=parseterm(buf);
-	    if(conf.debug>0)
+	    if(strlen(t.predial)>0)
 	    {
-		printterm(t);
-		puts("--");
-	    }
+	        if(conf.debug>0)
+	        {
+                    printterm(t);
+		    puts("--");
+	        }
 
-            storeterm(db, t);
-            i++;
+                storeterm(db, t);
+                i++;
+	    }
         }
     }
 

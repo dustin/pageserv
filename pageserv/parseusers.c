@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parseusers.c,v 1.11 1998/01/10 01:33:02 dustin Exp $
+ * $Id: parseusers.c,v 1.12 1998/01/22 10:23:51 dustin Exp $
  */
 
 #include <stdio.h>
@@ -14,20 +14,115 @@
 #include <fcntl.h>
 
 #include <pageserv.h>
+#include <readconfig.h>
 
 extern struct config conf;
 
-static struct user parseuser(char *line)
+struct user parseuser(char *line, char *delim, int flags)
 {
     struct user u;
     int early, late;
+    char *tmp;
 
     u.times=0;
 
-    memset(&u.passwd, 0x00, PWLEN);
+    memset(&u, 0x00, sizeof(struct user));
 
-    sscanf(line, "%s %s %s %d %d", u.name, u.pageid, u.statid,
-            &early, &late);
+    tmp=strtok(line, delim);
+    if(tmp==NULL)
+    {
+        return(u);
+    }
+    else
+    {
+        if(strlen(tmp)>(size_t)NAMELEN)
+        {
+            printf("Name ``%s'' is too long, skipping\n", tmp);
+            return(u);
+        }
+        else
+        {
+            strcpy(u.name, tmp);
+        }
+    }
+
+    if(flags & PARSE_GETPASSWD)
+    {
+	_ndebug(4, ("Getting password field\n"));
+        tmp=strtok(NULL, delim);
+        if(tmp==NULL)
+        {
+            return(u);
+        }
+        else
+        {
+            if(strlen(tmp)>(size_t)PWLEN)
+            {
+                printf("ID ``%s'' is too long, skipping\n", tmp);
+                return(u);
+            }
+            else
+            {
+                strcpy(u.passwd, tmp);
+            }
+        }
+    }
+
+    tmp=strtok(NULL, delim);
+    if(tmp==NULL)
+    {
+        return(u);
+    }
+    else
+    {
+        if(strlen(tmp)>(size_t)IDLEN)
+        {
+            printf("ID ``%s'' is too long, skipping\n", tmp);
+            return(u);
+        }
+        else
+        {
+            strcpy(u.pageid, tmp);
+        }
+    }
+
+    tmp=strtok(NULL, delim);
+    if(tmp==NULL)
+    {
+        return(u);
+    }
+    else
+    {
+        if(strlen(tmp)>(size_t)STATLEN)
+        {
+            printf("Station ID ``%s'' is too long, skipping\n", tmp);
+            return(u);
+        }
+        else
+        {
+            strcpy(u.statid, tmp);
+        }
+    }
+
+    tmp=strtok(NULL, delim);
+    if(tmp==NULL)
+    {
+        return(u);
+    }
+    else
+    {
+        early=atoi(tmp);
+    }
+
+    tmp=strtok(NULL, delim);
+    if(tmp==NULL)
+    {
+        return(u);
+    }
+    else
+    {
+        late=atoi(tmp);
+    }
 
     u.times=pack_timebits(early, late);
 
@@ -41,12 +136,17 @@ int parseusers(void)
     struct user u;
     DBM *db;
     int i=0;
+    char *delim;
 
     if( (f=fopen(conf.userdb, "r")) == NULL)
     {
         perror(conf.userdb);
         exit(1);
     }
+
+    delim=rcfg_lookup(conf.cf, "databases.textdelim");
+    if(delim==NULL)
+        delim=" \t";
 
     /* just initialize the database */
     if( (db=dbm_open(conf.userdb, O_CREAT|O_RDWR, 0644)) ==NULL)
@@ -60,14 +160,17 @@ int parseusers(void)
     {
         if( (buf[0]!='#') && (!isspace(buf[0])) )
         {
-            u=parseuser(buf);
-	    if(conf.debug>0)
-	    {
-		printuser(u);
-		puts("--");
-	    }
-            conf.udb.storeuser(u);
-            i++;
+            u=parseuser(buf, delim, 0);
+            if(strlen(u.statid)>0)
+            {
+                if(conf.debug>0)
+                {
+                    printuser(u);
+                    puts("--");
+                }
+                conf.udb.storeuser(u);
+                i++;
+            }
         }
     }
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: ypuserdb.c,v 1.7 1998/01/18 00:27:25 dustin Exp $
+ * $Id: ypuserdb.c,v 1.8 1998/01/22 10:23:53 dustin Exp $
  */
 
 #include <config.h>
@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
+#include <assert.h>
 
 #ifdef HAVE_RPCSVC_YPCLNT_H
 #include <rpcsvc/ypclnt.h>
@@ -45,22 +46,20 @@ static struct user nis_getuser(char *name)
     char *data;
     int yperr, len, times[2];
 
-    memset(&u, 0x00, sizeof(u));
-
     yperr=yp_match(domainname, conf.userdb, name,
 	  strlen(name), &data, &len);
 
     if(!yperr)
     {
-	strcpy(u.name, strtok(data, ":"));
-	strcpy(u.passwd, strtok(NULL, ":"));
-	strcpy(u.pageid, strtok(NULL, ":"));
-	strcpy(u.statid, strtok(NULL, ":"));
-	times[0]=atoi(strtok(NULL, ":"));
-	times[1]=atoi(strtok(NULL, ":"));
-	u.times=pack_timebits(times[0], times[1]);
-
+	u=parseuser(data, ":", PARSE_GETPASSWD);
 	free(data);
+    }
+
+    if(strlen(u.statid)<(size_t)1)
+    {
+	_ndebug(2, ("nis_getuser:  Parser didn't like my data for ``%s'',"
+		    "eating the evidence.\n", name));
+	memset(&u, 0x00, sizeof(struct user));
     }
 
     return(u);
@@ -70,8 +69,15 @@ static char **nis_listusers(char *term)
 {
     char **ret;
     struct user u;
-    int size=4, index=0, keylen, vallen, yperr;
+    int size, index=0, keylen, vallen, yperr;
     char *key, *val;
+    char tmp[BUFLEN];
+
+    size=rcfg_lookupInt(conf.cf, "tuning.utableguess");
+    if(size<2)
+	size=4;
+
+    _ndebug(2, ("Table size guess is %d\n", size));
 
     ret=malloc(size * sizeof(char *));
 
@@ -82,13 +88,30 @@ static char **nis_listusers(char *term)
     {
 	strncpy(u.name, key, keylen);
 	u.name[keylen]=0x00;
-	u=conf.udb.getuser(u.name);
+
+        _ndebug(4, ("nis_listusers found key ``%s''\n", u.name));
+
+	if(vallen>BUFLEN)
+	{
+	    _ndebug(2, ("My buffer runneth over.\n"));
+	    memset(&u, 0x00, sizeof(struct user));
+	}
+	else
+	{
+	    strncpy(tmp, val, vallen);
+	    tmp[vallen]=0x00;
+	    u=parseuser(tmp, ":", PARSE_GETPASSWD);
+	}
 
 	if( (strcmp(u.statid, term) == 0) || (strcmp(term, "*") == 0) )
 	{
 	    ret[index]=malloc(keylen+1);
 	    strncpy(ret[index], key, keylen);
 	    ret[index++][keylen]=0x00;
+	}
+	else
+	{
+	    _ndebug(2, ("user didn't match pattern\n"));
 	}
 
 	free(key);
@@ -105,7 +128,10 @@ static char **nis_listusers(char *term)
 	    }
 
 	    ret=realloc(ret, size*sizeof(char *));
+	    assert(ret);
 	}
+
+	_ndebug(4, ("Index is %d, grabbing a new key\n", index));
 
 	yperr=yp_next(domainname, conf.userdb, key, keylen,
 	      &key, &keylen, &val, &vallen);
