@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: pushqueue.c,v 2.8 1998/06/03 16:43:02 dustin Exp $
+ * $Id: pushqueue.c,v 2.9 1998/07/14 06:31:33 dustin Exp $
  */
 
 #include <stdio.h>
@@ -33,6 +33,7 @@ int main(int argc, char **argv)
     char *hostname="pager", *priority=NULL;
     char to[1024], msg[1024];
     int port=SNPP_PORT, debug=0;
+    extern char *optarg; extern int optind;
 
     while( (c=getopt(argc, argv, "p:H:P:d:")) != -1)
     {
