@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.19 1997/04/29 17:57:57 dustin Exp $
+ * $Id: queue.c,v 1.20 1997/04/29 18:14:32 dustin Exp $
  * $State: Exp $
  */
 
@@ -99,6 +99,7 @@ void runqueue(void)
 		    if(conf.debug>0)
 			printf("Delivery of %s unsuccessful\n", q[i].qid);
 		    logqueue(q[i], FAIL_LOG, MESG_TAPFAIL);
+                    q_unlock(q[i]);
 		}
 		if(conf.debug>2)
                     printf("\t%d to %s  ``%s''\n", i, q[i].to, q[i].message);
@@ -111,6 +112,7 @@ void runqueue(void)
         cleanqueuelist(q);
     }
     cleantermlist(termlist);
+    cleanmylocks();
 }
 
 void logqueue(struct queuent q, int type, char *reason)
