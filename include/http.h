@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * "$Id: http.h,v 1.2 1997/04/14 04:36:35 dustin Exp $"
+ * "$Id: http.h,v 1.3 1997/04/14 06:48:08 dustin Exp $"
  */
 
 #ifndef HTTP_H
@@ -11,17 +11,23 @@
 #define REQUESTSIZE 1024
 
 /* methods defs */
-#define HTTP_GET  0
-#define HTTP_PUT  1
-#define HTTP_POST 2
-#define HTTP_HEAD 3
+#define HTTP_GET     0
+#define HTTP_PUT     1
+#define HTTP_POST    2
+#define HTTP_HEAD    3
+#define HTTP_DELETE  4
+#define HTTP_TRACE   5
+#define HTTP_OPTIONS 6
 
 #ifdef IWANTMETHODNAMES
 static char *methodnames[]={
     "GET",
     "PUT",
     "POST",
-    "HEAD"
+    "HEAD",
+    "DELETE",
+    "TRACE",
+    "OPTIONS"
 };
 #endif
 
