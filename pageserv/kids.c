@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: kids.c,v 1.8 1997/12/29 08:55:01 dustin Exp $
+ * $Id: kids.c,v 1.9 1997/12/31 08:16:34 dustin Exp $
  */
 
 #include <signal.h>
@@ -80,30 +80,18 @@ void child_onalarm()
 void _pageserv_main(modpass p)
 {
     char buf[BUFLEN];
-    int flag, s;
-
-    s=p.socket;
-
-    /* Get rid of that bastard Nagle algorithm */
-    flag=1;
-
-    if (setsockopt(s, IPPROTO_TCP, TCP_NODELAY, (char *)&flag,
-	sizeof(int)) <0)
-    {
-	_ndebug(0, ("Looks like we're sticking with ol' Nagle.\n"));
-    }
 
     /* Cheezy welcome banner */
     sprintf(buf, MESG_WELCOME, VERSION);
-    puttext(s, buf);
+    puttext(p.socket, buf);
 
     /* Child will only live a certain number of seconds */
     alarm(conf.childlifetime);
     signal(SIGALRM, child_onalarm);
 
-    puttext(s, PROMPT_CMD);
-    gettextcr(s, buf);
-    process(s, buf, p);
+    puttext(p.socket, PROMPT_CMD);
+    gettextcr(p.socket, buf);
+    process(p.socket, buf, p);
 
     exit(0);
 }
