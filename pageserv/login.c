@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: login.c,v 1.5 1997/04/11 15:55:01 dustin Exp $
+ * $Id: login.c,v 1.6 1997/04/11 22:58:06 dustin Exp $
  * $State: Exp $
  */
 
@@ -25,7 +25,7 @@
 extern struct config conf;
 
 /* real password, test password */
-#define checkpass(a, b) (strcmp(a, crypt(b, a)) == 0)
+#define checkpass(a, b) (strcmp(a, (char *)crypt(b, a)) == 0)
 
 void makesalt(char *s, int n, long v)
 {
@@ -47,7 +47,7 @@ struct user setpasswd(struct user u, char *passwd)
     srand(t);
 
     makesalt(salt, 2, rand());
-    strcpy(u.passwd, crypt(passwd, salt));
+    strcpy(u.passwd, (char *)crypt(passwd, salt));
 
     return(u);
 }
