@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: snppmain.c,v 1.9 1997/08/06 04:48:22 dustin Exp $
+ * $Id: snppmain.c,v 1.10 1997/08/07 07:23:31 dustin Exp $
  */
 
 #include <config.h>
@@ -96,7 +96,7 @@ void snpp_holduntil(int s, char *time)
 
     if(strlen(time)>12)
     {
-        if(time[12]=='-' || time[12]=='+')
+        if(time[12]=='-' || time[12]=='+' || isspace(time[12]))
 	{
 	    offset=atoi(time+12);
 
