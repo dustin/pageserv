@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.47 1997/08/11 06:59:14 dustin Exp $
+ * $Id: pageserv.h,v 1.48 1997/08/27 06:10:22 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -300,7 +300,7 @@ void printterm(struct terminal t);
 void printterms(void);
 void printuser(struct user u);
 void printusers(void);
-void process(int s, char *cmd);
+void process(int s, char *cmd, modpass p);
 void quit(int s);
 void rdconfig(char *file);
 void reaper(void);

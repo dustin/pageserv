@@ -1,8 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: protocol.c,v 1.7 1997/08/11 03:54:58 dustin Exp $
- * $State: Exp $
+ * $Id: protocol.c,v 1.8 1997/08/27 06:10:27 dustin Exp $
  */
 
 #include <stdio.h>
@@ -17,7 +16,7 @@
 
 extern struct config conf;
 
-void p_epage(int s)
+void p_epage(int s, modpass p)
 {
     char buf1[BUFLEN], buf2[BUFLEN], buf3[BUFLEN];
     struct queuent q;
@@ -44,6 +43,8 @@ void p_epage(int s)
     strcpy(q.to, buf1);
     strcpy(q.message, buf3);
 
+    q.rem_addr=ntohl(p.fsin.sin_addr.s_addr);
+
     if(conf.udb.u_exists(buf1))
     {
         storequeue(s, q, STORE_NORMAL);
@@ -54,7 +55,7 @@ void p_epage(int s)
     }
 }
 
-void p_mash(int s)
+void p_mash(int s, modpass p)
 {
     char buf1[BUFLEN], buf2[BUFLEN];
     struct queuent q;
@@ -82,7 +83,7 @@ void p_mash(int s)
     }
 }
 
-void p_depth(int s)
+void p_depth(int s, modpass p)
 {
     char buf[BUFLEN];
 
@@ -93,7 +94,7 @@ void p_depth(int s)
     puttext(s, buf);
 }
 
-void p_farkle(int s)
+void p_farkle(int s, modpass p)
 {
     struct queuent q;
     struct user u;
@@ -126,7 +127,7 @@ void p_farkle(int s)
     }
 }
 
-void p_quit(int s)
+void p_quit(int s, modpass p)
 {
     if(conf.debug>1)
 	puts("Entering p_quit");
@@ -135,7 +136,7 @@ void p_quit(int s)
     exit(0);
 }
 
-void process(int s, char *cmd)
+void process(int s, char *cmd, modpass p)
 {
     static char *commands[P_MAX+1]={
         "mash", "farkle", "depth", "quit",
@@ -175,21 +176,21 @@ void process(int s, char *cmd)
     switch(c)
     {
         case P_MASH:
-            p_mash(s); break;
+            p_mash(s, p); break;
 
         case P_DEPTH:
-            p_depth(s); break;
+            p_depth(s, p); break;
 
         case P_FARKLE:
-            p_farkle(s); break;
+            p_farkle(s, p); break;
 
         case P_EPAGE:
-            p_epage(s); break;
+            p_epage(s, p); break;
 
         case P_LOGIN:
             p_login(s); break;
 
         case P_QUIT:
-            p_quit(s);
+            p_quit(s, p);
     }
 }

@@ -1,8 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: kids.c,v 1.5 1997/04/16 18:23:00 dustin Exp $
- * $State: Exp $
+ * $Id: kids.c,v 1.6 1997/08/27 06:10:26 dustin Exp $
  */
 
 #include <signal.h>
@@ -107,7 +106,7 @@ void _pageserv_main(modpass p)
 
     puttext(s, PROMPT_CMD);
     gettextcr(s, buf);
-    process(s, buf);
+    process(s, buf, p);
 
     exit(0);
 }
