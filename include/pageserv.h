@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.37 1997/07/14 06:02:59 dustin Exp $
+ * $Id: pageserv.h,v 1.38 1997/07/31 02:37:40 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -121,6 +121,11 @@
 /* Function returns */
 #define FUNC_UNKNOWN -1
 
+/* PID returns */
+#define  PID_NOFILE 1
+#define  PID_STALE  2
+#define  PID_ACTIVE 3
+
 #ifdef IWANT_MODENAMES
 static char *modenames[]={
     "daemon",
@@ -219,6 +224,7 @@ int any_closeterm(int s, struct terminal t);
 int any_openterm(struct terminal t);
 int bit_set(int bmap, int which);
 int check_time(int priority, char *whom);
+int checkpidfile(char *filename);
 int deleteuser(char *name);
 int execnamedfunc(char *name, struct namedfunc *f);
 int f_exists(char *file);
@@ -295,3 +301,13 @@ int pushqueue(char *to, char *message, int priority);
 void cgettext(char *message, int size);
 
 #endif /* PAGESERV_H */
+
+
+
+
+
+
+
+
+
+
