@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: utility.c,v 1.23 1998/07/15 08:05:49 dustin Exp $
+ * $Id: utility.c,v 1.24 1998/07/23 15:42:48 dustin Exp $
  */
 
 #include <config.h>
@@ -28,6 +28,19 @@ extern struct config conf;
 
 /* Static declarations */
 static int set_bit(int map, int bit);
+
+/*
+ * snprintf for those that don't have it.
+ * More that likely, it'll overrun buffers, because they
+ * probably don't have vsnprintf either.
+ */
+int snprintf(char *s, size_t n, const char *format, ...)
+{
+    va_list ap;
+    va_start(ap, format);
+    vsnprintf(s, n-1, format, ap);
+    va_end(ap);
+}
 
 /*
  * Each main module will have its own logging that does essentially the

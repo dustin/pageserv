@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1996-1998  Dustin Sallings
  *
- * $Id: snppclient.h,v 1.2 1998/06/03 16:43:03 dustin Exp $
+ * $Id: snppclient.h,v 1.3 1998/07/23 15:42:47 dustin Exp $
  */
 
 #ifndef _SNPP_CLIENT_H
@@ -59,5 +59,9 @@ struct snpp_client {
 /* The thing the outside world sees */
 struct snpp_client *snpp_connect(char *hostname, int port);
 char *_killwhitey(char *what);
+
+#if !defined(HAVE_SNPRINTF)
+int snprintf(char *s, size_t n, const char *format, ...);
+#endif
 
 #endif /* _SNPP_CLIENT_H */

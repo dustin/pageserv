@@ -52,6 +52,15 @@
 # endif
 #endif
 
+#undef HAVE_SNPRINTF
+#undef HAVE_SPRINTF
+
+#if !defined(HAVE_SNPRINTF)
+# if ! defined(HAVE_SPRINTF)
+#  error No snprintf or sprintf, this is not C.
+# endif
+#endif
+
 #undef HAVE_STRERROR
 
 #if defined(HAVE_POSTGRES)

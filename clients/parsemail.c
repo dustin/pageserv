@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parsemail.c,v 2.11 1998/07/10 18:57:47 dustin Exp $
+ * $Id: parsemail.c,v 2.12 1998/07/23 15:42:42 dustin Exp $
  */
 
 #include <stdio.h>
@@ -113,7 +113,7 @@ int main(int argc, char **argv)
     if(from==NULL)
         from="(unknown sender)";
 
-    sprintf(line, "%s: %s -- %s", tag, from, subject);
+    snprintf(line, LINELEN-1, "%s: %s -- %s", tag, from, subject);
 
     _ndebug(2, ("Page to send:  %s\n", line));
 

@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.73 1998/07/15 07:55:12 dustin Exp $
+ * $Id: pageserv.h,v 1.74 1998/07/23 15:42:45 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -358,6 +358,10 @@ void showversion(void);
 void sql_userdbInit(void);
 void storeterm(DBM *db, struct terminal t);
 void stringListSort(char **list);
+
+#if !defined(HAVE_SNPRINTF)
+int snprintf(char *s, size_t n, const char *format, ...);
+#endif
 
 /* This doesn't even get defined if HAVE_NIS isn't set */
 #ifdef HAVE_NIS

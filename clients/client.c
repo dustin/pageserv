@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: client.c,v 2.8 1998/06/03 16:45:18 dustin Exp $
+ * $Id: client.c,v 2.9 1998/07/23 15:42:41 dustin Exp $
  */
 
 /*
@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <string.h>
 #include <strings.h>
 #include <ctype.h>
@@ -25,6 +26,19 @@
 #include <assert.h>
 
 #include <snppclient.h>
+
+/*
+ * snprintf for those that don't have it.
+ * More that likely, it'll overrun buffers, because they
+ * probably don't have vsnprintf either.
+ */
+int snprintf(char *s, size_t n, const char *format, ...)
+{
+    va_list ap;
+    va_start(ap, format);
+    vsnprintf(s, n-1, format, ap);
+    va_end(ap);
+}
 
 static void _snpp_destroy_struct(struct snpp_client *snpp)
 {
