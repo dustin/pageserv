@@ -1,13 +1,13 @@
-# Terminal number - protocol - terminal server - port - pre-dial
+# Terminal number - flags - terminal server - port - pre-dial
 # all delimited by ws
 
 1.800.364.0816	1	liv-lex-1.ipa.net       6001    9,
 1.800.455.2698	1	/dev/ttyb               6001
 1.800.455.2698	1	liv-lex-1.ipa.net	6001    9,
-1.800.658.9983	2	liv-lex-1.ipa.net	6001	9,
-# 219.1805	2	liv0.lit.intellinet.com	6001
-219.1805	2	liv-lex-1.ipa.net	6001	9,1.501
+1.800.658.9983	1	liv-lex-1.ipa.net	6001	9,
+# 219.1805	1	liv0.lit.intellinet.com	6001
+219.1805	1	liv-lex-1.ipa.net	6001	9,1.501
 7820483	1	liv-lex-1.ipa.net	6001	9,
-783.6426	2	liv-lex-1.ipa.net	6001	9,
+783.6426	1	liv-lex-1.ipa.net	6001	9,
 7840555	1	liv-lex-1.ipa.net	6001	9,
 1.510.801.9999	1	/dev/ttyb	0	,
