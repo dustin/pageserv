@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile,v 1.3 1997/03/11 19:36:31 dustin Exp $
+# $Id: Makefile,v 1.4 1997/03/11 21:05:44 dustin Exp $
 
 MAJOR=2
 MINOR=0
@@ -8,7 +8,8 @@ VERSION=$(MAJOR).$(MINOR).$(PATCH)
 
 CC=cc
 CFLAGS=-O2 -g -Wall -DVERSION=\"$(VERSION)\"
-LDFLAGS=-g
+LIBS=-lnsl -lsocket
+LDFLAGS=-g $(LIBS)
 
 SERV_OBJS=sockets.o main.o utility.o kids.o queue.o protocol.o
 PQ_OBJS=pqueue.o utility.o queue.o
@@ -22,10 +23,10 @@ JUNK=$(EXES) *.o *.core
 all: pageserv pqueue
 
 pageserv: $(SERV_OBJS)
-	$(CC) -o $@ $(SERV_OBJS)
+	$(CC) -o $@ $(SERV_OBJS) $(LDFLAGS)
 
 pqueue: $(PQ_OBJS)
-	$(CC) -o $@ $(PQ_OBJS)
+	$(CC) -o $@ $(PQ_OBJS) $(LDFLAGS)
 
 tgz: $(ARCHIVE).tar.gz
 

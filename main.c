@@ -1,7 +1,7 @@
 /*
  * Copyright (c{) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.2 1997/03/11 05:58:56 dustin Exp $
+ * $Id: main.c,v 1.3 1997/03/11 21:05:46 dustin Exp $
  */
 
 #include <stdio.h>
@@ -46,6 +46,7 @@ void main(void)
 	fdset=tfdset;
         t.tv_sec=CHILD_LIFETIME;
         t.tv_usec=0;
+        fromlen=sizeof(fsin);
 
 	if( select(s+1, &fdset, NULL, NULL, &t) > 0)
 	{
@@ -58,6 +59,10 @@ void main(void)
 	         else
 		     close(ns);
              }
+	     else
+	     {
+		 perror("accept");
+	     }
 	}
 	reaper();
     }
