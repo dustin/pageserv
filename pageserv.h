@@ -1,13 +1,20 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.15 1997/03/13 19:37:35 dustin Exp $
+ * $Id: pageserv.h,v 1.16 1997/03/14 00:52:10 dustin Exp $
  */
 
 /* for DBM type */
 #include <ndbm.h>
 
+#include "config.h"
+
+/* Remote host for clients */
+#define REMHOST "localhost"
+
+/* Port number to run on/connect to */
 #define PORT 1029
+
 #define BUFLEN 300
 #define TOLEN 40
 #define FNSIZE 40

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.8 1997/03/13 19:37:37 dustin Exp $
+ * $Id: userdb.c,v 1.9 1997/03/14 00:52:11 dustin Exp $
  */
 
 #include <stdio.h>
@@ -22,6 +22,7 @@ void getnormtimes(int times, int *ret)
 
     if(bit_set(times, 0))
     {
+	puts("The zero bit is set");
 	/* handle full-timers */
 	if( (times & 0xFFFFFFFF) == 0xFFFFFFFF)
 	{
@@ -38,6 +39,7 @@ void getnormtimes(int times, int *ret)
     }
     else
     {
+	puts("The zero bit is NOT set");
         for(i=0; bit_set(times, i)==0 && BC; i++);
         ret[0]=i;
 

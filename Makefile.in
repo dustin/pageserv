@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 1.4 1997/03/13 04:43:59 dustin Exp $
+# $Id: Makefile.in,v 1.5 1997/03/14 00:52:06 dustin Exp $
 
 MAJOR=2
 MINOR=0
@@ -25,7 +25,8 @@ ARCHIVE=$(NAME)-$(VERSION)
 STUFF=$(SOURCES) pageserv.h configure configure.in Makefile.in clients \
 	README
 JUNK=$(EXES) *.o *.core core
-AUTOJUNK=config.status config.cache config.log Makefile clients/Makefile
+AUTOJUNK=config.status config.cache config.log Makefile clients/Makefile \
+	config.h
 
 all: $(EXES)
 

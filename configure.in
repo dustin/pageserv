@@ -1,6 +1,7 @@
-dnl $Id: configure.in,v 1.4 1997/03/13 04:25:58 dustin Exp $
+dnl $Id: configure.in,v 1.5 1997/03/14 00:52:09 dustin Exp $
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(main.c)
+AC_CONFIG_HEADER(config.h)
 
 dnl Checks for programs.
 AC_PROG_CC(-g)
@@ -19,7 +20,7 @@ AC_STRUCT_TM
 
 dnl Checks for library functions.
 AC_TYPE_SIGNAL
-AC_CHECK_FUNCS(select socket)
+AC_CHECK_FUNCS(select socket herror)
 
 AC_CHECK_LIB(nsl, main)
 AC_CHECK_LIB(socket, main)
