@@ -1,8 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: signals.c,v 1.7 1997/08/06 07:39:15 dustin Exp $
- * $State: Exp $
+ * $Id: signals.c,v 1.8 1997/08/20 07:53:29 dustin Exp $
  */
 
 #include <stdio.h>
@@ -38,6 +37,12 @@ RETSIGTYPE serv_sighup(int sig)
     resetservtraps();
 }
 
+RETSIGTYPE serv_sigchld(int sig)
+{
+    reaper();
+    resetservtraps();
+}
+
 void resetservtraps(void)
 {
     if(conf.debug>0)
@@ -47,6 +52,7 @@ void resetservtraps(void)
     signal(SIGQUIT, serv_sigint);
     signal(SIGTERM, serv_sigint);
     signal(SIGHUP, serv_sighup);
+    signal(SIGCHLD, serv_sigchld);
 }
 
 RETSIGTYPE del_sigint(int sig)
