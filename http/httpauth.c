@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpauth.c,v 1.4 1997/07/10 06:46:52 dustin Exp $
+ * $Id: httpauth.c,v 1.5 1997/07/10 07:12:33 dustin Exp $
  */
 
 #include <config.h>
@@ -35,7 +35,7 @@ void http_checkauth(int s, struct http_request r, char *path)
     char authname[180];
     char pathname[1024], buf[1024];
     FILE *f;
-    int i;
+    int i, needauth=0;
 
     strcpy(pathname, path);
 
@@ -54,6 +54,7 @@ void http_checkauth(int s, struct http_request r, char *path)
 
         if( (f=fopen(buf, "r")) != NULL)
         {
+	    needauth++;
             fgets(authname, 180, f);
             for(i=0; (authname[i]!='\n'
                       && authname[i]!='\r'
@@ -66,7 +67,8 @@ void http_checkauth(int s, struct http_request r, char *path)
         }
     }
 
-    _http_auth_require(s, r, authname);
+    if(needauth)
+        _http_auth_require(s, r, authname);
 }
 
 void _http_auth_require(int s, struct http_request r, char *authname)
