@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.25 1997/07/03 06:09:26 dustin Exp $
+ * $Id: queue.c,v 1.26 1997/07/06 19:30:48 dustin Exp $
  * $State: Exp $
  */
 
@@ -152,16 +152,16 @@ void logqueue(struct queuent q, int type, char *reason)
     switch(type)
     {
         case QUE_LOG:
-            syslog(conf.log_que, "%s got paged %d bytes qid %s", q.to,
-                strlen(q.message), q.qid); break;
+            syslog(conf.log_que, "queued %s to %s:  %d bytes",
+		q.qid, q.to, strlen(q.message)); break;
         case SUC_LOG:
-            syslog(conf.log_que, "delivered %s %d bytes qid %s", q.to,
-                strlen(q.message), q.qid); break;
+            syslog(conf.log_que, "delivered %s to %s: %d bytes",
+		q.qid, q.to, strlen(q.message)); break;
         case FAIL_LOG:
             syslog(conf.log_que, "failed %s to %s: %s", q.qid,
                 q.to, reason); break;
         case EXP_LOG:
-            syslog(conf.log_que, "%s to %s expired, dequeuing", q.qid,
+            syslog(conf.log_que, "expired %s to %s:  dequeuing", q.qid,
                 q.to ); break;
     }
     closelog();
