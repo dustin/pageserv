@@ -1,0 +1,40 @@
+<html><head><title>Modify User $user</title></head>
+<body bgcolor="fFfFfF">
+
+<h2>Modify user $user</h2>
+
+If you leave the password entries blank, it will not be modified.<br>
+
+<form method="POST" action="/moduser">
+
+<table border="0">
+
+<tr>
+    <td>New passwd:</td>
+    <td><input name="passwd1" type="password"><br></td>
+</tr>
+
+<tr>
+    <td>Again:</td>
+    <td><input name="passwd2" type="password"><br></td>
+</tr>
+
+<tr>
+    <td>Early:</td>
+    <td><select name="early">
+	&selectTimeE
+        </select><br>
+    </td>
+</tr>
+<tr>
+    <td>Late:</td>
+    <td><select name="late">
+	&selectTimeL
+        </select><br>
+    </td>
+</tr>
+</table>
+
+<input type="submit">
+</form>
+<p><hr width="50%" align="left">
