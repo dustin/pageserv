@@ -875,7 +875,7 @@ OS=`$UNAMEPROG|$TRPROG '[A-Z]' '[a-z]'`
 VER=`$UNAMEPROG -r`
 case "$OS" in
     'sunos')
-	if test $REV lt 5
+	if test $VER -lt 5
 	then
 	    echo "Woohoo!  SunOS 4.x, one of my favs"
 	else
@@ -1687,7 +1687,7 @@ cat >> confdefs.h <<EOF
 EOF
 
 
-for ac_func in select socket herror getopt
+for ac_func in select socket herror getopt ypmatch
 do
 echo $ac_n "checking for $ac_func""... $ac_c" 1>&6
 echo "configure:1694: checking for $ac_func" >&5

@@ -34,6 +34,9 @@
 /* Define if you have the socket function.  */
 #undef HAVE_SOCKET
 
+/* Define if you have the ypmatch function. */
+#undef HAVE_YPMATCH
+
 /* Define if you have the <dirent.h> header file.  */
 #undef HAVE_DIRENT_H
 
