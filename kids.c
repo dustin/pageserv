@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: kids.c,v 1.5 1997/03/12 22:54:07 dustin Exp $
+ * $Id: kids.c,v 1.6 1997/03/14 16:28:18 dustin Exp $
  */
 
 #include <signal.h>
@@ -13,6 +13,11 @@
 
 #include "pageserv.h"
 
+/* The reaper is called after every connection or every 120 seconds,
+ * whichever is sooner.  It waits on all the children that have died
+ * off.
+ */
+
 void reaper(void)
 {
     int pid=1;
@@ -22,25 +27,24 @@ void reaper(void)
     }
 }
 
-void quit(int s)
-{
-    puttext(s, MESG_QUIT);
-    exit(0);
-}
+/* Brilliant alarm handling by Dustin Sallings */
 
 void onalarm()
 {
     exit(0);
 }
 
+/* Child's main loop.  Called immediately after parent's fork() */
+
 void childmain(int s)
 {
     char buf[BUFLEN];
 
-    sprintf(buf, "Welcome to Dustin's pager server version %s.\n", VERSION);
+    /* Cheezy welcome banner */
+    sprintf(buf, MESG_WELCOME, VERSION);
     puttext(s, buf);
 
-    /* lifetime of 120 seconds */
+    /* Child will only live CHILD_LIFETIME seconds */
     alarm(CHILD_LIFETIME);
     signal(SIGALRM, onalarm);
 

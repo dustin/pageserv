@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: protocol.c,v 1.10 1997/03/13 05:29:00 dustin Exp $
+ * $Id: protocol.c,v 1.11 1997/03/14 16:28:21 dustin Exp $
  */
 
 #include <stdio.h>
@@ -162,6 +162,12 @@ void p_farkle(int s)
     }
 }
 
+void p_quit(int s)
+{
+    puttext(s, MESG_QUIT);
+    exit(0);
+}
+
 void process(int s, char *cmd)
 {
     static char *commands[P_MAX+1]={
@@ -210,6 +216,6 @@ void process(int s, char *cmd)
 	    p_apage(s); break;
 
         case P_QUIT:
-	    quit(s);
+	    p_quit(s);
     }
 }

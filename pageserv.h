@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.16 1997/03/14 00:52:10 dustin Exp $
+ * $Id: pageserv.h,v 1.17 1997/03/14 16:28:19 dustin Exp $
  */
 
 /* for DBM type */
@@ -28,6 +28,7 @@
 #define MESG_NOQUEUE "No pages\n\n\n"
 #define MESG_NOUSER "No such user\n\n\n"
 #define MESG_BADTIME "User is not accepting normal priority pages now\n\n\n"
+#define MESG_WELCOME "Welcome to Dustin's pager server version %s.\n"
 
 /* prompts */
 #define PROMPT_CMD  "CMD: "
