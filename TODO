@@ -13,12 +13,14 @@ Delivery:
     * multiple modems on a port
     * have timeouts actually time out
     * clean stuff
+    * need queue status flags
 
 Clients:
 
     * Cleaner client stuff
     * Add more options to clients: remote host, options to parsemail,
       etc...
+    * Clients should use snpp
     * .parsemail
 
 Technical:
@@ -30,4 +32,4 @@ Technical:
 
 ----------------------------------------
 Copyright (c) 1997  Dustin Sallings
-$Id: TODO,v 2.28 1997/08/09 06:33:25 dustin Exp $
+$Id: TODO,v 2.29 1997/08/20 13:47:56 dustin Exp $
