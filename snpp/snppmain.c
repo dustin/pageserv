@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: snppmain.c,v 1.23 1998/04/12 01:04:47 dustin Exp $
+ * $Id: snppmain.c,v 1.24 1998/06/29 01:07:13 dustin Exp $
  */
 
 #include <config.h>
@@ -229,16 +229,19 @@ static void snpp_setpageid(int s, char *id)
 
 static void snpp_setmess(int s, char *mess)
 {
-    if(snpp_message!=NULL)
-    {
+    if(snpp_message!=NULL) {
         puttext(s, "503 Error, message already entered\n");
         return;
     }
 
-    if(mess==NULL || strlen(mess)==0)
-    {
+    if(mess==NULL || strlen(mess)==0) {
         puttext(s, "550 Error, invalid message\n");
         return;
+    }
+
+    if(strlen(mess)>=BUFLEN) {
+	puttext(s, "550 Error:  Message too long\n");
+	return;
     }
 
     snpp_message=strdup(mess);
