@@ -1572,7 +1572,7 @@ else
 fi
 done
 
-for ac_hdr in rpcsvc/ypclnt.h rpcsvc/yp_prot.h
+for ac_hdr in termio.h
 do
 ac_safe=`echo "$ac_hdr" | sed 'y%./+-%__p_%'`
 echo $ac_n "checking for $ac_hdr""... $ac_c" 1>&6
