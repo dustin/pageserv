@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpprocess.c,v 1.18 1998/01/01 09:40:50 dustin Exp $
+ * $Id: httpprocess.c,v 1.19 1998/01/10 01:32:41 dustin Exp $
  */
 
 #define IWANTDOCINFO 1
@@ -52,7 +52,7 @@ void http_senddoc(int s, struct http_request r)
 }
 #endif
 
-void _http_process_get(int s, struct http_request r, modpass p)
+static void _http_process_get(int s, struct http_request r, modpass p)
 {
     if(r.special==1)
     {
@@ -72,7 +72,7 @@ void _http_process_get(int s, struct http_request r, modpass p)
     }
 }
 
-int http_verifydoc(int s, struct http_request *r)
+static int http_verifydoc(int s, struct http_request *r)
 {
     int i, ret=1;
     char buf[2048];

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.15 1997/09/04 06:18:49 dustin Exp $
+ * $Id: userdb.c,v 1.16 1998/01/10 01:33:11 dustin Exp $
  */
 
 #include <stdio.h>
@@ -33,7 +33,7 @@ void cleanuserlist(char **list)
     free(list);
 }
 
-char **dbm_listusers(char *term)
+static char **dbm_listusers(char *term)
 {
     datum d, val;
     DBM *db;
@@ -82,7 +82,7 @@ char **dbm_listusers(char *term)
 
 void getnormtimes(int times, int *ret)
 {
-    int i, allones=0;
+    int i;
 
     if(bit_set(times, 0))
     {
@@ -90,7 +90,6 @@ void getnormtimes(int times, int *ret)
         if( (times & 0xFFFFFFFF) == 0xFFFFFFFF)
         {
             ret[0]=ret[1]=0;
-            allones=1;
         }
         else
         {
@@ -111,7 +110,7 @@ void getnormtimes(int times, int *ret)
     }
 }
 
-void dbm_eraseuserdb(void)
+static void dbm_eraseuserdb(void)
 {
     datum d;
     DBM *db;
@@ -125,14 +124,14 @@ void dbm_eraseuserdb(void)
     for(d=dbm_firstkey(db); d.dptr!=NULL; d=dbm_firstkey(db))
     {
 	if(conf.debug>2)
-	    printf("deleting %s\n", d.dptr);
+	    printf("deleting %s\n", (char *)d.dptr);
 	dbm_delete(db, d);
     }
 
     dbm_close(db);
 }
 
-int dbm_u_exists(char *name)
+static int dbm_u_exists(char *name)
 {
     datum d, k;
     DBM *db;
@@ -153,7 +152,7 @@ int dbm_u_exists(char *name)
     return(d.dptr!=NULL);
 }
 
-int dbm_deleteuser(char *name)
+static int dbm_deleteuser(char *name)
 {
     datum d;
     DBM *db;
@@ -185,7 +184,7 @@ void printuser(struct user u)
     printf("Normal:    %d to %d\n", times[0], times[1]);
 }
 
-struct user dbm_open_getuser(DBM *db, char *name)
+static struct user dbm_open_getuser(DBM *db, char *name)
 {
     datum d, k;
     struct user u;
@@ -247,7 +246,7 @@ int check_time(struct queuent q)
 
 }
 
-void dbm_open_storeuser(DBM *db, struct user u)
+static void dbm_open_storeuser(DBM *db, struct user u)
 {
     datum k, d;
     k.dptr=u.name;
@@ -259,7 +258,7 @@ void dbm_open_storeuser(DBM *db, struct user u)
     dbm_store(db, k, d, DBM_REPLACE);
 }
 
-void dbm_storeuser(struct user u)
+static void dbm_storeuser(struct user u)
 {
     DBM *db;
 
@@ -274,7 +273,7 @@ void dbm_storeuser(struct user u)
     dbm_close(db);
 }
 
-struct user dbm_getuser(char *name)
+static struct user dbm_getuser(char *name)
 {
     DBM *db;
     struct user u;

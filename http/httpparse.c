@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpparse.c,v 1.14 1998/01/01 09:40:49 dustin Exp $
+ * $Id: httpparse.c,v 1.15 1998/01/10 01:32:39 dustin Exp $
  */
 
 #define IWANTMETHODNAMES 1
@@ -19,7 +19,7 @@
 
 extern struct config conf;
 
-int _http_authdecode_match(char c)
+static int _http_authdecode_match(char c)
 {
     int i;
     static char *map=
@@ -34,7 +34,7 @@ int _http_authdecode_match(char c)
     return(i);
 }
 
-void _http_authdecode(struct http_request *r)
+static void _http_authdecode(struct http_request *r)
 {
     char *string;
     char *dest;

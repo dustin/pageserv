@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: snppmain.c,v 1.16 1998/01/01 09:40:55 dustin Exp $
+ * $Id: snppmain.c,v 1.17 1998/01/10 01:33:18 dustin Exp $
  */
 
 #include <config.h>
@@ -33,6 +33,10 @@
 
 extern struct config conf;
 
+static void _snpp_init(void);
+static void _snpp_main(modpass p);
+static int _snpp_socket(void);
+
 module mod_snppserv={
     _snpp_init,
     _snpp_main,
@@ -42,20 +46,20 @@ module mod_snppserv={
     0
 };
 
-char *snpp_pageid[SNPP_NID];
-char *snpp_message=NULL;
-int  snpp_nid=0;
-int  snpp_priority=PR_NORMAL;
-int  snpp_holdtime=0;
+static char *snpp_pageid[SNPP_NID];
+static char *snpp_message=NULL;
+static int  snpp_nid=0;
+static int  snpp_priority=PR_NORMAL;
+static int  snpp_holdtime=0;
 
-void snpp_onalarm()
+static void snpp_onalarm()
 {
     _ndebug(2, ("SNPP server received alarm, exiting...\n"));
 
     exit(0);
 }
 
-int _snpp_socket(void)
+static int _snpp_socket(void)
 {
     if(mod_snppserv.listening)
         return(mod_snppserv.s);
@@ -63,7 +67,7 @@ int _snpp_socket(void)
         return(-1);
 }
 
-void _snpp_init(void)
+static void _snpp_init(void)
 {
     if(conf.snppserver)
     {
@@ -83,7 +87,7 @@ void _snpp_init(void)
     }
 }
 
-void snpp_holduntil(int s, char *time)
+static void snpp_holduntil(int s, char *time)
 {
     int i, offset=0;
     int vals[6];
@@ -99,13 +103,13 @@ void snpp_holduntil(int s, char *time)
         return;
     }
 
-    if(strlen(time)<12)
+    if(strlen(time) < (size_t)12)
     {
         puttext(s, "Invalid time (try help)\n");
         return;
     }
 
-    if(strlen(time)>12)
+    if(strlen(time)> (size_t)12)
     {
         if(time[12]=='-' || time[12]=='+' || isspace(time[12]))
 	{
@@ -160,7 +164,7 @@ void snpp_holduntil(int s, char *time)
     }
 }
 
-void snpp_setpageid(int s, char *id)
+static void snpp_setpageid(int s, char *id)
 {
     if(conf.udb.u_exists(id))
     {
@@ -181,7 +185,7 @@ void snpp_setpageid(int s, char *id)
     }
 }
 
-void snpp_setmess(int s, char *mess)
+static void snpp_setmess(int s, char *mess)
 {
     if(snpp_message!=NULL)
     {
@@ -199,9 +203,9 @@ void snpp_setmess(int s, char *mess)
     puttext(s, "250 Message OK\n");
 }
 
-void snpp_setpriority(int s, char *pri)
+static void snpp_setpriority(int s, char *pri)
 {
-    if( (pri!=NULL) && (strlen(pri)>0) )
+    if( (pri!=NULL) && (strlen(pri)> (size_t)0) )
     {
         if( tolower(pri[0]) == 'h')
 	    snpp_priority=PR_HIGH;
@@ -214,7 +218,7 @@ void snpp_setpriority(int s, char *pri)
     }
 }
 
-void snpp_cleanstuff(void)
+static void snpp_cleanstuff(void)
 {
     /* These are set to NULL, because they're used by RESEt, too */
     int i;
@@ -235,7 +239,7 @@ void snpp_cleanstuff(void)
     }
 }
 
-void snpp_send(int s, struct sockaddr_in fsin)
+static void snpp_send(int s, struct sockaddr_in fsin)
 {
     struct queuent q;
     int i, j;
@@ -271,7 +275,7 @@ void snpp_send(int s, struct sockaddr_in fsin)
     return;
 }
 
-void _snpp_main(modpass p)
+static void _snpp_main(modpass p)
 {
     int s, going=1, c, tries=0;
     char buf[BUFLEN];

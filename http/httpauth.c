@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpauth.c,v 1.9 1998/01/01 09:40:46 dustin Exp $
+ * $Id: httpauth.c,v 1.10 1998/01/10 01:32:35 dustin Exp $
  */
 
 #include <config.h>
@@ -20,7 +20,7 @@ extern struct config conf;
 
 #define checkpass(a, b) (strcmp(a, (char *)crypt(b, a)) == 0)
 
-void striptopath(char *pathname)
+static void striptopath(char *pathname)
 {
     int i;
 
@@ -97,7 +97,7 @@ void _http_auth_require(int s, struct http_request r, char *authname)
 
     u=conf.udb.getuser(r.auth.name);
 
-    if(strlen(u.passwd)>0)
+    if(strlen(u.passwd)>(size_t)0)
     {
          if(checkpass(u.passwd, r.auth.pass))
 	 {

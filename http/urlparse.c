@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: urlparse.c,v 1.7 1998/01/01 09:40:52 dustin Exp $
+ * $Id: urlparse.c,v 1.8 1998/01/10 01:32:47 dustin Exp $
  */
 
 #include <pageserv.h>
@@ -14,7 +14,7 @@
 
 extern struct config conf;
 
-char _http_X2c(char *u)
+static char _http_X2c(char *u)
 {
     char c;
     c=( (u[0]>='A'? ((u[0]&0xdf)-'A')+10 : (u[0]-'0')) << 4);
@@ -22,7 +22,7 @@ char _http_X2c(char *u)
     return(c);
 }
 
-void _http_unescape(char *u)
+static void _http_unescape(char *u)
 {
     int i, j;
 
@@ -37,7 +37,7 @@ void _http_unescape(char *u)
     u[i]=0x00;
 }
 
-void _http_addtolist(struct http_request *r, char *n, char *v)
+static void _http_addtolist(struct http_request *r, char *n, char *v)
 {
     struct http_list *list, *tmp;
 

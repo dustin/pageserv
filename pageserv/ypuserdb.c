@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: ypuserdb.c,v 1.5 1997/09/04 06:18:50 dustin Exp $
+ * $Id: ypuserdb.c,v 1.6 1998/01/10 01:33:14 dustin Exp $
  */
 
 #include <config.h>
@@ -23,9 +23,9 @@
 
 extern struct config conf;
 
-char *domainname;
+static char *domainname;
 
-int nis_u_exists(char *name)
+static int nis_u_exists(char *name)
 {
     char *data;
     int yperr, len;
@@ -39,7 +39,7 @@ int nis_u_exists(char *name)
     return(!yperr);
 }
 
-struct user nis_getuser(char *name)
+static struct user nis_getuser(char *name)
 {
     struct user u;
     char *data;
@@ -66,7 +66,7 @@ struct user nis_getuser(char *name)
     return(u);
 }
 
-char **nis_listusers(char *term)
+static char **nis_listusers(char *term)
 {
     char **ret;
     struct user u;
@@ -114,22 +114,22 @@ char **nis_listusers(char *term)
     return(ret);
 }
 
-int nis_deleteuser(char *name)
+static int nis_deleteuser(char *name)
 {
     return(0);
 }
 
-void nis_storeuser(struct user u)
+static void nis_storeuser(struct user u)
 {
     return;
 }
 
-void nis_eraseuserdb(void)
+static void nis_eraseuserdb(void)
 {
     return;
 }
 
-int nis_parseusers(void)
+static int nis_parseusers(void)
 {
     return 0;
 }

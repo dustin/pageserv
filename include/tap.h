@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * "$Id: tap.h,v 1.5 1997/09/04 06:18:38 dustin Exp $"
+ * "$Id: tap.h,v 1.6 1998/01/10 01:32:54 dustin Exp $"
  */
 
 #ifndef TAP_H
@@ -80,15 +80,15 @@
 
 /* functions */
 
-char *tap_sent_checksum(int sum);
-int p_openport(char *port);
 int s_modem_connect(int s, char *number);
 int s_modem_waitfor(int s, char *what, int timeout);
 int s_modem_waitforchar(int s, char what, int timeout);
-int s_openhost(char *host, int port);
 int s_tap_end(int s);
 int s_tap_init(int s, int flags);
 int s_tap_send(int s, char *id, char *message);
-int tap_checksum(char *string);
+static char *tap_sent_checksum(int sum);
+static int p_openport(char *port);
+static int s_openhost(char *host, int port);
+static int tap_checksum(char *string);
 
 #endif /* TAP_H */

@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.55 1998/01/01 08:41:05 dustin Exp $
+ * $Id: pageserv.h,v 1.56 1998/01/10 01:32:51 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -254,15 +254,12 @@ struct config {
 
 /* prototypes */
 
-RETSIGTYPE serv_sighup(int sig);
-RETSIGTYPE serv_sigint(int sig);
 char **listterms(void);
 char *addtostr(int *size, char *dest, char *str);
 char *fntoqid(char *fn);
 char *getHostName(unsigned int addr);
 char *kw(char *in);
 char *newqfile(void);
-int _pageserv_socket(void);
 int any_closeterm(int s, struct terminal t);
 int any_openterm(struct terminal t);
 int bit_set(int bmap, int which);
@@ -274,7 +271,6 @@ int f_exists(char *file);
 int getservsocket(int port);
 int gettext(int s, char *buf);
 int gettextcr(int s, char *buf);
-int p_lock(char *dev);
 int p_openterm(struct terminal t);
 int p_unlock(char *dev);
 int pack_timebits(int early, int late);
@@ -287,7 +283,6 @@ int q_unlock(struct queuent q);
 int queuedepth(void);
 int readytodeliver(struct queuent q);
 int s_openterm(struct terminal t);
-int set_bit(int bmap, int which);
 int storequeue(int s, struct queuent q, int flags);
 int t_exists(char *number);
 struct queuent *listqueue(char *number);
@@ -296,8 +291,6 @@ struct queuent readqueuefile(char *fn);
 struct terminal getterm(char *key);
 struct terminal open_getterm(DBM *db, char *key);
 struct user setpasswd(struct user u, char *passwd);
-void _pageserv_init(void);
-void _pageserv_main(modpass p);
 void checklocks(void);
 void cleanconfig(void);
 void cleanmylocks(void);
@@ -316,6 +309,7 @@ void logConnect(struct sockaddr_in fsin, module *m);
 void logqueue(struct queuent q, int type, char *reason);
 void p_getpasswd(int s, char *to);
 void p_login(int s);
+void reaper(void);
 void printqueue(void);
 void printterm(struct terminal t);
 void printterms(void);
@@ -324,7 +318,6 @@ void printusers(void);
 void process(int s, char *cmd, modpass p);
 void quit(int s);
 void rdconfig(char *file);
-void reaper(void);
 void resetdelivertraps(void);
 void resetservtraps(void);
 void runqueue(void);

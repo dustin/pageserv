@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: serial.c,v 2.9 1998/01/01 09:40:42 dustin Exp $
+ * $Id: serial.c,v 2.10 1998/01/10 01:32:28 dustin Exp $
  */
 
 /*
@@ -34,6 +34,8 @@
 
 extern struct config conf;
 
+static int p_lock(char *dev);
+
 void checklocks(void)
 {
     DIR *dir;
@@ -59,7 +61,10 @@ void checklocks(void)
 	    {
 		_ndebug(2, ("Found a lockfile:  %s\n", path));
 
-		unlink(path);
+		if(unlink(path)<0)
+		{
+		    _ndebug(1, ("Couldn't delete lockfile:  %s\n", path));
+		}
 	    }
 
 	    fclose(f);
@@ -84,11 +89,10 @@ int p_unlock(char *dev)
 
     _ndebug(2, ("lockfile is %s, killin' it\n", lockfile));
 
-    unlink(lockfile);
-    return(0);
+    return(unlink(lockfile));
 }
 
-int p_lock(char *dev)
+static int p_lock(char *dev)
 {
     FILE *f;
     char lock[50];
@@ -118,13 +122,14 @@ int p_lock(char *dev)
 	    return(-1);
 	}
 
-	fprintf(f, "%10d\n", getpid());
+	fprintf(f, "%10d\n", (int)getpid());
 
 	fclose(f);
 	return(0);
     }
 
-    return(-1); /* this will never happen */
+    /*NOTREACHED*/
+    return(-1);
 }
 
 int p_openterm(struct terminal t)
@@ -135,12 +140,18 @@ int p_openterm(struct terminal t)
     strcpy(buf, t.predial);
     strcat(buf, t.number);
     if( (s=p_openport(t.ts))>=0)
-        s_modem_connect(s, buf);
+    {
+        if( s_modem_connect(s, buf) < 0)
+	{
+	    close(s);
+	    s=-1;
+	}
+    }
 
     return(s);
 }
 
-int p_openport(char *port)
+static int p_openport(char *port)
 {
     int s;
     struct termios tm;

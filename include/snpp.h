@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * "$Id: snpp.h,v 1.5 1997/08/11 07:38:46 dustin Exp $"
+ * "$Id: snpp.h,v 1.6 1998/01/10 01:32:53 dustin Exp $"
  */
 
 #ifndef SNPP_H
@@ -75,10 +75,7 @@ static char *methodnames[]={
 #endif
 
 char *snpp_arg(char *s);
-int  _snpp_socket(void);
 int snpp_parse(char *cmd);
-void _snpp_init(void);
-void _snpp_main(modpass p);
 void snpp_help(int s);
 
 #endif /* SNPP_H */

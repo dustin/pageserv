@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: signals.c,v 1.8 1997/08/20 07:53:29 dustin Exp $
+ * $Id: signals.c,v 1.9 1998/01/10 01:33:08 dustin Exp $
  */
 
 #include <stdio.h>
@@ -14,7 +14,7 @@
 
 extern struct config conf;
 
-RETSIGTYPE serv_sigint(int sig)
+static RETSIGTYPE serv_sigint(int sig)
 {
     if(conf.debug>0)
 	puts("Exit type signal caught, shutting down...");
@@ -24,7 +24,7 @@ RETSIGTYPE serv_sigint(int sig)
     exit(0);
 }
 
-RETSIGTYPE serv_sighup(int sig)
+static RETSIGTYPE serv_sighup(int sig)
 {
     cleanconfig();
     rdconfig(CONFIGFILE);
@@ -37,7 +37,7 @@ RETSIGTYPE serv_sighup(int sig)
     resetservtraps();
 }
 
-RETSIGTYPE serv_sigchld(int sig)
+static RETSIGTYPE serv_sigchld(int sig)
 {
     reaper();
     resetservtraps();
@@ -55,7 +55,7 @@ void resetservtraps(void)
     signal(SIGCHLD, serv_sigchld);
 }
 
-RETSIGTYPE del_sigint(int sig)
+static RETSIGTYPE del_sigint(int sig)
 {
     cleanmylocks();
     exit(1);

@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 2.43 1998/01/01 08:51:18 dustin Exp $
+# $Id: Makefile.in,v 2.44 1998/01/10 01:32:08 dustin Exp $
 
 MAJOR=2
 MINOR=10
@@ -10,6 +10,7 @@ SHELL=/bin/sh
 CC=@CC@
 YACC=@YACC@
 LEX=@LEX@
+LINT=@LINT@
 CFLAGS=-DVERSION=\"$(VERSION)\" @CFLAGS@
 
 LIBS=@LIBS@
@@ -51,6 +52,10 @@ irixhack.o:
 
 clean:  irixhack.o
 	for i in $(DIRS) ; do cd $$i && $(MAKE) clean ; cd .. ; done
+	rm -f $(JUNK)
+
+lint:
+	for i in $(DIRS) ; do cd $$i && $(MAKE) lint ; cd .. ; done
 	rm -f $(JUNK)
 
 ultrabrite: irixhack.o

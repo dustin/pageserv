@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * "$Id: http.h,v 1.15 1997/08/11 08:17:00 dustin Exp $"
+ * "$Id: http.h,v 1.16 1998/01/10 01:32:50 dustin Exp $"
  */
 
 #ifndef HTTP_H
@@ -81,26 +81,20 @@ struct http_request {
 /* functions */
 
 char *_http_getcgiinfo(struct http_request r, char *what);
-int  _http_socket(void);
 struct http_request http_parserequest(int s);
 void _http_admin(int s, struct http_request r);
 void _http_auth_require(int s, struct http_request r, char *authname);
-void _http_error(int s, struct http_request r);
+void _http_error(int s,  struct http_request r);
 void _http_footer(int s);
 void _http_free_request(struct http_request r);
+void _http_header(int s);
 void _http_header_needauth(int s, char *authname, struct http_request r);
 void _http_header_notfound(int s, struct http_request r);
 void _http_header_ok(int s, int size);
-void _http_init(void);
 void _http_init_request(struct http_request *r);
-void _http_lex_dofunc(char *func);
-void _http_lex_showthing(char *thing);
-void _http_main(modpass p);
 void _http_moduser(int s, struct http_request r);
-void _http_moduser_timelist(int s, int def);
 void _http_parse(int s, struct http_request r);
 void _http_parseargs(int s, struct http_request *r);
-void _http_process_get(int s, struct http_request r, modpass p);
 void _http_sendpage(int s, struct http_request r, modpass p);
 void http_checkauth(int s, struct http_request r, char *path);
 void http_process(int s, struct http_request r, modpass p);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpmisc.c,v 1.6 1998/01/01 09:40:48 dustin Exp $
+ * $Id: httpmisc.c,v 1.7 1998/01/10 01:32:38 dustin Exp $
  */
 
 #include <config.h>
@@ -82,14 +82,14 @@ void _http_footer(int s)
     puttext(s, HTTP_FOOTER);
 }
 
-void _http_free_largs(struct http_list *l)
+static void _http_free_largs(struct http_list *l)
 {
-    _ndebug(4, ("Got http_list entry at %p\n", l));
+    _ndebug(4, ("Got http_list entry at %p\n", (void *)l));
 
     if(l == NULL)
         return;
 
-    _ndebug(4, ("Freeing http_list entry at %p\n", l));
+    _ndebug(4, ("Freeing http_list entry at %p\n", (void *)l));
 
     if(l->next != NULL)
         _http_free_largs(l->next);

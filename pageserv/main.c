@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.34 1998/01/01 23:11:42 dustin Exp $
+ * $Id: main.c,v 1.35 1998/01/10 01:33:00 dustin Exp $
  */
 
 #include <config.h>
@@ -31,7 +31,7 @@
 
 struct config conf;
 
-void writepid(int pid)
+static void writepid(int pid)
 {
     FILE *f;
     int r;
@@ -62,7 +62,7 @@ void writepid(int pid)
     fclose(f);
 }
 
-void detach(void)
+static void detach(void)
 {
    int pid, i;
    char *tmp;
@@ -93,7 +93,7 @@ void detach(void)
    umask(7);
 }
 
-void daemon_main(void)
+static void daemon_main(void)
 {
     struct sockaddr_in fsin;
     int i, s, fromlen, pid, upper;
@@ -191,7 +191,7 @@ void daemon_main(void)
     }
 }
 
-void rehash_main(void)
+static void rehash_main(void)
 {
     int i;
 
@@ -207,7 +207,7 @@ void rehash_main(void)
     printf("Parsed %d terminal servers.\n", i);
 }
 
-void killserver(void)
+static void killserver(void)
 {
     int pid;
     FILE *f;
@@ -249,7 +249,7 @@ void killserver(void)
     exit(0);
 }
 
-void ldb_main(void)
+static void ldb_main(void)
 {
     conf.udb.dbinit();
     puts("Users:\n------------");
@@ -258,7 +258,7 @@ void ldb_main(void)
     printterms();
 }
 
-void changepasswd(void)
+static void changepasswd(void)
 {
     char buf[BUFLEN];
     struct user u;
@@ -324,5 +324,3 @@ int main(int argc, char **argv)
     cleanconfig();
     exit(0);
 }
-
-

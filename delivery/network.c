@@ -1,8 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: network.c,v 2.9 1998/01/01 09:40:42 dustin Exp $
- * $State: Exp $
+ * $Id: network.c,v 2.10 1998/01/10 01:32:27 dustin Exp $
  */
 
 /*
@@ -32,7 +31,13 @@ int s_openterm(struct terminal t)
     strcpy(buf, t.predial);
     strcat(buf, t.number);
     s=s_openhost(t.ts, t.port);
-    s_modem_connect(s, buf);
+
+    if(s_modem_connect(s, buf) < 0)
+    {
+        close(s);
+	s=-1;
+    }
+
     return(s);
 }
 
@@ -42,13 +47,13 @@ void net_timeout(void)
     exit(1);
 }
 
-int s_openhost(char *host, int port)
+static int s_openhost(char *host, int port)
 {
-struct hostent *hp;
-int success, i, flag;
-register int s=-1;
-struct linger l;
-struct sockaddr_in sin;
+    struct hostent *hp;
+    int i, flag;
+    register int s=-1;
+    struct linger l;
+    struct sockaddr_in sin;
 
     if((hp=gethostbyname(host)) == NULL)
     {
@@ -59,8 +64,6 @@ struct sockaddr_in sin;
 #endif
         exit(1);
     }
-
-    success=0;
 
     for(i=0; i<conf.maxconattempts; i++)
     {
@@ -94,7 +97,6 @@ struct sockaddr_in sin;
         }
 	else
 	{
-	    success=1;
 	    break;
 	}
     }

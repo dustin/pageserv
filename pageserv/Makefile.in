@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 1.16 1997/10/10 08:24:20 dustin Exp $
+# $Id: Makefile.in,v 1.17 1998/01/10 01:32:56 dustin Exp $
 
 SHELL=/bin/sh
 CC=@CC@
@@ -28,13 +28,31 @@ SOURCES=sockets.c main.c utility.c kids.c queue.c protocol.c \
 EXES=pageserv
 NAME=pageserv
 ARCHIVE=$(NAME)-$(VERSION)
-JUNK=$(EXES) *.o *.core core
+
+# Lint stuff
+LINT=@LINT@
+LINTLIBSP=-L@top_srcdir@/delivery -L@top_srcdir@/http -L@top_srcdir@/snpp
+LINTLIBS=-ldeliver -lhttp -lsnpp
+LINTFLAGS=$(INCLUDES) -DVERSION=\"$(VERSION)\" -v -x -u
+LINTS=sockets.ln main.ln utility.ln kids.ln queue.ln protocol.ln \
+	parseusers.ln userdb.ln readconfig.ln termdb.ln parseterms.ln \
+	signals.ln login.ln modules.ln nettools.ln ypuserdb.ln sqluserdb.ln
+
+JUNK=$(EXES) *.o *.core core $(LINTS)
 AUTOJUNK=Makefile
+
+.SUFFIXES: .c .o .l .a .ln
 
 all: $(EXES)
 
 pageserv: $(SERV_OBJS)
 	$(CC) -o $@ $(SERV_OBJS) $(LDFLAGS) $(LDELIVER) $(MODS) $(RCFG)
+
+lint: $(LINTS)
+	$(LINT) $(LINTFLAGS) $(LINTS) $(LINTLIBSP) $(LINTLIBS)
+
+.c.ln: $<
+	$(LINT) $(LINTFLAGS) -c $<
 
 depend:
 	echo "" >> Makefile

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: pushqueue.c,v 2.4 1997/08/10 07:17:13 dustin Exp $
+ * $Id: pushqueue.c,v 2.5 1998/01/10 01:32:22 dustin Exp $
  */
 
 #include <stdio.h>
@@ -17,7 +17,7 @@
 #error No getopt()!!!
 #endif /* HAVE_GETOPT */
 
-void usage(char *command)
+static void usage(char *command)
 {
     printf("pushqueue version %s by Dustin Sallings\n", VERSION);
     printf("Usage:  %s [-p priority]\n", command);

@@ -2,7 +2,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: lexer.l,v 1.10 1997/09/11 03:14:02 dustin Exp $
+ * $Id: lexer.l,v 1.11 1998/01/10 01:32:43 dustin Exp $
  */
 
 #include <config.h>
@@ -17,10 +17,12 @@
 
 extern struct config conf;
 
-int _parse_sock;
-struct http_request _parse_r;
-int _parse_strlen=0;
-char *_parse_sendstr;
+static int _parse_sock;
+static struct http_request _parse_r;
+static int _parse_strlen=0;
+static char *_parse_sendstr;
+static void _http_lex_dofunc(char *func);
+static void _http_lex_showthing(char *thing);
 
 %}
 
@@ -50,7 +52,7 @@ int yywrap(void)
     return(1);
 }
 
-void _parse_maketimelist(int frwhen)
+static void _parse_maketimelist(int frwhen)
 {
     int i, times[2];
     char buf[BUFLEN];
@@ -74,7 +76,7 @@ void _parse_maketimelist(int frwhen)
     }
 }
 
-void _parse_listTerms(void)
+static void _parse_listTerms(void)
 {
     char **terms;
     char buf[1024];
@@ -94,17 +96,17 @@ void _parse_listTerms(void)
     cleantermlist(terms);
 }
 
-void _parse_selectTimeE(void)
+static void _parse_selectTimeE(void)
 {
     _parse_maketimelist(EARLY);
 }
 
-void _parse_selectTimeL(void)
+static void _parse_selectTimeL(void)
 {
     _parse_maketimelist(LATE);
 }
 
-void _parse_tableUserList(void)
+static void _parse_tableUserList(void)
 {
     char **users;
     char **terms;
@@ -144,7 +146,7 @@ void _parse_tableUserList(void)
     cleantermlist(terms);
 }
 
-void _http_lex_dofunc(char *func)
+static void _http_lex_dofunc(char *func)
 {
     struct namedfunc f[]={
         { "&selectTimeE", _parse_selectTimeE },
@@ -161,7 +163,7 @@ void _http_lex_dofunc(char *func)
         _parse_sendstr=addtostr(&_parse_strlen, _parse_sendstr, func);
 }
 
-void _http_lex_showthing(char *thing)
+static void _http_lex_showthing(char *thing)
 {
     int i;
     static char *parse_vars[]={

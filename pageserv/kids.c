@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: kids.c,v 1.10 1997/12/31 16:38:04 dustin Exp $
+ * $Id: kids.c,v 1.11 1998/01/10 01:32:57 dustin Exp $
  */
 
 #include <signal.h>
@@ -18,6 +18,10 @@
 
 extern struct config conf;
 
+static void _pageserv_init(void);
+static void _pageserv_main(modpass p);
+static int _pageserv_socket(void);
+
 module mod_pageserv={
     _pageserv_init,
     _pageserv_main,
@@ -32,7 +36,7 @@ module mod_pageserv={
  * off.
  */
 
-int _pageserv_socket(void)
+static int _pageserv_socket(void)
 {
     if(mod_pageserv.listening)
         return(mod_pageserv.s);
@@ -40,7 +44,7 @@ int _pageserv_socket(void)
 	return(-1);
 }
 
-void _pageserv_init(void)
+static void _pageserv_init(void)
 {
     if(conf.pageserv==1)
     {
@@ -69,7 +73,7 @@ void reaper(void)
 
 /* Brilliant alarm handling by Dustin Sallings */
 
-void child_onalarm()
+static void child_onalarm()
 {
     _ndebug(2, ("Received alarm, exiting.\n"));
     exit(0);
@@ -77,7 +81,7 @@ void child_onalarm()
 
 /* Child's main loop.  Called immediately after parent's fork() */
 
-void _pageserv_main(modpass p)
+static void _pageserv_main(modpass p)
 {
     char buf[BUFLEN];
 

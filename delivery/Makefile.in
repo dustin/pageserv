@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 2.8 1997/07/09 07:24:15 dustin Exp $
+# $Id: Makefile.in,v 2.9 1998/01/10 01:32:24 dustin Exp $
 
 SHELL=/bin/sh
 CC=@CC@
@@ -21,6 +21,13 @@ STUFF=
 JUNK=$(EXES) *.o *.a *.core core
 AUTOJUNK=
 
+# Lint stuff
+LINT=@LINT@
+LINTFLAGS=$(INCLUDES) -DVERSION=\"$(VERSION)\" -v -x -u
+LINTS=tap.ln network.ln modem.ln serial.ln
+
+.SUFFIXES: .c .o .l .a .ln
+
 all: deliver.a
 
 taptest: taptest.o deliver.a
@@ -29,6 +36,12 @@ taptest: taptest.o deliver.a
 deliver.a: $(LDELIVER_OBJS)
 	$(AR) $@ $(LDELIVER_OBJS)
 	$(RANLIB) $@
+
+lint: $(LINTS)
+	$(LINT) $(LINTFLAGS) -odeliver $(LINTS)
+
+.c.ln: $<
+	$(LINT) $(LINTFLAGS) -c $<
 
 depend:
 	echo "" >> Makefile

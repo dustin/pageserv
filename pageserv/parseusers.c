@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parseusers.c,v 1.10 1997/08/11 04:28:53 dustin Exp $
+ * $Id: parseusers.c,v 1.11 1998/01/10 01:33:02 dustin Exp $
  */
 
 #include <stdio.h>
@@ -17,7 +17,7 @@
 
 extern struct config conf;
 
-struct user parseuser(char *line)
+static struct user parseuser(char *line)
 {
     struct user u;
     int early, late;

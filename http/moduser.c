@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: moduser.c,v 1.8 1998/01/01 09:40:51 dustin Exp $
+ * $Id: moduser.c,v 1.9 1998/01/10 01:32:44 dustin Exp $
  */
 
 #include <pageserv.h>
@@ -14,7 +14,7 @@
 
 extern struct config conf;
 
-void _http_modusererror(int s, char *message)
+static void _http_modusererror(int s, char *message)
 {
     _http_header_ok(s, 0);
     puttext(s, "<html><head><title>Error:  ");
@@ -23,7 +23,7 @@ void _http_modusererror(int s, char *message)
     puttext(s, message);
 }
 
-void _http_moduserheader(int s)
+static void _http_moduserheader(int s)
 {
     _http_header_ok(s, 0);
     puttext(s, "<html><head><title>Modify user</title></head>\n");
@@ -52,7 +52,7 @@ void _http_moduser_timelist(int s, int def)
     }
 }
 
-void _http_moduser_process(int s, struct http_request r)
+static void _http_moduser_process(int s, struct http_request r)
 {
     struct user u;
     int times[2];
@@ -82,9 +82,9 @@ void _http_moduser_process(int s, struct http_request r)
 
     if(strcmp(passwd1, passwd2)==0)
     {
-        if(strlen(passwd1)>0)
+        if(strlen(passwd1)>(size_t)0)
         {
-            if(strlen(passwd1)<5)
+            if(strlen(passwd1)<(size_t)5)
             {
                 puttext(s,
                     "Password must be at least 5 chars, not set.<br>\n");

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: admin.c,v 1.7 1998/01/01 09:40:46 dustin Exp $
+ * $Id: admin.c,v 1.8 1998/01/10 01:32:33 dustin Exp $
  */
 
 #include <pageserv.h>
@@ -14,7 +14,7 @@
 
 extern struct config conf;
 
-void _http_adminerror(int s, char *message)
+static void _http_adminerror(int s, char *message)
 {
     _http_header_ok(s, 0);
     puttext(s, "<html><head><title>Error:  ");
@@ -23,14 +23,14 @@ void _http_adminerror(int s, char *message)
     puttext(s, message);
 }
 
-void _http_adminheader(int s)
+static void _http_adminheader(int s)
 {
     _http_header_ok(s, 0);
     puttext(s, "<html><head><title>Pageserv Admin</title></head>\n");
     puttext(s, "<body bgcolor=\"fFfFfF\">\n");
 }
 
-void _http_doadduser(int s, struct http_request r)
+static void _http_doadduser(int s, struct http_request r)
 {
     struct user u;
     int times[2];
@@ -99,7 +99,7 @@ void _http_doadduser(int s, struct http_request r)
     }
 }
 
-void _http_dodeluser(int s, struct http_request r)
+static void _http_dodeluser(int s, struct http_request r)
 {
      char *user;
 
@@ -130,7 +130,7 @@ void _http_dodeluser(int s, struct http_request r)
      }
 }
 
-void _http_admin_process(int s, struct http_request r)
+static void _http_admin_process(int s, struct http_request r)
 {
     int i;
     char *form;

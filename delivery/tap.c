@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  SPY Internetworking
  *
- * $Id: tap.c,v 2.16 1998/01/01 09:40:43 dustin Exp $
+ * $Id: tap.c,v 2.17 1998/01/10 01:32:30 dustin Exp $
  */
 
 #include <stdio.h>
@@ -15,7 +15,7 @@
 
 extern struct config conf;
 
-int tap_checksum(char *string)
+static int tap_checksum(char *string)
 {
     int i, sum=0;
 
@@ -27,7 +27,7 @@ int tap_checksum(char *string)
     return(sum);
 }
 
-char *tap_sent_checksum(int sum)
+static char *tap_sent_checksum(int sum)
 {
     static char charsum[4]={0,0,0,0};
 
@@ -66,13 +66,21 @@ int s_tap_init(int s, int flags)
 	puttext(s, "\r");
     }
 
-    s_modem_waitfor(s, "ID=", 2);
+    if( s_modem_waitfor(s, "ID=", 2) < 0)
+    {
+	_ndebug(2, ("Error:  s_modem_waitfor(%d, \"ID=\", 2);\n", s));
+	return(-1);
+    }
 
     sprintf(buf, "%cPG1\r", C_ESC);
     puttext(s, buf);
 
     sprintf(buf, "%c[p", C_ESC);
-    s_modem_waitfor(s, buf, 10);
+    if( s_modem_waitfor(s, buf, 10) < 0)
+    {
+	_ndebug(2, ("Error:  s_modem_waitfor(%d, \"%s\", 2);\n", s, buf));
+	return(-1);
+    }
     return(0);
 }
 
@@ -87,7 +95,7 @@ int s_tap_end(int s)
     return(0);
 }
 
-int charfound(char *string, char *chars)
+static int charfound(char *string, char *chars)
 {
     int i;
 

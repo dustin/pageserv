@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: snppmisc.c,v 1.4 1997/08/06 04:37:44 dustin Exp $
+ * $Id: snppmisc.c,v 1.5 1998/01/10 01:33:20 dustin Exp $
  */
 
 #include <snpp.h>
@@ -11,7 +11,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
-void snpp_helpsend(int s, char *message)
+static void snpp_helpsend(int s, char *message)
 {
     char buf[BUFLEN];
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.32 1998/01/01 08:41:13 dustin Exp $
+ * $Id: readconfig.c,v 1.33 1998/01/10 01:33:07 dustin Exp $
  */
 
 #include <readconfig.h>
@@ -19,7 +19,7 @@
 
 extern struct config conf;
 
-void setdefaults(void)
+static void setdefaults(void)
 {
     /* This is a *little* inclear, but here I list all known types of
      * user database, so that I can just check to see what's configured
@@ -91,7 +91,7 @@ void showversion(void)
     printf("Pageserv by Dustin Sallings\nVersion %s\n", VERSION);
 }
 
-void showusage(char *cmd)
+static void showusage(char *cmd)
 {
     showversion();
 
@@ -164,7 +164,7 @@ void getoptions(int argc, char **argv)
     }
 }
 
-int getlogFacility(char *facility)
+static int getlogFacility(char *facility)
 {
     int i;
     static struct { char *name; int value; } fcs[]={

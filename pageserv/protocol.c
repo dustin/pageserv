@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: protocol.c,v 1.10 1997/12/31 16:38:08 dustin Exp $
+ * $Id: protocol.c,v 1.11 1998/01/10 01:33:03 dustin Exp $
  */
 
 #include <stdio.h>
@@ -16,7 +16,7 @@
 
 extern struct config conf;
 
-void p_epage(int s, modpass p)
+static void p_epage(int s, modpass p)
 {
     char buf1[BUFLEN], buf2[BUFLEN], buf3[BUFLEN];
     struct queuent q;
@@ -54,7 +54,7 @@ void p_epage(int s, modpass p)
     }
 }
 
-void p_mash(int s, modpass p)
+static void p_mash(int s, modpass p)
 {
     char buf1[BUFLEN], buf2[BUFLEN];
     struct queuent q;
@@ -81,7 +81,7 @@ void p_mash(int s, modpass p)
     }
 }
 
-void p_depth(int s, modpass p)
+static void p_depth(int s, modpass p)
 {
     char buf[BUFLEN];
 
@@ -91,7 +91,7 @@ void p_depth(int s, modpass p)
     puttext(s, buf);
 }
 
-void p_farkle(int s, modpass p)
+static void p_farkle(int s, modpass p)
 {
     struct queuent q;
     struct user u;
@@ -122,7 +122,7 @@ void p_farkle(int s, modpass p)
     }
 }
 
-void p_quit(int s, modpass p)
+static void p_quit(int s, modpass p)
 {
     _ndebug(1, ("Entering p_quit\n"));
 

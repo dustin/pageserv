@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: sendpage.c,v 1.7 1998/01/01 09:40:52 dustin Exp $
+ * $Id: sendpage.c,v 1.8 1998/01/10 01:32:45 dustin Exp $
  */
 
 #include <pageserv.h>
@@ -14,7 +14,7 @@
 
 extern struct config conf;
 
-void _http_sendpageerror(int s, char *message)
+static void _http_sendpageerror(int s, char *message)
 {
     _http_header_ok(s, 0);
     puttext(s, "<html><head><title>Error:  ");
@@ -23,7 +23,7 @@ void _http_sendpageerror(int s, char *message)
     puttext(s, message);
 }
 
-void _http_sendpagesuccess(int s)
+static void _http_sendpagesuccess(int s)
 {
     _http_header_ok(s, 0);
     puttext(s, "<html><head><title>Page accepted</title></head>");

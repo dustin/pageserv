@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 1.6 1997/08/03 02:25:23 dustin Exp $
+# $Id: Makefile.in,v 1.7 1998/01/10 01:32:32 dustin Exp $
 
 SHELL=/bin/sh
 CC=@CC@
@@ -18,15 +18,36 @@ LHTTP_OBJS=httpmain.o httpparse.o httpprocess.o httpmisc.o urlparse.o \
 	sendpage.o moduser.o httpauth.o admin.o lexer.o
 SOURCES=httpmain.c httpparse.c httpprocess.c httpmisc.c urlparse.c \
 	sendpage.c moduser.c httpauth.c admin.c lexer.l
+
+# Lint stuff
+LINT=@LINT@
+LINTFLAGS=$(INCLUDES) -DVERSION=\"$(VERSION)\" -v -x -u
+LINTS=httpmain.ln httpparse.ln httpprocess.ln httpmisc.ln urlparse.ln \
+	sendpage.ln moduser.ln httpauth.ln admin.ln lexer.ln
+
 EXES=
 STUFF=
-JUNK=$(EXES) lexer.c *.o *.a *.core core
+JUNK=$(EXES) lexer.c *.o *.a *.ln *.core core $(LINTS)
+
+.SUFFIXES: .c .o .l .a .ln
 
 all: http.a
 
 http.a: $(LHTTP_OBJS)
 	$(AR) $@ $(LHTTP_OBJS)
 	$(RANLIB) $@
+
+lint: $(LINTS)
+	$(LINT) $(LINTFLAGS) -ohttp $(LINTS)
+
+.c.ln: $<
+	$(LINT) $(LINTFLAGS) -c $<
+
+.l.ln: $<
+	$(LEX) -t $< > lex.blah.c
+	$(LINT) $(LINTFLAGS) -c lex.blah.c
+	mv lex.blah.ln $@
+	rm lex.blah.c
 
 depend:
 	echo "" >> Makefile
@@ -35,7 +56,7 @@ depend:
 
 # irix globbing shit.
 irixhack.o:
-	@touch irixhack.o
+	@touch irixhack.o irixhack.ln
 
 clean:  irixhack.o
 	rm -f $(JUNK)

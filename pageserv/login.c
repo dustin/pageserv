@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: login.c,v 1.15 1997/12/29 08:55:01 dustin Exp $
+ * $Id: login.c,v 1.16 1998/01/10 01:32:59 dustin Exp $
  */
 
 #include <config.h>
@@ -38,7 +38,7 @@ extern struct config conf;
 /* real password, test password */
 #define checkpass(a, b) (strcmp(a, (char *)crypt(b, a)) == 0)
 
-void makesalt(char *s, int n, long v)
+static void makesalt(char *s, int n, long v)
 {
     char *c="./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 

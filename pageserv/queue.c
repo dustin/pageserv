@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.36 1998/01/01 23:11:43 dustin Exp $
+ * $Id: queue.c,v 1.37 1998/01/10 01:33:05 dustin Exp $
  */
 
 #include <stdio.h>
@@ -248,7 +248,7 @@ int q_lock(struct queuent q)
         return(-1);
     }
 
-    fprintf(f, "%d\n", getpid());
+    fprintf(f, "%d\n", (int)getpid());
 
     fclose(f);
     return(0);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpmain.c,v 1.8 1998/01/01 09:40:47 dustin Exp $
+ * $Id: httpmain.c,v 1.9 1998/01/10 01:32:36 dustin Exp $
  */
 
 #include <config.h>
@@ -19,6 +19,10 @@
 
 extern struct config conf;
 
+static int _http_socket(void);
+static void _http_init(void);
+static void _http_main(modpass p);
+
 module mod_webserv={
     _http_init,
     _http_main,
@@ -28,14 +32,14 @@ module mod_webserv={
     0
 };
 
-void http_onalarm()
+static void http_onalarm()
 {
     _ndebug(2, ("Web server received alarm, exiting...\n"));
 
     exit(0);
 }
 
-int _http_socket(void)
+static int _http_socket(void)
 {
     if(mod_webserv.listening)
         return(mod_webserv.s);
@@ -43,7 +47,7 @@ int _http_socket(void)
         return(-1);
 }
 
-void _http_init(void)
+static void _http_init(void)
 {
     if(conf.webserver)
     {
@@ -63,7 +67,7 @@ void _http_init(void)
     }
 }
 
-void _http_main(modpass p)
+static void _http_main(modpass p)
 {
     struct http_request r;
     int s;

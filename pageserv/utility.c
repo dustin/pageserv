@@ -1,8 +1,7 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: utility.c,v 1.15 1997/12/29 09:52:34 dustin Exp $
- * $State: Exp $
+ * $Id: utility.c,v 1.16 1998/01/10 01:33:13 dustin Exp $
  */
 
 #include <stdio.h>
@@ -19,7 +18,8 @@
 
 extern struct config conf;
 
-/* Please note, this is only a place holder for the real function */
+/* Static declarations */
+static int set_bit(int map, int bit);
 
 int checkpidfile(char *filename)
 {
@@ -49,7 +49,7 @@ int checkpidfile(char *filename)
     return(ret);
 }
 
-void quicksort(char **a, int l, int r)
+static void quicksort(char **a, int l, int r)
 {
     int i, j;
     char *v, *t;
@@ -130,7 +130,7 @@ char *addtostr(int *size, char *dest, char *str)
 	new=1;
     }
 
-    if(strlen(dest)+strlen(str)>=*size)
+    if(strlen(dest)+strlen(str)>=(size_t)*size)
     {
 	if(conf.debug>4)
 	    printf("Realloc'in to %d bytes, need more than %d bytes\n",
@@ -305,7 +305,7 @@ int bit_set(int map, int bit)
     return(map);
 }
 
-int set_bit(int map, int bit)
+static int set_bit(int map, int bit)
 {
     int blah;
 

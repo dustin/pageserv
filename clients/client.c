@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: client.c,v 2.2 1997/04/13 22:00:25 dustin Exp $
+ * $Id: client.c,v 2.3 1998/01/10 01:32:19 dustin Exp $
  */
 
 /*
@@ -30,7 +30,7 @@ void timeout(void)
     exit(1);
 }
 
-int openhost(void)
+static int openhost(void)
 {
 struct hostent *hp;
 register int s;
@@ -75,6 +75,7 @@ struct sockaddr_in sin;
     return(s);
 }
 
+/*LINTED [function returns value which is always ignored]*/
 char *ckw(char *in)
 {
     /* bounds checking */
@@ -90,13 +91,14 @@ char *ckw(char *in)
         in[strlen(in)-1]=0x00;
     }
 
+    /* Returns its arg */
     return(in);
 }
 
 void cgettext(char *message, int size)
 {
-    fgets(message, size, stdin);
-    ckw(message);
+    if(fgets(message, size, stdin)!=NULL)
+        ckw(message);
 }
 
 int pushqueue(char *to, char *message, int priority)

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parsemail.c,v 2.2 1997/04/19 23:38:31 dustin Exp $
+ * $Id: parsemail.c,v 2.3 1998/01/10 01:32:21 dustin Exp $
  */
 
 #include <stdio.h>
@@ -14,12 +14,12 @@
 
 #define LINELEN 2048
 
-void usage(char *name)
+static void usage(char *name)
 {
     fprintf(stderr, "Usage:\n%s [-p priority] <to>\n", name);
 }
 
-char *getdata(int l, char *line)
+static char *getdata(int l, char *line)
 {
     char *ret;
 
@@ -62,7 +62,8 @@ void main(int argc, char **argv)
 
     while(!feof(stdin))
     {
-	fgets(line, LINELEN, stdin);
+	if(fgets(line, LINELEN, stdin)==NULL)
+            break;
 
 	if(strncmp(line, "From: ", 6) == 0)
 	{

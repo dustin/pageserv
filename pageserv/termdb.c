@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: termdb.c,v 1.10 1997/09/12 05:30:54 dustin Exp $
+ * $Id: termdb.c,v 1.11 1998/01/10 01:33:10 dustin Exp $
  * $State: Exp $
  */
 
@@ -40,7 +40,7 @@ void erasetermdb(void)
     for(d=dbm_firstkey(db); d.dptr!=NULL; d=dbm_firstkey(db))
     {
 	if(conf.debug>2)
-	    printf("Deleting %s\n", d.dptr);
+	    printf("Deleting %s\n", (char *)d.dptr);
         dbm_delete(db, d);
     }
 

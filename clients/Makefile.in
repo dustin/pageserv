@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 2.4 1997/07/09 07:24:12 dustin Exp $
+# $Id: Makefile.in,v 2.5 1998/01/10 01:32:17 dustin Exp $
 
 SHELL=/bin/sh
 CC=@CC@
@@ -19,7 +19,17 @@ EXES=pushqueue parsemail
 NAME=clients
 ARCHIVE=$(NAME)-$(VERSION)
 STUFF=$(SOURCES) Makefile pushqueue.pl
-JUNK=$(EXES) *.o *.core core
+
+# Lint stuff
+LINT=@LINT@
+LINTFLAGS=$(INCLUDES) -DVERSION=\"$(VERSION)\" -v -x -u
+PUSH_LINTS=pushqueue.ln client.ln
+EMAIL_LINTS=parsemail.ln client.ln
+LINTS=$(PUSH_LINTS) $(EMAIL_LINTS)
+
+JUNK=$(EXES) $(EMAIL_OBJS) $(PUSH_OBJS) $(LINTS) *.core core
+
+.SUFFIXES: .c .o .l .a .ln
 
 all: $(EXES)
 
@@ -28,6 +38,13 @@ pushqueue: $(PUSH_OBJS)
 
 parsemail: $(EMAIL_OBJS)
 	$(CC) -o $@ $(EMAIL_OBJS) $(LDFLAGS)
+
+lint: $(LINTS)
+	$(LINT) $(LINTFLAGS) $(PUSH_LINTS)
+	$(LINT) $(LINTFLAGS) $(EMAIL_LINTS)
+
+.c.ln: $<
+	$(LINT) $(LINTFLAGS) -c $<
 
 depend:
 	echo "" >> Makefile
