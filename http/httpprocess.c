@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpprocess.c,v 1.5 1997/04/15 15:41:18 dustin Exp $
+ * $Id: httpprocess.c,v 1.6 1997/04/16 19:26:37 dustin Exp $
  */
 
 #define IWANTDOCINFO 1
@@ -61,6 +61,11 @@ void http_process_get(int s, struct http_request r)
         puttext(s, "<body bgcolor=\"ffffff\">");
         puttext(s, "Your special request was ");
         puttext(s, r.request);
+	if( strlen(r.args))
+	{
+	    puttext(s, "<br>Arguments:  ");
+	    puttext(s, r.args);
+	}
     }
     else
     {

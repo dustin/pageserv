@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * "$Id: http.h,v 1.7 1997/04/16 06:10:36 dustin Exp $"
+ * "$Id: http.h,v 1.8 1997/04/16 19:26:39 dustin Exp $"
  */
 
 #ifndef HTTP_H
@@ -42,18 +42,21 @@ static char *methodnames[]={
 #ifdef IWANTDOCINFO
 
 static char *docnames[]={
-    "/usermod"
+    "/usermod",
+    "/sendpage"
 };
 
 #define DOC_USERMOD 0
+#define DOC_SENDPAGE 1
 
-#define NDOCS    1
+#define NDOCS    2
 #define NOTADOC  NDOCS
 
 #endif /* IWANTDOCINFO */
 
 struct http_request {
     char request[REQUESTSIZE];
+    char args[REQUESTSIZE];
     int version;
     int docnum;
     int special;

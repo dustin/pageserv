@@ -32,11 +32,14 @@ typedef struct {
 Upon initializing, the initmodules() routine goes through the list of
 compiled in modules and creates a copy of each module into a globally
 accessable structure element.  Realize, of course, that this means the
-<i>actual</i> data in the real module is completely inaccessible, the OO
-equivelant of private data, however, the methods involved in extracting
+<i>actual</i> data in the real module is inaccessible for writing, and
+mostly for reading as well.  This is the
+OO equivelant of private data, however, the methods involved in extracting
 or modifying that data don't move, so it's easy to keep up with the
 functions that modify the data without other random functions breaking
-the data.
+the data.  Also, any data defined in the module declaration is accessible
+for reading only, but will return invalid results if the module has
+modified its data.
 
 <p>
 
