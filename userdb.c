@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.1 1997/03/12 06:00:36 dustin Exp $
+ * $Id: userdb.c,v 1.2 1997/03/12 06:04:01 dustin Exp $
  */
 
 #include <stdio.h>
@@ -22,7 +22,7 @@ void storeuser(DBM *db, struct user u)
     k.dptr=u.name;
     k.dsize=strlen(u.name);
 
-    d.dptr=&u;
+    d.dptr=(char *)&u;
     d.dsize=sizeof(u);
 
     dbm_store(db, k, d, DBM_REPLACE);
