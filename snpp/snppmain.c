@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: snppmain.c,v 1.13 1997/08/11 03:55:04 dustin Exp $
+ * $Id: snppmain.c,v 1.14 1997/08/27 07:38:20 dustin Exp $
  */
 
 #include <config.h>
@@ -218,6 +218,7 @@ void snpp_cleanstuff(void)
     }
     snpp_nid=0;
     snpp_holdtime=0;
+    snpp_priority=PR_NORMAL;
 
     if(snpp_message)
     {
