@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: client.c,v 1.3 1997/03/14 05:37:18 dustin Exp $
+ * $Id: client.c,v 1.4 1997/03/14 21:22:21 dustin Exp $
  */
 
 /*
@@ -31,7 +31,7 @@ int openhost(void)
 {
 struct hostent *hp;
 register int s;
-int linger;
+struct linger l;
 struct sockaddr_in sin;
 
     if((hp=gethostbyname(REMHOST)) == NULL)
@@ -54,7 +54,9 @@ struct sockaddr_in sin;
     sin.sin_port=htons(PORT);
     bcopy(hp->h_addr, &sin.sin_addr, hp->h_length);
 
-    setsockopt(s, SOL_SOCKET, SO_LINGER, (char *)&linger, sizeof(int));
+    l.l_onoff  = 1;
+    l.l_linger = 60;
+    setsockopt(s, SOL_SOCKET, SO_LINGER, (char *)&l, sizeof(l));
 
     if(connect(s, (struct sockaddr *)&sin, sizeof(sin))<0)
     {
