@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.43 1997/08/07 13:49:21 dustin Exp $
+ * $Id: pageserv.h,v 1.44 1997/08/09 06:35:38 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -11,6 +11,7 @@
 #include <ndbm.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <netinet/in.h>
 
 #include <config.h>
 #include <module.h>
@@ -163,6 +164,7 @@ struct queuent {
     time_t submitted;
     time_t soonest;
     time_t latest;
+    unsigned int rem_addr;
     struct user u;
 };
 
@@ -225,12 +227,14 @@ char **listterms(void);
 char **listusers(char *term);
 char *addtostr(int *size, char *dest, char *str);
 char *fntoqid(char *fn);
+char *getHostName(unsigned int addr);
 char *kw(char *in);
 char *newqfile(void);
 int _pageserv_socket(void);
 int any_closeterm(int s, struct terminal t);
 int any_openterm(struct terminal t);
 int bit_set(int bmap, int which);
+int checkIPAccess(struct sockaddr_in addr, module *m);
 int check_time(struct queuent q);
 int checkpidfile(char *filename);
 int deleteuser(char *name);
@@ -280,6 +284,7 @@ void getnormtimes(int times, int *ret);
 void getoptions(int argc, char **argv);
 void getqueueinfo( struct queuent *q );
 void initmodules(void);
+void logConnect(struct sockaddr_in fsin, module *m);
 void logqueue(struct queuent q, int type, char *reason);
 void open_storeuser(DBM *db, struct user u);
 void p_getpasswd(int s, char *to);

@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 1.12 1997/08/06 07:39:12 dustin Exp $
+# $Id: Makefile.in,v 1.13 1997/08/09 06:35:44 dustin Exp $
 
 SHELL=/bin/sh
 CC=@CC@
@@ -20,10 +20,10 @@ RCFG=@top_srcdir@/readconfig/readconfig.a
 
 SERV_OBJS=sockets.o main.o utility.o kids.o queue.o protocol.o userdb.o \
 	readconfig.o termdb.o parseusers.o parseterms.o signals.o \
-	login.o modules.o
+	login.o modules.o nettools.o
 SOURCES=sockets.c main.c utility.c kids.c queue.c protocol.c \
 	parseusers.c userdb.c readconfig.c termdb.c \
-	parseterms.c signals.c login.c modules.c
+	parseterms.c signals.c login.c modules.c nettools.c
 EXES=pageserv
 NAME=pageserv
 ARCHIVE=$(NAME)-$(VERSION)

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.22 1997/08/07 08:04:30 dustin Exp $
+ * $Id: readconfig.c,v 1.23 1997/08/09 06:35:49 dustin Exp $
  */
 
 #include <readconfig.h>
@@ -182,7 +182,7 @@ void rdconfig(char *file)
 
     /* set stuff out of the config crap */
 
-    conf.cf=readconfig(file);
+    conf.cf=rcfg_readconfig(file);
     cf=conf.cf;
 
     /* Hook up with some log facility action */

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: snppmain.c,v 1.10 1997/08/07 07:23:31 dustin Exp $
+ * $Id: snppmain.c,v 1.11 1997/08/09 06:36:02 dustin Exp $
  */
 
 #include <config.h>
@@ -18,6 +18,7 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <netinet/in.h>
 
 extern struct config conf;
 
@@ -225,7 +226,7 @@ void snpp_cleanstuff(void)
     }
 }
 
-void snpp_send(int s)
+void snpp_send(int s, struct sockaddr_in fsin)
 {
     struct queuent q;
     int i, j;
@@ -235,6 +236,8 @@ void snpp_send(int s)
         puttext(s, "503 Error, pager ID or message incomplete\n");
         return;
     }
+
+    q.rem_addr=ntohl(fsin.sin_addr.s_addr);
 
     q.priority=snpp_priority;
     q.soonest=snpp_holdtime;
@@ -295,7 +298,7 @@ void _snpp_main(modpass p)
                 break;
 
             case SNPP_SEND:
-                snpp_send(s);
+                snpp_send(s, p.fsin);
                 tries++;
                 break;
 

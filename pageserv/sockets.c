@@ -1,8 +1,7 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: sockets.c,v 1.4 1997/04/14 03:51:56 dustin Exp $
- * $State: Exp $
+ * $Id: sockets.c,v 1.5 1997/08/09 06:35:49 dustin Exp $
  */
 
 #include <stdio.h>
@@ -14,10 +13,57 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
+#include <syslog.h>
 
 #include <pageserv.h>
+#include <nettools.h>
+#include <readconfig.h>
 
 extern struct config conf;
+
+int checkIPAccess(struct sockaddr_in addr, module *m)
+{
+    return 1;
+}
+
+char *getHostName(unsigned int addr)
+{
+    struct hostent *h;
+    char *name;
+
+    h=gethostbyaddr(&addr, sizeof(unsigned int), AF_INET);
+    if(h==NULL)
+	name=nmc_intToDQ(addr);
+    else
+	name=h->h_name;
+
+    return(name);
+}
+
+void logConnect(struct sockaddr_in fsin, module *m)
+{
+    struct hostent *h;
+    char *ip_addr, *hostname;
+    int i;
+
+    openlog("pageserv", LOG_PID|LOG_NDELAY, conf.log_que);
+
+    if(rcfg_lookupInt(conf.cf, "log.hostnames") ==1)
+	hostname=getHostName(fsin.sin_addr.s_addr);
+    else
+        hostname=nmc_intToDQ(fsin.sin_addr.s_addr);
+
+    ip_addr=nmc_intToDQ(fsin.sin_addr.s_addr);
+
+    syslog(conf.log_que|LOG_INFO, "connect from %s (%s) for %s",
+	   hostname, ip_addr, m->name);
+
+    if(conf.debug>2)
+	printf("connect from %s (%s) for %s\n", hostname, ip_addr,
+	       m->name);
+
+    closelog();
+}
 
 int getservsocket(int port)
 {

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.30 1997/08/07 13:49:25 dustin Exp $
+ * $Id: queue.c,v 1.31 1997/08/09 06:35:47 dustin Exp $
  * $State: Exp $
  */
 
@@ -17,6 +17,7 @@
 #include <sys/socket.h>
 
 #include <pageserv.h>
+#include <nettools.h>
 #include <tap.h>
 
 extern struct config conf;
@@ -437,6 +438,10 @@ struct queuent readqueuefile(char *fn)
     fgets(buf, BUFLEN, f);
     q.latest=atoi(buf);
 
+    /* The submitter's IP address */
+    fgets(buf, BUFLEN, f);
+    q.rem_addr=atoi(buf);
+
     /* The actual message data */
     fgets(q.message, BUFLEN, f);
     kw(q.message);
@@ -558,12 +563,13 @@ int storequeue(int s, struct queuent q, int flags)
         time(&q.submitted); /* store the time */
 
         qf=fopen(fn, "w");
-        fprintf(qf, "%d\n%s\n%d\n%d\n%d\n%s\n",
+        fprintf(qf, "%d\n%s\n%d\n%d\n%d\n%u\n%s\n",
 		q.priority,
 		q.to,
                 (int)q.submitted,
 		(int)q.soonest,
 		(int)q.latest,
+		q.rem_addr,
 		q.message);
         fclose(qf);
 
@@ -619,6 +625,9 @@ void displayq(struct queuent q)
     printf("%s:\t%s\t\tPriority:  %d\tTo %s   %d bytes\n",
         q.qid, ctime(&q.submitted), q.priority, q.to,
         strlen(q.message));
+
+    printf("\t\tFrom:  %s (%s)\n", getHostName(htonl(q.rem_addr)),
+	   nmc_intToDQ(q.rem_addr));
 
     if(q.soonest>0)
     {

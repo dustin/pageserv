@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.21 1997/08/06 07:39:13 dustin Exp $
+ * $Id: main.c,v 1.22 1997/08/09 06:35:45 dustin Exp $
  * $State: Exp $
  */
 
@@ -26,6 +26,7 @@
 
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <netdb.h>
 
 struct config conf;
 
@@ -149,17 +150,30 @@ void daemon_main(void)
 		    if( (p.socket=accept(m->socket(),
 			(struct sockaddr *)&fsin, &fromlen)) >=0 )
 		    {
-			pid=fork();
+			logConnect(fsin, m);
+
+			if(checkIPAccess(fsin, m) == 0)
+			{
+			    /* This will cause us to
+			     * just hang up on them. */
+
+			    pid=1;
+			}
+			else
+			{
+			    pid=fork();
+			}
 
 			if(pid==0)
 			{
+			    p.fsin=fsin;
 			    m->handler(p);
 			}
 			else
 			{
 			    close(p.socket);
 
-			    if(conf.debug>2)
+			    if(conf.debug>2 && pid>1)
 				printf("Spawned a child, pid %d\n", pid);
 			}
 		    }
