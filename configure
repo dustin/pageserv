@@ -1692,7 +1692,7 @@ else
 fi
 done
 
-for ac_hdr in termio.h
+for ac_hdr in termio.h dlfcn.h
 do
 ac_safe=`echo "$ac_hdr" | sed 'y%./+-%__p_%'`
 echo $ac_n "checking for $ac_hdr""... $ac_c" 1>&6
@@ -1934,7 +1934,7 @@ cat >> confdefs.h <<EOF
 EOF
 
 
-for ac_func in select socket herror getopt
+for ac_func in select socket herror getopt dlopen dlsym dlerror dlclose
 do
 echo $ac_n "checking for $ac_func""... $ac_c" 1>&6
 echo "configure:1941: checking for $ac_func" >&5

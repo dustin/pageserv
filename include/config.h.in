@@ -50,6 +50,13 @@
 /* Define if you have the ypmatch function. */
 #undef HAVE_YPMATCH
 
+/* Check out dynamic loading abilities */
+
+#undef HAVE_DLSYM
+#undef HAVE_DLOPEN
+#undef HAVE_DLCLOSE
+#undef HAVE_DLERROR
+
 /* Define if you have the <dirent.h> header file.  */
 #undef HAVE_DIRENT_H
 

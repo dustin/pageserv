@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.39 1997/08/03 02:25:40 dustin Exp $
+ * $Id: pageserv.h,v 1.40 1997/08/03 21:06:53 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -206,10 +206,13 @@ struct config {
     int    nmodules;       /* number of modules */
 };
 
-/* macros */
+/* Let's see if loadable modules are going to be used */
 
-/* #define puttext(a, b) send(a, b, strlen(b), 0) */
-/* #define puttext(a, b) write(a, b, strlen(b)) */
+#if defined(HAVE_DLSYM) && defined(HAVE_DLOPEN) && defined(HAVE_DLCLOSE)
+#define USE_LM 1
+#else
+#undef  USE_LM
+#endif
 
 /* prototypes */
 
