@@ -1,3 +1,9 @@
+Sun Dec 27 19:03:28 PST 1998
+
+Userdb and termdb both support LDAP databases now.
+
+--------------------
+
 Tue Oct 27 10:25:06 PST 1998
 
 History sucks.
@@ -57,4 +63,4 @@ use a string as an argument, and it is matched against known database
 types.  The term database info is currently ignored.
 
 ----------------------------------------
-$Id: HISTORY,v 2.9 1998/10/27 18:31:19 dustin Exp $
+$Id: HISTORY,v 2.10 1998/12/28 03:23:53 dustin Exp $

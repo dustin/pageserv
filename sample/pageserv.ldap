@@ -1,0 +1,24 @@
+# LDAP classes for Pageserv
+# Copyright (c) 1998  Dustin Sallings <dustin@spy.net>
+# $Id: pageserv.ldap,v 1.1 1998/12/28 03:23:56 dustin Exp $
+
+objectclass pageservUser
+	requires
+		objectClass,
+		pageId,
+		pageStatId
+	allows
+		pagePasswd,
+		pageNotify,
+		pageFlags,
+		pageEarly,
+		pageLate
+
+objectclass pageservTerminal
+	requires
+		pageNumber,
+		pageDevice
+	allows
+		pagePredial,
+		pageInit,
+		pagePort
