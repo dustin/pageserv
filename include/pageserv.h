@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.53 1997/12/29 07:44:05 dustin Exp $
+ * $Id: pageserv.h,v 1.54 1997/12/31 16:38:01 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -21,6 +21,11 @@
 /* In case it didn't make it */
 #ifndef _ndebug
 #define _ndebug(a, b)
+#endif
+
+/* An exit routine for _mod_pageserv */
+#ifndef _mod_pageserv_exit
+#define _mod_pageserv_exit(a, b) close(a); exit(b);
 #endif
 
 /* for DBM type */

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: kids.c,v 1.9 1997/12/31 08:16:34 dustin Exp $
+ * $Id: kids.c,v 1.10 1997/12/31 16:38:04 dustin Exp $
  */
 
 #include <signal.h>
@@ -93,5 +93,5 @@ void _pageserv_main(modpass p)
     gettextcr(p.socket, buf);
     process(p.socket, buf, p);
 
-    exit(0);
+    _mod_pageserv_exit(p.socket, 0);
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: protocol.c,v 1.9 1997/12/29 08:55:02 dustin Exp $
+ * $Id: protocol.c,v 1.10 1997/12/31 16:38:08 dustin Exp $
  */
 
 #include <stdio.h>
@@ -127,7 +127,7 @@ void p_quit(int s, modpass p)
     _ndebug(1, ("Entering p_quit\n"));
 
     puttext(s, MESG_QUIT);
-    exit(0);
+    _mod_pageserv_exit(s, 0);
 }
 
 void process(int s, char *cmd, modpass p)
@@ -158,7 +158,7 @@ void process(int s, char *cmd, modpass p)
 	_ndebug(1, ("%s", buf));
 
         send(s, buf, strlen(buf), 0);
-        exit(0);
+        _mod_pageserv_exit(s, 0);
     }
 
     _ndebug(1, ("Received ``%s'' command\n", cmd));

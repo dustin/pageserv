@@ -1,11 +1,12 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.29 1997/12/29 09:52:33 dustin Exp $
+ * $Id: main.c,v 1.30 1997/12/31 16:38:06 dustin Exp $
  */
 
 #include <config.h>
 #include <pageserv.h>
+#include <readconfig.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -64,6 +65,7 @@ void writepid(int pid)
 void detach(void)
 {
    int pid, i;
+   char *tmp;
 
    pid=fork();
 
@@ -87,7 +89,11 @@ void detach(void)
    open("/dev/null", O_RDWR);
    open("/dev/null", O_RDWR);
 
-   chdir("/");
+   tmp=rcfg_lookup(conf.cf, "etc.working_directory");
+   if(tmp==NULL)
+       tmp="/";
+
+   chdir(tmp);
    umask(7);
 }
 
@@ -155,9 +161,8 @@ void daemon_main(void)
 
 			if(checkIPAccess(fsin, m) == 0)
 			{
-			    /* This will cause us to
-			     * just hang up on them. */
-
+			    _ndebug(2, ("Hanging up on connection because "
+					"of ACL\n"));
 			    pid=1;
 			}
 			else

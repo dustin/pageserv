@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: sockets.c,v 1.7 1997/08/09 07:18:30 dustin Exp $
+ * $Id: sockets.c,v 1.8 1997/12/31 16:38:10 dustin Exp $
  */
 
 #include <stdio.h>
@@ -56,9 +56,7 @@ void logConnect(struct sockaddr_in fsin, module *m)
     syslog(conf.log_que|LOG_INFO, "connect from %s (%s) for %s",
 	   hostname, ip_addr, m->name);
 
-    if(conf.debug>2)
-	printf("connect from %s (%s) for %s\n", hostname, ip_addr,
-	       m->name);
+    _ndebug(2, ("connect from %s (%s) for %s\n", hostname, ip_addr, m->name));
 
     closelog();
 }
