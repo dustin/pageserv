@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.3 1997/03/31 23:12:05 dustin Exp $
+ * $Id: main.c,v 1.4 1997/04/01 05:42:00 dustin Exp $
  */
 
 #include <stdio.h>
@@ -55,6 +55,8 @@ void daemon_main(void)
 
     if(conf.debug==0)
         detach();
+
+    resetservtraps(); /* set signal traps */
 
     s=initialize();
 

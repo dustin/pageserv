@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.5 1997/04/01 04:54:14 dustin Exp $
+ * $Id: queue.c,v 1.6 1997/04/01 05:42:00 dustin Exp $
  */
 
 #include <stdio.h>
@@ -101,7 +101,6 @@ struct queuent *listqueue(char *number)
 		}
 		list[index++]=q;
 	    }
-            /* unlink(q.qid); */
         }
     }
     list[index].to[0]==0x00;
@@ -275,6 +274,8 @@ void printqueue(void)
     {
 	displayq(q[i]);
     }
+
+    cleanqueuelist(q);
 }
 
 struct queuent dofarkle()

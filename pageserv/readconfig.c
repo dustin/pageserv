@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.3 1997/03/31 23:12:07 dustin Exp $
+ * $Id: readconfig.c,v 1.4 1997/04/01 05:42:01 dustin Exp $
  */
 
 #include <stdio.h>
@@ -16,7 +16,7 @@
 
 extern struct config conf;
 
-#define COMMANDS "D"
+#define COMMANDS "DT"
 
 int isin(char c, char *s)
 {
@@ -52,7 +52,7 @@ char *getarg(char *line)
    return(b);
 }
 
-void d_command(char s, char *arg)
+void D_command(char s, char *arg)
 {
     switch(s)
     {
@@ -62,7 +62,15 @@ void d_command(char s, char *arg)
 	case 'q': conf.qdir=strdup(arg); break;
 	case 'p': conf.pidfile=strdup(arg); break;
 	case 'd': conf.debug=atoi(arg); break;
+    }
+}
+
+void T_command(char s, char *arg)
+{
+    switch(s)
+    {
 	case 'l': conf.childlifetime=atoi(arg); break;
+	case 'q': conf.maxqueuetime=atoi(arg); break;
     }
 }
 
@@ -76,7 +84,8 @@ void docommand(int l, char c, char s, char *arg)
 
     switch(c)
     {
-	case 'D': d_command(s, arg);  break;
+	case 'D': D_command(s, arg);  break;
+	case 'T': T_command(s, arg);  break;
     }
 }
 
@@ -184,6 +193,7 @@ void readconfig(char *file)
     memset( (char *)&conf, 0x00, sizeof(conf));
 
     conf.childlifetime=CHILD_LIFETIME;
+    conf.maxqueuetime=MAX_QUEUETIME;
 
     f=fopen(file, "r");
     if(f==NULL)
@@ -229,5 +239,6 @@ void showconfig(void)
     printf("\tQueue dir:    %s\n", conf.qdir);
     printf("\tPID file:     %s\n", conf.pidfile);
     printf("\tChild life:   %d\n", conf.childlifetime);
+    printf("\tMax queue tm: %d\n", conf.maxqueuetime);
     printf("\tDebug:        %d\n", conf.debug);
 }
