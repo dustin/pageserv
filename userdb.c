@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.10 1997/03/14 14:27:07 dustin Exp $
+ * $Id: userdb.c,v 1.11 1997/03/14 16:09:36 dustin Exp $
  */
 
 #include <stdio.h>
@@ -18,15 +18,15 @@
 
 void getnormtimes(int times, int *ret)
 {
-    int i;
+    int i, allones=0;
 
     if(bit_set(times, 0))
     {
-	puts("The zero bit is set");
 	/* handle full-timers */
 	if( (times & 0xFFFFFFFF) == 0xFFFFFFFF)
 	{
 	    ret[0]=ret[1]=0;
+	    allones=1;
 	}
 	else
 	{
@@ -39,18 +39,21 @@ void getnormtimes(int times, int *ret)
     }
     else
     {
-	puts("The zero bit is NOT set");
         for(i=0; bit_set(times, i)==0 && BC; i++);
         ret[0]=i;
 
         for(; bit_set(times, i) && BC; i++);
 	ret[1]=i;
     }
-    /* add one to early so it'll make sense */
-    if(ret[0]<23)
-        ret[0]++;
-    else
-	ret[0]=0;
+
+    if(allones==0)
+    {
+        /* add one to early so it'll make sense */
+        if(ret[0]<23)
+            ret[0]++;
+        else
+            ret[0]=0;
+    }
 }
 
 void printuser(struct user u)

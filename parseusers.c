@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parseusers.c,v 1.6 1997/03/14 14:27:06 dustin Exp $
+ * $Id: parseusers.c,v 1.7 1997/03/14 16:09:34 dustin Exp $
  */
 
 #include <stdio.h>
@@ -65,6 +65,7 @@ void main(void)
     char buf[BUFLEN];
     struct user u;
     DBM *db;
+    int i=0;
 
     if( (f=fopen(USERDB, "r")) == NULL)
     {
@@ -83,10 +84,12 @@ void main(void)
 	if( (buf[0]!='#') && (!isspace(buf[0])) )
 	{
 	    u=parseuser(buf);
-	    printuser(u);
 	    storeuser(db, u);
+	    i++;
 	}
     }
+
+    printf("Parsed %d users.\n", i);
 
     fclose(f);
     dbm_close(db);
