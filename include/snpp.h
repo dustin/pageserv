@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * "$Id: snpp.h,v 1.4 1997/07/09 07:26:13 dustin Exp $"
+ * "$Id: snpp.h,v 1.5 1997/08/11 07:38:46 dustin Exp $"
  */
 
 #ifndef SNPP_H
@@ -9,6 +9,7 @@
 
 /* for NULL */
 #include <stdio.h>
+#include <sys/types.h>
 #include <module.h>
 
 #define SNPP_MAXTRIES 250
