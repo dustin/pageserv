@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: moduser.c,v 1.4 1997/07/09 07:26:03 dustin Exp $
+ * $Id: moduser.c,v 1.5 1997/07/10 06:46:54 dustin Exp $
  */
 
 #include <pageserv.h>
@@ -50,54 +50,6 @@ void _http_moduser_timelist(int s, int def)
 
         puttext(s, buf);
     }
-}
-
-void _http_moduser_moduserpage(int s, struct http_request r)
-{
-    struct user u;
-    char buf[BUFLEN];
-    int times[2];
-
-    strcpy(buf, r.auth.name);
-
-    if(u_exists(buf))
-    {
-        if(conf.debug>2)
-            printf("Getting mod data for user ``%s''\n", r.auth.name);
-
-        u=getuser(buf);
-    }
-    else
-    {
-        _http_modusererror(s, "Weird, must've raced.  Go home.");
-        return;
-    }
-
-    getnormtimes(u.times, times);
-
-    _http_moduserheader(s);
-    sprintf(buf, "<h2>Modify user %s</h2>\n", u.name);
-    puttext(s, buf);
-    puttext(s, "If you leave the password entries blank, it will not be \
-modified.<br>\n");
-
-    puttext(s, "<form method=\"POST\" action=\"/moduser\">\n");
-    puttext(s, "<table border=\"0\">\n");
-
-    puttext(s, "<tr><td>New passwd:</td><td><input name=\"passwd1\"");
-    puttext(s, " type=\"password\"><br></td></tr>\n");
-    puttext(s, "<tr><td>Again:</td><td><input name=\"passwd2\"");
-    puttext(s, " type=\"password\"><br></td></tr>\n");
-
-    puttext(s, "<tr><td>Early:</td><td><select name=\"early\">\n");
-    _http_moduser_timelist(s, times[0]);
-    puttext(s, "</select><br></td></tr>\n");
-
-    puttext(s, "<tr><td>Late:</td><td><select name=\"late\">\n");
-    _http_moduser_timelist(s, times[1]);
-    puttext(s, "</select><br></td></tr>\n");
-
-    puttext(s, "</table>\n<input type=\"submit\">\n</form>\n");
 }
 
 void _http_moduser_process(int s, struct http_request r)
@@ -178,7 +130,7 @@ void _http_moduser(int s, struct http_request r)
         puts("Moduser request");
 
     if(r.nargs==0)
-        _http_moduser_moduserpage(s, r);
+	_http_modusererror(s, "No data given.");
     else
         _http_moduser_process(s, r);
 

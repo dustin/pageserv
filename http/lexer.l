@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: lexer.l,v 1.1 1997/07/10 04:07:15 dustin Exp $
+ * $Id: lexer.l,v 1.2 1997/07/10 06:46:54 dustin Exp $
  */
 
 %{
@@ -19,6 +19,8 @@ extern struct config conf;
 
 int _parse_sock;
 struct http_request _parse_r;
+int _parse_strlen=0;
+char *_parse_sendstr;
 
 %}
 
@@ -28,44 +30,105 @@ FUNC    &[_A-Za-z][_A-Za-z0-9]*
 %%
 {THING} { _http_lex_showthing(yytext); }
 {FUNC}  { _http_lex_dofunc(yytext); }
-.|\n    { puttext(_parse_sock, yytext); }
+.|\n    { _parse_strlen=addtostr(_parse_strlen, _parse_sendstr,  yytext); }
 
 %%
+
+#define EARLY  0
+#define LATE   1
 
 int yywrap(void)
 {
     return(1);
 }
 
-void _http_lex_dofunc(char *func)
+void _parse_maketimelist(int frwhen)
 {
-    puttext(_parse_sock, "``");
-    puttext(_parse_sock, func);
-    puttext(_parse_sock, "''");
+    int i, times[2];
+    char buf[BUFLEN];
+    struct user u;
+
+    if(_parse_r.auth.name == NULL)
+        return;
+
+    u=getuser(_parse_r.auth.name);
+
+    getnormtimes(u.times, times);
+
+    for(i=0; i<24; i++)
+    {
+	if(i==times[frwhen])
+	    sprintf(buf, "<option selected>%d\n", i);
+	else
+	    sprintf(buf, "<option>%d\n", i);
+
+	_parse_strlen=addtostr(_parse_strlen, _parse_sendstr, buf);
+    }
 }
 
-void _http_lex_showthing(char *thing)
+void _http_lex_dofunc(char *func)
 {
     int i;
-    static char *things[]={
-	"$version",
+    static char *parse_funcs[]={
+	"&selectTimeE",
+	"&selectTimeL",
 	NULL
     };
 
-    for(i=0; things[i]!=NULL; i++)
+    if(conf.debug>2)
+	printf("_http_lex_dofunc got %s\n", func);
+
+    for(i=0; parse_funcs[i]!=NULL; i++)
     {
-	if(strcmp(things[i], thing)==0)
+	if(strcmp(parse_funcs[i], func)==0)
 	    break;
     }
 
     switch(i)
     {
 	case 0:
-	    puttext(_parse_sock, VERSION);
+	    _parse_maketimelist(EARLY);
+	    break;
+
+	case 1:
+	    _parse_maketimelist(LATE);
 	    break;
 
 	default:
-	    puttext(_parse_sock, thing);
+	    _parse_strlen=addtostr(_parse_strlen, _parse_sendstr, func);
+    }
+}
+
+void _http_lex_showthing(char *thing)
+{
+    int i;
+    static char *parse_vars[]={
+	"$version",
+	"$user",
+	NULL
+    };
+
+    if(conf.debug>2)
+	printf("_http_lex_showthing got %s\n", thing);
+
+    for(i=0; parse_vars[i]!=NULL; i++)
+    {
+	if(strcmp(parse_vars[i], thing)==0)
+	    break;
+    }
+
+    switch(i)
+    {
+	case 0:
+	    _parse_strlen=addtostr(_parse_strlen, _parse_sendstr, VERSION);
+	    break;
+        case 1:
+	    _parse_strlen=addtostr(_parse_strlen, _parse_sendstr,
+	        _parse_r.auth.name);
+            break;
+
+	default:
+	    _parse_strlen=addtostr(_parse_strlen, _parse_sendstr, thing);
     }
 }
 
@@ -78,6 +141,9 @@ void _http_parse(int s, struct http_request r)
     _parse_sock=s;
     _parse_r=r;
 
+    _parse_sendstr=(char *)malloc(sizeof(char)*DEFAULT_STRLEN);
+    _parse_strlen=DEFAULT_STRLEN;
+
     strcpy(buf, conf.webroot);
     strcat(buf, r.request);
     if(buf[strlen(buf)-1]=='/')
@@ -87,16 +153,24 @@ void _http_parse(int s, struct http_request r)
 
     http_checkauth(s, r, buf);
 
-    if(r.version>0)
-    {
-        stat(buf, &st);
-        _http_header_ok(s, (int)st.st_size+strlen(HTTP_FOOTER)+1);
-    }
-
     yyin=fopen(buf, "r");
 
     yylex();
 
     if(yyin)
 	fclose(yyin);
+
+    _parse_strlen=addtostr(_parse_strlen, _parse_sendstr, HTTP_FOOTER);
+
+
+    if(r.version>0)
+    {
+        _http_header_ok(s, strlen(_parse_sendstr));
+    }
+
+    if(_parse_sendstr)
+    {
+        puttext(s, _parse_sendstr);
+        free(_parse_sendstr);
+    }
 }

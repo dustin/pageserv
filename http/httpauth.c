@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpauth.c,v 1.3 1997/07/09 07:26:01 dustin Exp $
+ * $Id: httpauth.c,v 1.4 1997/07/10 06:46:52 dustin Exp $
  */
 
 #include <config.h>
@@ -55,23 +55,26 @@ void http_checkauth(int s, struct http_request r, char *path)
         if( (f=fopen(buf, "r")) != NULL)
         {
             fgets(authname, 180, f);
-            for(i=strlen(authname); (i=='\n' || i=='\r' || i==' ') &&
-                i>0; i--);
+            for(i=0; (authname[i]!='\n'
+                      && authname[i]!='\r'
+                      && authname[i]!=' ')
+                      && authname[i]; i++);
+            printf("i is %d\n", i);
             if(i>0)
-                authname[i+1]=0x00;
+                authname[i]=0x00;
             fclose(f);
         }
     }
 
-    if(authname[0]!=0x00)
-    {
-        _http_header_needauth(s, authname, r);
-    }
+    _http_auth_require(s, r, authname);
 }
 
 void _http_auth_require(int s, struct http_request r, char *authname)
 {
     struct user u;
+
+    if(conf.debug>2)
+        printf("authname is ``%s''\n", authname);
 
     if(r.auth.name == NULL)
         _http_header_needauth(s, authname, r);

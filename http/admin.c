@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: admin.c,v 1.1 1997/07/09 07:27:08 dustin Exp $
+ * $Id: admin.c,v 1.2 1997/07/10 06:46:51 dustin Exp $
  */
 
 #include <pageserv.h>
@@ -28,42 +28,6 @@ void _http_adminheader(int s)
     _http_header_ok(s, 0);
     puttext(s, "<html><head><title>Pageserv Admin</title></head>\n");
     puttext(s, "<body bgcolor=\"fFfFfF\">\n");
-}
-
-void _http_admin_adduserpage(int s, struct http_request r)
-{
-    struct user u;
-    char buf[BUFLEN];
-    int times[2];
-
-    strcpy(buf, r.auth.name);
-
-    _http_adminheader(s);
-    puttext(s, "<h2>Adding a User</h2>\n");
-
-    puttext(s, "<form method=\"POST\" action=\"/admin\">\n");
-    puttext(s, "<table border=\"0\">\n");
-
-    puttext(s, "<input type=\"hidden\" name=\"formname\" \
-value=\"adduser\">\n");
-
-    puttext(s, "<tr><td>Username:  </td><td><input name=\"username\">");
-    puttext(s, "<br></td></tr>\n");
-
-    puttext(s, "<tr><td>New passwd:</td><td><input name=\"passwd1\"");
-    puttext(s, " type=\"password\"><br></td></tr>\n");
-    puttext(s, "<tr><td>Again:</td><td><input name=\"passwd2\"");
-    puttext(s, " type=\"password\"><br></td></tr>\n");
-
-    puttext(s, "<tr><td>Early:</td><td><select name=\"early\">\n");
-    _http_moduser_timelist(s, DEFAULT_EARLY);
-    puttext(s, "</select><br></td></tr>\n");
-
-    puttext(s, "<tr><td>Late:</td><td><select name=\"late\">\n");
-    _http_moduser_timelist(s, DEFAULT_LATE);
-    puttext(s, "</select><br></td></tr>\n");
-
-    puttext(s, "</table>\n<input type=\"submit\">\n</form>\n");
 }
 
 void _http_admin_process(int s, struct http_request r)
@@ -144,7 +108,7 @@ void _http_admin(int s, struct http_request r)
         puts("Admin request");
 
     if(r.nargs==0)
-        _http_admin_adduserpage(s, r);
+        _http_adminerror(s, "No data sent.");
     else
         _http_admin_process(s, r);
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpprocess.c,v 1.15 1997/07/10 04:07:14 dustin Exp $
+ * $Id: httpprocess.c,v 1.16 1997/07/10 06:46:53 dustin Exp $
  */
 
 #define IWANTDOCINFO 1
@@ -62,14 +62,14 @@ void _http_process_get(int s, struct http_request r)
             case DOC_SENDPAGE: _http_sendpage(s, r); break;
             case DOC_ADMIN: _http_admin(s, r); break;
         }
+
+        _http_footer(s);
     }
     else
     {
 	/* run it through lex */
 	_http_parse(s, r);
     }
-
-    _http_footer(s);
 }
 
 int http_verifydoc(int s, struct http_request *r)
