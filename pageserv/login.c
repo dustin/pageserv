@@ -1,11 +1,12 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: login.c,v 1.7 1997/04/13 22:01:02 dustin Exp $
+ * $Id: login.c,v 1.8 1997/04/14 05:46:19 dustin Exp $
  * $State: Exp $
  */
 
 #include <config.h>
+#include <pageserv.h>
 
 #ifdef HAVE_CRYPT_H
 #include <crypt.h>
@@ -17,11 +18,13 @@
 #include <string.h>
 #include <ctype.h>
 #include <sys/types.h>
+
+#ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
+#endif
+
 #include <sys/socket.h>
 #include <netinet/in.h>
-
-#include <pageserv.h>
 
 extern struct config conf;
 

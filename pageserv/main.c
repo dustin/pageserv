@@ -1,9 +1,12 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.10 1997/04/14 04:36:41 dustin Exp $
+ * $Id: main.c,v 1.11 1997/04/14 05:46:20 dustin Exp $
  * $State: Exp $
  */
+
+#include <config.h>
+#include <pageserv.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,11 +14,17 @@
 #include <string.h>
 #include <signal.h>
 #include <sys/types.h>
+
+#ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
+#endif
+
+#ifdef HAVE_SYS_SELECT_H
+#include <sys/select.h>
+#endif
+
 #include <sys/socket.h>
 #include <netinet/in.h>
-
-#include <pageserv.h>
 
 struct config conf;
 
