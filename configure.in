@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 2.14 1997/04/14 07:15:24 dustin Exp $
+dnl $Id: configure.in,v 2.15 1997/04/16 19:30:38 dustin Exp $
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(pageserv)
 AC_CONFIG_HEADER(include/config.h)
@@ -26,7 +26,8 @@ case "$OS" in
         echo "Woohoo!  SunOS 4.x, one of my favs"
 	;;
     'netbsd')
-	echo "NetBSD!  One of my favs"
+	echo "NetBSD!  One of my favs, setting -Wall"
+	CFLAGS="$CFLAGS -Wall"
 	;;
     'solaris')
 	echo "Solaris?!?  Oh, alright..."
