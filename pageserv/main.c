@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.16 1997/07/07 08:48:43 dustin Exp $
+ * $Id: main.c,v 1.17 1997/07/08 07:08:28 dustin Exp $
  * $State: Exp $
  */
 
@@ -218,6 +218,7 @@ void changepasswd(void)
     struct user u;
 
     fputs("User's password to change:  ", stdout);
+    fflush(stdout);
     fgets(buf, BUFLEN, stdin);
     kw(buf);
 
@@ -230,6 +231,7 @@ void changepasswd(void)
     u=getuser(buf);
 
     fputs("User's new password:  ", stdout);
+    fflush(stdout);
     p_getpasswd(1, buf);
     putchar('\n');
 
@@ -239,7 +241,7 @@ void changepasswd(void)
     puts("Password set.");
 }
 
-void main(int argc, char **argv)
+int main(int argc, char **argv)
 {
 
     readconfig(CONFIGFILE);
@@ -273,4 +275,5 @@ void main(int argc, char **argv)
 	    changepasswd(); break;
     }
     cleanconfig();
+    exit(0);
 }
