@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile,v 1.4 1997/03/11 21:05:44 dustin Exp $
+# $Id: Makefile,v 1.5 1997/03/11 21:07:11 dustin Exp $
 
 MAJOR=2
 MINOR=0
@@ -8,7 +8,12 @@ VERSION=$(MAJOR).$(MINOR).$(PATCH)
 
 CC=cc
 CFLAGS=-O2 -g -Wall -DVERSION=\"$(VERSION)\"
-LIBS=-lnsl -lsocket
+
+LIBS=
+
+# For Solaris
+# LIBS=-lnsl -lsocket
+
 LDFLAGS=-g $(LIBS)
 
 SERV_OBJS=sockets.o main.o utility.o kids.o queue.o protocol.o
