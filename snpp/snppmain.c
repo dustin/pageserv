@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: snppmain.c,v 1.8 1997/08/06 04:37:44 dustin Exp $
+ * $Id: snppmain.c,v 1.9 1997/08/06 04:48:22 dustin Exp $
  */
 
 #include <config.h>
@@ -76,7 +76,7 @@ void snpp_holduntil(int s, char *time)
 {
     int i, offset=0;
     int vals[6];
-    char tmp[3], buf[1024], tztmp[256];
+    char tmp[3], buf[1024];
     struct tm tm, *tmptm;
     time_t t;
 
