@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.21 1997/08/07 07:57:01 dustin Exp $
+ * $Id: readconfig.c,v 1.22 1997/08/07 08:04:30 dustin Exp $
  */
 
 #include <readconfig.h>
@@ -164,7 +164,6 @@ void rdconfig(char *file)
 {
     char *tmp;
     struct confType *cf;
-    int log;
 
     /* set int defaults */
     memset( (char *)&conf, 0x00, sizeof(conf));
