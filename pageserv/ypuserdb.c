@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: ypuserdb.c,v 1.12 1998/01/28 17:34:36 dustin Exp $
+ * $Id: ypuserdb.c,v 1.13 1998/06/29 01:07:05 dustin Exp $
  */
 
 #include <config.h>
@@ -23,6 +23,15 @@
 
 #include <pageserv.h>
 #include <readconfig.h>
+
+/* This is a little dangerous, as I'm not doing memory debugging on it
+   because of NIS */
+
+#undef malloc
+#undef free
+#undef strdup
+#undef realloc
+#undef calloc
 
 extern struct config conf;
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.52 1998/02/27 07:47:28 dustin Exp $
+ * $Id: main.c,v 1.53 1998/06/29 01:06:59 dustin Exp $
  */
 
 #include <config.h>
@@ -273,7 +273,7 @@ static void daemon_main(void)
 	    m=conf.modules;
 	    for(i=0; i<conf.nmodules; i++)
 	    {
-		if(FD_ISSET(m->socket(), &fdset))
+		if( (m->socket()>0) && (FD_ISSET(m->socket(), &fdset)) )
 		{
                     _ndebug(2, ("Got a connection for ``%s''\n", m->name));
 
@@ -282,24 +282,18 @@ static void daemon_main(void)
 		    {
 			logConnect(fsin, m);
 
-			if(checkIPAccess(fsin, m) == 0)
-			{
+			if(checkIPAccess(fsin, m) == 0) {
 			    _ndebug(2, ("Hanging up on connection because "
 					"of ACL\n"));
 			    pid=1;
-			}
-			else
-			{
+			} else {
 			    pid=fork();
 			}
 
-			if(pid==0)
-			{
+			if(pid==0) {
 			    p.fsin=fsin;
 			    m->handler(p);
-			}
-			else
-			{
+			} else {
 			    close(p.socket);
 
 			    /* This used to be if(conf.debug>2 && pid>1) */

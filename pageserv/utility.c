@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: utility.c,v 1.20 1998/06/03 08:38:49 dustin Exp $
+ * $Id: utility.c,v 1.21 1998/06/29 01:07:03 dustin Exp $
  */
 
 #include <config.h>
@@ -253,44 +253,48 @@ int gettext(int s, char *buf)
 
 int gettextcr(int s, char *buf)
 {
-    int size=1, len=0;
+    int size=1, len=0, toobig=0;
+    char c=0;
 
     /* eat any extra CR's and LF's */
-    while( (len=read(s, buf, 1)) >0)
-    {
-	if(buf[size-1]=='\r')
-	{
+    while( (len=read(s, buf, 1)) >0) {
+	if(buf[size-1]=='\r') {
 	    size=0;
 	    break;
-	}
-	else if(buf[size-1]=='\n')
-	{
+	} else if(buf[size-1]=='\n') {
 	    size=0;
             break;
-	}
-	else
-	{
+	} else {
 	    break;
 	}
     }
 
-    if(len==0)
-    {
+    if(len==0) {
 	_ndebug(0, ("Broken pipe?\n"));
 	exit(0);
     }
 
-    while( (len=read(s, buf+size, 1)) >0)
-    {
-        if(len==0)
-        {
+    while( (len=read(s, &c, 1)) >0) {
+        if(len==0) {
 	    _ndebug(0, ("Broken pipe?\n"));
 	    exit(0);
         }
 
 	size+=len;
-        buf[size]=0x00;
-        if(buf[size-1]=='\r' || buf[size-1]=='\n')
+
+        if(!toobig) {
+
+            if(size>=BUFLEN) {
+	        _ndebug(3, ("Truncating input, too long.\n"));
+	        buf[BUFLEN-1]=0x00;
+                toobig=1;
+            }
+
+	    buf[size-1]=c;
+            buf[size]=0x00;
+        }
+
+        if(c=='\r' || c=='\n')
             break;
     }
 

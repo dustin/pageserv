@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.36 1998/04/12 01:04:23 dustin Exp $
+ * $Id: readconfig.c,v 1.37 1998/06/29 01:07:02 dustin Exp $
  */
 
 #include <readconfig.h>
@@ -289,12 +289,15 @@ void rdconfig(char *file)
 
 void cleanconfig(void)
 {
+    /* Don't do any of this */
+/*
     if(conf.servhost) free(conf.servhost);
     if(conf.userdb) free(conf.userdb);
     if(conf.termdb) free(conf.termdb);
     if(conf.qdir) free(conf.qdir);
     if(conf.pidfile) free(conf.pidfile);
     if(conf.webroot) free(conf.webroot);
+*/
     if(conf.modules) free(conf.modules);
 }
 
