@@ -1,5 +1,10 @@
 Pageserv by Dustin Sallings
 
+Developed under:
+
+    PC NetBSD 1.2
+    SGI Irix 6.2
+
 Tested on the following platforms:
 
     BSDi 2.1
@@ -22,4 +27,4 @@ Documentation:
     All of my documentation ends in .c
 
 ----------------------------------------
-$Id: README,v 1.5 1997/03/24 16:18:03 dustin Exp $
+$Id: README,v 1.6 1997/03/24 16:19:55 dustin Exp $
