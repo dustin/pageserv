@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 1.5 1997/03/14 00:52:06 dustin Exp $
+# $Id: Makefile.in,v 1.6 1997/03/14 05:58:54 dustin Exp $
 
 MAJOR=2
 MINOR=0
@@ -23,7 +23,7 @@ EXES=pageserv pqueue parseusers listusers
 NAME=pageserv
 ARCHIVE=$(NAME)-$(VERSION)
 STUFF=$(SOURCES) pageserv.h configure configure.in Makefile.in clients \
-	README
+	README config.h.in
 JUNK=$(EXES) *.o *.core core
 AUTOJUNK=config.status config.cache config.log Makefile clients/Makefile \
 	config.h
