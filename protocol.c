@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: protocol.c,v 1.11 1997/03/14 16:28:21 dustin Exp $
+ * $Id: protocol.c,v 1.12 1997/03/14 19:07:24 dustin Exp $
  */
 
 #include <stdio.h>
@@ -27,6 +27,7 @@ int gettext(int s, char *buf)
 	/* Pipe breaking bastard */
 	exit(0);
     }
+    return(size);
 }
 
 int gettextcr(int s, char *buf)
