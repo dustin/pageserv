@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.69 1998/04/15 17:14:17 dustin Exp $
+ * $Id: pageserv.h,v 1.70 1998/06/03 08:38:32 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -359,11 +359,5 @@ void stringListSort(char **list);
 #ifdef HAVE_NIS
 void nis_userdbInit(void);
 #endif
-
-/* client stuff */
-
-char *ckw(char *in);
-int pushqueue(char *to, char *message, int priority);
-void cgettext(char *message, int size);
 
 #endif /* PAGESERV_H */
