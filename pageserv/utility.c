@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: utility.c,v 1.25 1998/08/03 22:05:46 dustin Exp $
+ * $Id: utility.c,v 1.26 1998/09/24 19:36:30 dustin Exp $
  */
 
 #include <config.h>
@@ -89,7 +89,7 @@ int findGMTOffset(void)
     tm=localtime(&t);
 
     if(tm->tm_isdst>0)
-        i+=3600;
+        i-=3600;
 
     return(i);
 }

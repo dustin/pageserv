@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: snppmain.c,v 1.24 1998/06/29 01:07:13 dustin Exp $
+ * $Id: snppmain.c,v 1.25 1998/09/24 19:36:35 dustin Exp $
  */
 
 #include <config.h>
@@ -102,47 +102,39 @@ static void snpp_holduntil(int s, char *time)
 
     memset(&tm, 0x00, sizeof(tm));
 
-    if(time==NULL)
-    {
+    if(time==NULL) {
         puttext(s, "550 Invalid Delivery Date/Time (try help)\n");
         return;
     }
 
     for(i=0; time[i] && time[i]!=' ' && time[i]!='-' && time[i]!='+'; i++);
 
-    if(time[i])
-    {
+    if(time[i]) {
         offset=atoi(time+i);
 	time[i]=0x00;
         _ndebug(2, ("User supplied offset is %d\n", offset));
     }
 
-    if(strlen(time) < (size_t)12)
-    {
+    if(strlen(time) < (size_t)12) {
         puttext(s, "550 Invalid Delivery Date/Time (try help)\n");
         return;
     }
 
-    if(strlen(time)==(size_t)12)
-    {
-        for(i=0; i<12; i+=2)
-        {
+    if(strlen(time)==(size_t)12) {
+        for(i=0; i<12; i+=2) {
             tmp[0]=time[i];
 	    tmp[1]=time[i+1];
 	    tmp[2]=0x00;
 
 	    vals[i/2]=atoi(tmp);
         }
-    }
-    else
-    {
+    } else {
 	/* Get year */
 	strncpy(tmp, time, 4);
 	vals[0]=atoi(tmp)-1900;
 
         /* do the rest, yeah, this looks funny */
-        for(i=4; i<14; i+=2)
-        {
+        for(i=4; i<14; i+=2) {
             tmp[0]=time[i];
 	    tmp[1]=time[i+1];
 	    tmp[2]=0x00;
@@ -160,8 +152,7 @@ static void snpp_holduntil(int s, char *time)
 
     t=mktime(&tm);
 
-    if(t<(time_t)0)
-    {
+    if(t<(time_t)0) {
         puttext(s, "550 Invalid Delivery Date/Time (try help)\n");
 	return;
     }
@@ -174,8 +165,7 @@ static void snpp_holduntil(int s, char *time)
 
     t-=(3600*offset);
 
-    if(t>0)
-    {
+    if(t>0) {
         snpp_holdtime=t;
 	tmptm=gmtime(&t);
 	strcpy(buf, "250 Page will be held until ");
