@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.6 1997/04/09 21:09:11 dustin Exp $
+ * $Id: userdb.c,v 1.7 1997/04/11 15:55:06 dustin Exp $
  * $State: Exp $
  */
 
@@ -85,6 +85,7 @@ void printuser(struct user u)
 {
     int times[2];
     printf("ID:        %s\n", u.name);
+    printf("Password:  %s\n", u.passwd);
     printf("Pager ID:  %s\n", u.pageid);
     printf("Station:   %s\n", u.statid);
 
@@ -141,7 +142,22 @@ int check_time(int priority, char *whom)
 
 }
 
-void storeuser(DBM *db, struct user u)
+void storeuser(struct user u)
+{
+    DBM *db;
+
+    if( (db=dbm_open(conf.userdb, O_RDWR, 0644)) == NULL)
+    {
+        perror(conf.userdb);
+        exit(1);
+    }
+
+    open_storeuser(db, u);
+
+    dbm_close(db);
+}
+
+void open_storeuser(DBM *db, struct user u)
 {
     datum k, d;
     k.dptr=u.name;

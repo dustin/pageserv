@@ -8,7 +8,6 @@ Overall:
     * A login method into the server to allow clients to modify stuff
       about their database entry.
       - Management login to manage crap
-      - Regular login for users
     * NIS based databases
     * support numeric pagers
 
@@ -27,4 +26,4 @@ Clients:
 
 ----------------------------------------
 Copyright (c) 1997  Dustin Sallings
-$Id: TODO,v 2.11 1997/04/10 04:04:33 dustin Exp $
+$Id: TODO,v 2.12 1997/04/11 15:54:55 dustin Exp $

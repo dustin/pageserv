@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.7 1997/04/10 06:23:46 dustin Exp $
+ * $Id: main.c,v 1.8 1997/04/11 15:55:03 dustin Exp $
  * $State: Exp $
  */
 
@@ -167,6 +167,33 @@ void ldb_main(void)
     printterms();
 }
 
+void changepasswd(void)
+{
+    char buf[BUFLEN];
+    struct user u;
+
+    fputs("User's password to change:  ", stdout);
+    fgets(buf, BUFLEN, stdin);
+    kw(buf);
+
+    if(!u_exists(buf))
+    {
+	puts("No such user.");
+	exit(1);
+    }
+
+    u=getuser(buf);
+
+    fputs("User's new password:  ", stdout);
+    fgets(buf, BUFLEN, stdin);
+    kw(buf);
+
+    u=setpasswd(u, buf);
+    storeuser(u);
+
+    puts("Password set.");
+}
+
 void main(int argc, char **argv)
 {
 
@@ -197,6 +224,8 @@ void main(int argc, char **argv)
         case MODE_KILL:
 	    killserver(); break;
 
+        case MODE_PWCH:
+	    changepasswd(); break;
     }
     cleanconfig();
 }

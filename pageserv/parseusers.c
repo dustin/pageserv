@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parseusers.c,v 1.4 1997/04/11 03:45:52 dustin Exp $
+ * $Id: parseusers.c,v 1.5 1997/04/11 15:55:04 dustin Exp $
  * $State: Exp $
  */
 
@@ -95,7 +95,7 @@ int parseusers(void)
 		printuser(u);
 		puts("--");
 	    }
-            storeuser(db, u);
+            open_storeuser(db, u);
             i++;
         }
     }

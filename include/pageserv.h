@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.19 1997/04/11 03:45:44 dustin Exp $
+ * $Id: pageserv.h,v 1.20 1997/04/11 15:54:59 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -97,6 +97,7 @@
 #define MODE_VERS   4    /* print version info */
 #define MODE_RUNQ   5    /* Run the queue */
 #define MODE_KILL   6    /* Kill off the daemon. */
+#define MODE_PWCH   7    /* Password change */
 
 /* log types */
 
@@ -113,7 +114,8 @@ static char *modenames[]={
     "print queue",
     "printing version info",
     "running queue",
-    "killing server"
+    "killing server",
+    "changing password"
 };
 #endif
 
@@ -201,6 +203,7 @@ struct terminal getterm(char *key);
 struct terminal open_getterm(DBM *db, char *key);
 struct user getuser(char *key);
 struct user open_getuser(DBM *db, char *key);
+struct user setpasswd(struct user u, char *passwd);
 void childmain(int s);
 void cleanconfig(void);
 void cleanqueuelist(struct queuent *list);
@@ -213,6 +216,7 @@ void getnormtimes(int times, int *ret);
 void getoptions(int argc, char **argv);
 void getqueueinfo( struct queuent *q );
 void logqueue(struct queuent q, int type, char *reason);
+void open_storeuser(DBM *db, struct user u);
 void p_login(int s);
 void printqueue(void);
 void printterm(struct terminal t);
@@ -228,7 +232,7 @@ void runqueue(void);
 void showconfig(void);
 void showversion(void);
 void storeterm(DBM *db, struct terminal t);
-void storeuser(DBM *db, struct user u);
+void storeuser(struct user u);
 
 /* client stuff */
 
