@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * "$Id: tap.h,v 1.7 1998/01/11 08:05:53 dustin Exp $"
+ * "$Id: tap.h,v 1.8 1998/07/13 23:41:42 dustin Exp $"
  */
 
 #ifndef TAP_H
@@ -76,7 +76,8 @@
 #endif
 
 /* Flags */
-#define TAP_INITCR 0x1
+#define TAP_INITCR    0x1
+#define TAP_INITDELAY 0x2
 
 /* functions */
 

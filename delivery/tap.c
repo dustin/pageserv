@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  SPY Internetworking
  *
- * $Id: tap.c,v 2.19 1998/07/11 06:16:10 dustin Exp $
+ * $Id: tap.c,v 2.20 1998/07/13 23:41:39 dustin Exp $
  */
 
 #include <stdio.h>
@@ -46,8 +46,9 @@ void chardump(char *s)
 {
     int i;
 
-    for(i=0; s[i]!=0; i++)
+    for(i=0; s[i]!=0; i++) {
 	printf("%d:\t%2d (%c)\n", i, (int)s[i], s[i]);
+    }
 }
 
 int s_tap_init(int s, int flags)
@@ -57,6 +58,12 @@ int s_tap_init(int s, int flags)
     _ndebug(0, ("Initializing TAP\n"));
 
     /* If configured to do so, pimp slap it with a CR right away */
+
+    if(flags & TAP_INITDELAY) {
+	_ndebug(3, ("flag TAP_INITDELAY is set, sleeping\n"));
+
+	sleep(1);
+    }
 
     if(flags & TAP_INITCR) {
 	_ndebug(3, ("flag TAP_INITCR is set, sending a CR\n"));
