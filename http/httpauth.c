@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpauth.c,v 1.5 1997/07/10 07:12:33 dustin Exp $
+ * $Id: httpauth.c,v 1.6 1997/07/14 06:17:35 dustin Exp $
  */
 
 #include <config.h>
@@ -60,7 +60,6 @@ void http_checkauth(int s, struct http_request r, char *path)
                       && authname[i]!='\r'
                       && authname[i]!=' ')
                       && authname[i]; i++);
-            printf("i is %d\n", i);
             if(i>0)
                 authname[i]=0x00;
             fclose(f);
