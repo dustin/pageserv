@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.22 1997/06/20 09:14:27 dustin Exp $
+ * $Id: queue.c,v 1.23 1997/06/20 13:54:39 dustin Exp $
  * $State: Exp $
  */
 
@@ -119,8 +119,9 @@ void runqueue(void)
 	    } /* while loop */
 
             s_tap_end(s);
+	    puttext(s, "+++atz\n");
             close(s);
-            sleep(1); /* sleep it off */
+            sleep(5); /* sleep it off */
         }
 
         cleanqueuelist(q);
