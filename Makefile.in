@@ -1,9 +1,9 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 2.9 1997/04/14 03:51:09 dustin Exp $
+# $Id: Makefile.in,v 2.10 1997/04/14 04:33:32 dustin Exp $
 
 MAJOR=2
-MINOR=3
-PATCH=7
+MINOR=4
+PATCH=0
 VERSION=$(MAJOR).$(MINOR).$(PATCH)
 
 SHELL=/bin/sh
