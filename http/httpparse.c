@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpparse.c,v 1.6 1997/04/18 20:27:32 dustin Exp $
+ * $Id: httpparse.c,v 1.7 1997/04/18 21:18:55 dustin Exp $
  */
 
 #define IWANTMETHODNAMES 1
@@ -99,5 +99,6 @@ struct http_request http_parserequest(int s)
                 finished=1;
         }
     }
+    r.alist=NULL;
     return(r);
 }
