@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 1997  SPY Internetworking
  *
- * $Id: tap.c,v 2.0 1997/03/30 05:58:18 dustin Exp $
+ * $Id: tap.c,v 2.1 1997/03/30 06:16:58 dustin Exp $
  */
 
 #include <pageserv.h>
-#include "tap.h"
+#include <tap.h>
 
 void chardump(char *s)
 {

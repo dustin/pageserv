@@ -1,12 +1,12 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: checksum.c,v 2.0 1997/03/30 05:58:15 dustin Exp $
+ * $Id: checksum.c,v 2.1 1997/03/30 06:16:56 dustin Exp $
  */
 
 #include <stdio.h>
 
-#include "tap.h"
+#include <tap.h>
 
 int tap_checksum(char *string)
 {

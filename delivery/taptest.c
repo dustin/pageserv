@@ -1,12 +1,12 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: taptest.c,v 2.0 1997/03/30 05:58:19 dustin Exp $
+ * $Id: taptest.c,v 2.1 1997/03/30 06:16:59 dustin Exp $
  */
 
 #include <stdio.h>
 
-#include "tap.h"
+#include <tap.h>
 #include <pageserv.h>
 
 struct config conf;
