@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.15 1997/04/04 22:21:08 dustin Exp $
+ * $Id: queue.c,v 1.16 1997/04/10 04:16:15 dustin Exp $
  * $State: Exp $
  */
 
@@ -452,23 +452,15 @@ void printqueue(void)
 
 struct queuent dofarkle()
 {
-    DIR *dir;
-    struct dirent *d;
-    struct queuent q;
+    struct queuent *q, retq;
 
-    chdir(conf.qdir);
-    dir=opendir(".");
+    /* This looks like it's more than necessary, but I want to get the
+       right order. */
 
-    while( (d=readdir(dir))!=NULL)
-    {
-        if(d->d_name[0]=='q')
-        {
-            q=readqueuefile(d->d_name);
+    q=listqueue("*");
+    retq=*q;
+    cleanqueuelist(q);
 
-            break;
-        }
-    }
-    closedir(dir);
-    dequeue(q.qid);
-    return(q);
+    dequeue(retq.qid);
+    return(retq);
 }
