@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: snppmain.c,v 1.17 1998/01/10 01:33:18 dustin Exp $
+ * $Id: snppmain.c,v 1.18 1998/01/14 06:34:47 dustin Exp $
  */
 
 #include <config.h>
@@ -91,7 +91,7 @@ static void snpp_holduntil(int s, char *time)
 {
     int i, offset=0;
     int vals[6];
-    char tmp[3], buf[1024];
+    char tmp[5], buf[1024];
     struct tm tm, *tmptm;
     time_t t;
 
@@ -99,38 +99,51 @@ static void snpp_holduntil(int s, char *time)
 
     if(time==NULL)
     {
-        puttext(s, "No time argument specified\n");
+        puttext(s, "550 Invalid Delivery Date/Time (try help)\n");
         return;
+    }
+
+    for(i=0; time[i] && time[i]!=' ' && time[i]!='-' && time[i]!='+'; i++);
+
+    if(time[i])
+    {
+        offset=atoi(time+i);
+	time[i]=0x00;
+        _ndebug(2, ("User supplied offset is %d\n", offset));
     }
 
     if(strlen(time) < (size_t)12)
     {
-        puttext(s, "Invalid time (try help)\n");
+        puttext(s, "550 Invalid Delivery Date/Time (try help)\n");
         return;
     }
 
-    if(strlen(time)> (size_t)12)
+    if(strlen(time)==(size_t)12)
     {
-        if(time[12]=='-' || time[12]=='+' || isspace(time[12]))
-	{
-	    offset=atoi(time+12);
+        for(i=0; i<12; i+=2)
+        {
+            tmp[0]=time[i];
+	    tmp[1]=time[i+1];
+	    tmp[2]=0x00;
 
-	    _ndebug(2, ("User supplied offset is %d\n", offset));
-	}
-	else
-	{
-	    puttext(s, "Invalid time (try help)\n");
-	    return;
-	}
+	    vals[i/2]=atoi(tmp);
+        }
     }
-
-    for(i=0; i<12; i+=2)
+    else
     {
-        tmp[0]=time[i];
-	tmp[1]=time[i+1];
-	tmp[2]=0x00;
+	/* Get year */
+	strncpy(tmp, time, 4);
+	vals[0]=atoi(tmp)-1900;
 
-	vals[i/2]=atoi(tmp);
+        /* do the rest, yeah, this looks funny */
+        for(i=4; i<14; i+=2)
+        {
+            tmp[0]=time[i];
+	    tmp[1]=time[i+1];
+	    tmp[2]=0x00;
+
+	    vals[(i-2)/2]=atoi(tmp);
+        }
     }
 
     tm.tm_year=vals[0];
@@ -141,6 +154,12 @@ static void snpp_holduntil(int s, char *time)
     tm.tm_sec=vals[5];
 
     t=mktime(&tm);
+
+    if(t<(time_t)0)
+    {
+        puttext(s, "550 Invalid Delivery Date/Time (try help)\n");
+	return;
+    }
 
     _ndebug(2, ("Adding %d for GMT offset\n", 3600*conf.gmtoffset));
 
@@ -156,7 +175,7 @@ static void snpp_holduntil(int s, char *time)
     {
         snpp_holdtime=t;
 	tmptm=gmtime(&t);
-	strcpy(buf, "Page will be held until ");
+	strcpy(buf, "250 Page will be held until ");
 	strcat(buf, asctime(tmptm));
 	buf[strlen(buf)-1]=0x00;
 	strcat(buf, " GMT\n");
