@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: modem.c,v 2.21 1998/07/14 16:53:32 dustin Exp $
+ * $Id: modem.c,v 2.22 1998/07/15 07:54:49 dustin Exp $
  */
 
 #include <config.h>
@@ -170,9 +170,7 @@ int dexpect(int s, char **what, int timeout)
                     i[which]=0;
                 }
             }
-        }
-        else
-        {
+        } else {
             return(-1);
         }
     }
@@ -204,6 +202,7 @@ int s_modem_connect(int s, char *number)
     i=s_modem_waitfor(s, "OK", 10);
     if(i<0) {
 	_ndebug(2, ("init failed\n"));
+	del_log("Modem init failed for number %s", number);
 	return(-1);
     }
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: network.c,v 2.13 1998/07/14 05:48:08 dustin Exp $
+ * $Id: network.c,v 2.14 1998/07/15 07:54:51 dustin Exp $
  */
 
 /*
@@ -51,17 +51,13 @@ static int s_openhost(char *host, int port)
     struct sockaddr_in sin;
 
     if((hp=gethostbyname(host)) == NULL) {
-#ifdef HAVE_HERROR
-        herror("gethostbyname");
-#else
-        fprintf(stderr, "Error looking up %s\n", host);
-#endif
+        del_log("Error looking up %s\n", host);
         return(-1);
     }
 
     for(i=0; i<conf.maxconattempts; i++) {
         if((s=socket(AF_INET, SOCK_STREAM, 0))<0) {
-            perror("socket");
+	    del_log("socket: ", strerror(errno));
             return(-1);
         }
 

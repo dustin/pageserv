@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  SPY Internetworking
  *
- * $Id: tap.c,v 2.24 1998/07/14 22:46:59 dustin Exp $
+ * $Id: tap.c,v 2.25 1998/07/15 07:54:55 dustin Exp $
  */
 
 #include <stdio.h>
@@ -125,7 +125,8 @@ int s_tap_send(int s, char *id, char *message)
 
     /* cheap bounds checking */
     if(strlen(message)+strlen(id)>(BUFLEN-20)) {
-        del_log("ACK, length of message+id is too long!");
+        del_log("ACK!  Length of message+id is too long (%s:%d)!",
+		__FILE__, __LINE__);
 	return(-1);
     }
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: serial.c,v 2.15 1998/07/11 06:16:08 dustin Exp $
+ * $Id: serial.c,v 2.16 1998/07/15 07:54:53 dustin Exp $
  */
 
 /*
@@ -154,7 +154,6 @@ static int p_openport(char *port)
 
     if(p_lock(port)<0) {
 	_ndebug(2, ("p_openport():  Resource is locked.\n"));
-
 	return(-1);
     }
 
@@ -189,10 +188,10 @@ static int p_openport(char *port)
     tm.c_cflag |= (CREAD | CS7 | PARENB | CLOCAL);
 
     if (tcflush(s, TCIFLUSH) == -1)
-	perror("tcflush");
+	del_log("tcflush: %s", strerror(errno));
 
     if (tcsetattr(s,TCSANOW, &tm))
-	perror("tcsetattr");
+	del_log("tcsetattr", strerror(errno));
 
     return(s);
 }

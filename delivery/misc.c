@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: misc.c,v 2.6 1998/07/14 23:05:41 dustin Exp $
+ * $Id: misc.c,v 2.7 1998/07/15 07:54:47 dustin Exp $
  */
 
 #include <stdio.h>
@@ -53,18 +53,10 @@ void cleanmylocks()
     checklocks(); /* this is for serial locks */
 }
 
-#ifndef HAVE_VSNPRINTF
-
-#ifndef HAVE_VSPRINTF
-# error No vsnprintf(), no vsprintf(), what is this?
-#endif
-
-/* *NASTY* workaround for a missing vsnprintf, call your vendor */
-int vsnprintf(char *s, size_t n, const char *format, va_list ap)
-{
-    return(vsprintf(s, format, ap));
-}
-#endif
+/*
+ * This is for logging in the delivery module.  Lets me make changes to
+ * the way it works without relinking everything.
+ */
 
 void del_log(char *format, ...)
 {
@@ -151,10 +143,10 @@ void runqueue(void)
                 } /* while loop */
 
                 s_tap_end(s);
-                puttext(s, "+++atz\n");
                 any_closeterm(s, term);
                 sleep(5); /* sleep it off */
             } else {
+		del_log("Failed to get a port");
                 _ndebug(2, ("Didn't get the port\n"));
             }
         }
@@ -169,6 +161,7 @@ void runqueue(void)
 static RETSIGTYPE del_sigint(int sig)
 {
     cleanmylocks();
+    del_log("Caught signal %d, exiting...", sig);
     exit(1);
 }
 
