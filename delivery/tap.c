@@ -1,8 +1,7 @@
 /*
  * Copyright (c) 1997  SPY Internetworking
  *
- * $Id: tap.c,v 2.13 1997/08/03 02:35:42 dustin Exp $
- * $State: Exp $
+ * $Id: tap.c,v 2.14 1997/09/04 06:18:11 dustin Exp $
  */
 
 #include <stdio.h>
@@ -51,12 +50,23 @@ void chardump(char *s)
     }
 }
 
-int s_tap_init(int s)
+int s_tap_init(int s, int flags)
 {
     char buf[BUFLEN];
 
     if(conf.debug>0)
         puts("Initializing TAP");
+
+    /* If configured to do so, pimp slap it with a CR right away */
+
+    if(flags & TAP_INITCR)
+    {
+	if(conf.debug>3)
+	    puts("flag TAP_INITCR is set, sending a CR");
+
+	usleep(2600);
+	puttext(s, "\r");
+    }
 
     s_modem_waitfor(s, "ID=", 2);
 
