@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  SPY Internetworking
  *
- * $Id: tap.c,v 2.23 1998/07/14 19:26:17 dustin Exp $
+ * $Id: tap.c,v 2.24 1998/07/14 22:46:59 dustin Exp $
  */
 
 #include <stdio.h>
@@ -153,16 +153,11 @@ int s_tap_send(int s, char *id, char *message)
     /* Another random sleepy thing, just to get the timing right */
     usleep(1700);
 
-    /*
-     * Note: I *probably* shouldn't do this for ESC here since I don't
-     * know for sure that it went, but I ran into a problem where I was
-     * sending duplicate pages because *SOME* server decided ESC was good
-     * enough.
-     */
-    if(c==C_ACK || c==C_ESC) {
+    /* I used to do escape here...  hmm...  */
+    if(c==C_ACK) {
 	return(0);
     } else {
 	_ndebug(2, (":( Received character %xh\n", c));
-	return(1);
+	return((int)c);
     }
 }

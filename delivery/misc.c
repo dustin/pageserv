@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: misc.c,v 2.4 1998/07/14 16:53:31 dustin Exp $
+ * $Id: misc.c,v 2.5 1998/07/14 22:46:56 dustin Exp $
  */
 
 #include <stdio.h>
@@ -87,7 +87,7 @@ void runqueue(void)
     struct queuent *q;
     char **termlist;
     struct terminal term;
-    int t, i, s;
+    int t, i, s, r;
 
     conf.udb.dbinit();
     resetdelivertraps();
@@ -117,19 +117,25 @@ void runqueue(void)
                     for(i=0; q[i].to[0] != NULL; i++) {
                         getqueueinfo(&q[i]);
 
-                        if( (s_tap_send(s, q[i].u.pageid, q[i].message)) == 0){
+                        if( (r=s_tap_send(s, q[i].u.pageid, q[i].message))==0){
                             _ndebug(0, ("Delivery of %s successful\n",
                                 q[i].qid));
-                            logqueue(q[i], SUC_LOG, NULL);
-			    dq_notify(q[i], "Successfully delivered",
-				      NOTIFY_SUCC);
-                            dequeue(q[i].qid);
-                            usleep(2600);
+			    del_log("delivered %s to %s: %d bytes",
+				    q[i].qid, q[i].to, strlen(q[i].message));
+			    dequeue(q[i].qid);
+			    usleep(2600);
                         } else {
-                            _ndebug(0, ("Delivery of %s unsuccessful\n",
-                                q[i].qid));
-                            logqueue(q[i], FAIL_LOG, MESG_TAPFAIL);
-                            q_unlock(q[i]);
+			    if(r==C_RS) {
+				dq_notify(q[i], "Unsuccessful", NOTIFY_FAIL);
+                                del_log("failed %s to %s, got RS (fatal)",
+					q[i].qid, q[i].to);
+				dequeue(q[i].qid);
+			    } else {
+                                del_log("failed %s to %s, "
+                                        "will keep trying until it expires",
+					q[i].qid, q[i].to);
+                                q_unlock(q[i]);
+			    }
                         }
                         _ndebug(2, ("\t%d to %s  ``%s''\n", i, q[i].to,
                             q[i].message));
