@@ -1,11 +1,12 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: protocol.c,v 1.7 1997/03/12 22:54:10 dustin Exp $
+ * $Id: protocol.c,v 1.8 1997/03/12 23:07:13 dustin Exp $
  */
 
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 
@@ -69,7 +70,7 @@ void p_apage(int s)
 
     ack=htonl(1);
 
-    send(s, &ack, sizeof(ack), 0);
+    send(s, (char *)&ack, sizeof(ack), 0);
 
     q.priority=ntohl(q.priority);
 
@@ -103,8 +104,6 @@ void p_epage(int s)
     strcpy(q.to, buf1);
     strcpy(q.message, buf3);
 
-    printf("EPAGE:  %s %s %s\n", buf1, buf2, buf3);
-
     if(u_exists(buf1))
     {
         storequeue(s, q, STORE_NORMAL);
@@ -115,7 +114,7 @@ void p_epage(int s)
     }
 }
 
-void p_queueup(int s)
+void p_mash(int s)
 {
     char buf1[BUFLEN], buf2[BUFLEN];
     struct queuent q;
@@ -124,8 +123,6 @@ void p_queueup(int s)
     gettextcr(s, buf1);
     puttext(s, PROMPT_MESS);
     gettextcr(s, buf2);
-
-    printf("Received:\n``%s''\n``%s''\n", buf1, buf2);
 
     q.priority=PR_NORMAL;
 
@@ -205,7 +202,7 @@ void process(int s, char *cmd)
     switch(c)
     {
 	case P_MASH:
-	    p_queueup(s); break;
+	    p_mash(s); break;
 
 	case P_DEPTH:
 	    p_depth(s); break;

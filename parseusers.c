@@ -1,11 +1,12 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parseusers.c,v 1.3 1997/03/12 16:02:23 dustin Exp $
+ * $Id: parseusers.c,v 1.4 1997/03/12 23:07:11 dustin Exp $
  */
 
 #include <stdio.h>
 #include <ndbm.h>
+#include <ctype.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -57,7 +58,6 @@ void main(void)
     FILE *f;
     char buf[BUFLEN];
     struct user u;
-    datum d;
     DBM *db;
 
     if( (f=fopen(USERDB, "r")) == NULL)
