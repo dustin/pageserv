@@ -2,8 +2,14 @@
 # ws delimted
 # id      pager-id   station-id    early     late
 
-dustin    3123362    219.1805       7        23
+dustin    253.4645   1.510.801.9999 7        23
+scott     253.9118   1.510.801.9999 7        23
+dustin.ipa    3123362    219.1805   7        23
 dustin2   7888802    783.6426       9        1
+nwise     1106710    1.800.455.2698 7        23
+dktyler   1105430    1.800.455.2698 7        23
+
+
 seanb     7786834    1.800.642.4152
 
 # Backard compatible, too   (sort of)
