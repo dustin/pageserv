@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: snppmisc.c,v 1.5 1998/01/10 01:33:20 dustin Exp $
+ * $Id: snppmisc.c,v 1.6 1998/01/14 06:43:24 dustin Exp $
  */
 
 #include <snpp.h>
@@ -37,6 +37,8 @@ void snpp_help(int s)
     "PRIORITY",
     "\tSet the priority of the message",
     "HOLDuntil YYMMDDHHMMSS[+/-GMT]",
+    " ...or",
+    "HOLDuntil YYYYMMDDHHMMSS[+/-GMT]",
     "\tDelay delivery until the given time",
     "SEND",
     "\tSend the queued message",
