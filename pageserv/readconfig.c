@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.35 1998/02/26 17:17:52 dustin Exp $
+ * $Id: readconfig.c,v 1.36 1998/04/12 01:04:23 dustin Exp $
  */
 
 #include <readconfig.h>
@@ -222,7 +222,6 @@ void rdconfig(char *file)
 
     conf.maxconattempts=MAX_CONATTEMPTS;
     conf.conattemptsleep=CONATTEMPTSSLEEP;
-    conf.gmtoffset=0;
     conf.pageport=PORT;
     conf.pageserv=1;
     conf.webport=WEBPORT;
@@ -271,7 +270,6 @@ void rdconfig(char *file)
     storeIfFoundS("databases.termdb", conf.termdb);
     storeIfFoundS("etc.pidfile", conf.pidfile);
     storeIfFoundS("etc.queuedir", conf.qdir);
-    storeIfFoundI("etc.gmtOffset", conf.gmtoffset);
     storeIfFoundI("modules.pageserv.protocols.farkle", conf.farkle);
     storeIfFoundI("modules.webserver.run", conf.webserver);
     storeIfFoundI("modules.pageserv.run", conf.pageserv);
@@ -320,7 +318,6 @@ void showconfig(void)
     printf("\tTerm db:      %s\n", conf.termdb);
     printf("\tQueue dir:    %s\n", conf.qdir);
     printf("\tPID file:     %s\n", conf.pidfile);
-    printf("\tGMT offset:   %d\n", conf.gmtoffset);
     printf("\tPaegserv:     %d\n", conf.pageserv);
     printf("\tPage port:    %d\n", conf.pageport);
     printf("\tWebRoot:      %s\n", conf.webroot);

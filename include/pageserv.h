@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.66 1998/03/18 08:33:26 dustin Exp $
+ * $Id: pageserv.h,v 1.67 1998/04/12 01:04:18 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -248,7 +248,6 @@ struct config {
 
     int snppserver;        /* start the snppserver? */
     int snppport;          /* snppserver port num */
-    int gmtoffset;         /* number of hours off of gmt */
 
     char *servhost;        /* server fqdn */
     char *userdb;          /* path to user database */

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: snppmain.c,v 1.22 1998/01/23 09:27:37 dustin Exp $
+ * $Id: snppmain.c,v 1.23 1998/04/12 01:04:47 dustin Exp $
  */
 
 #include <config.h>
@@ -94,7 +94,7 @@ static void _snpp_init(void)
 
 static void snpp_holduntil(int s, char *time)
 {
-    int i, offset=0;
+    int i, gmt, offset=0;
     int vals[6];
     char tmp[5], buf[1024];
     struct tm tm, *tmptm;
@@ -166,13 +166,11 @@ static void snpp_holduntil(int s, char *time)
 	return;
     }
 
-    _ndebug(2, ("Adding %d for GMT offset\n", 3600*conf.gmtoffset));
+    gmt=findGMTOffset();
+    _ndebug(2, ("Adding %d for GMT offset\n", gmt));
 
-    t+=(3600*conf.gmtoffset);
+    t+=gmt;
     tmptm=localtime(&t);
-
-    if(tmptm->tm_isdst!=0)
-        t-=3600;
 
     t-=(3600*offset);
 

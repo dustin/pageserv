@@ -1,8 +1,10 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: utility.c,v 1.17 1998/01/27 01:32:46 dustin Exp $
+ * $Id: utility.c,v 1.18 1998/04/12 01:04:25 dustin Exp $
  */
+
+#include <config.h>
 
 #include <stdio.h>
 #include <ctype.h>
@@ -14,12 +16,42 @@
 #include <sys/socket.h>
 #include <sys/wait.h>
 
+#ifdef HAVE_SYS_TIME_H
+#include <sys/time.h>
+#endif
+
 #include <pageserv.h>
 
 extern struct config conf;
 
 /* Static declarations */
 static int set_bit(int map, int bit);
+
+/*
+ * find the number of seconds off of GMT (including DST)
+ */
+int findGMTOffset(void)
+{
+    struct tm *tm;
+    int i;
+    time_t t, tmp;
+
+    t=time(NULL);
+    tmp=t;
+    tm=gmtime(&t);
+    t=mktime(tm);
+
+    i=(int)tmp-(int)t;
+
+    t=tmp;
+    tm=localtime(&t);
+
+    if(tm->tm_isdst>0)
+        i++;
+
+    return(i);
+}
+
 
 int checkpidfile(char *filename)
 {
