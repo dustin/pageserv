@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.48 1998/01/28 08:34:32 dustin Exp $
+ * $Id: main.c,v 1.49 1998/01/28 08:59:05 dustin Exp $
  */
 
 #include <config.h>
@@ -500,14 +500,14 @@ void runqueue_main(void)
     lib=dlopen(libname, RTLD_LAZY);
     if(lib==NULL)
     {
-        _ndebug(2, ("%s\n", dlerror()));
+        _ndebug(2, ("dlopen: %s\n", dlerror()));
 	return;
     }
 
     runqueue=dlsym(lib, "runqueue");
     if(runqueue==NULL)
     {
-	_ndebug(2, ("%s\n", dlerror()));
+	_ndebug(2, ("dlsym: %s\n", dlerror()));
 	return;
     }
 #endif

@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 2.26 1998/01/28 08:34:22 dustin Exp $
+dnl $Id: configure.in,v 2.27 1998/01/28 08:59:01 dustin Exp $
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(pageserv)
 AC_CONFIG_HEADER(include/config.h)
@@ -31,6 +31,14 @@ fi
 case "$OS" in
     'sunos')
         echo "Woohoo!  SunOS 4.x, one of my favs"
+	if test $GCC = "yes"
+	then
+	    echo "Using GCC, let's try to make shared libs."
+	    DYNLIBS=1
+	    NEEDUNDERSCORE=0
+	    MAKESO="$CC -shared"
+	    CFLAGS="$CFLAGS -fPIC"
+	fi
 	;;
     'netbsd')
 	echo "NetBSD!  One of my favs, setting -Wall"
@@ -41,7 +49,7 @@ case "$OS" in
 	;;
     'hp-ux')
         echo "HP-UX, this should be fun..."
-        if test GCC != "yes"
+        if test $GCC != "yes"
         then
             echo "Setting ANSI flags"
             CFLAGS="$CFLAGS -Ae"
@@ -50,7 +58,7 @@ case "$OS" in
         ;;
     'irix')
 	echo "Looks like IRIX it's going to be..."
-	if test GCC = "yes"
+	if test $GCC = "yes"
 	then
 	    echo "That's odd, we're using gcc...  OK."
 	    echo "If you have the IDO, please set the environ CC to cc"
