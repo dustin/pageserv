@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: sqluserdb.c,v 1.1 1997/10/10 08:24:22 dustin Exp $
+ * $Id: sqluserdb.c,v 1.2 1998/01/11 11:03:05 dustin Exp $
  */
 
 #include <config.h>
@@ -23,7 +23,7 @@
 extern struct config conf;
 
 #ifdef HAVE_POSTGRES
-PGresult *do_sql_pg(char *query)
+static PGresult *do_sql_pg(char *query)
 {
     PGconn *conn;
     PGresult *res;
@@ -62,7 +62,7 @@ PGresult *do_sql_pg(char *query)
 }
 #endif
 
-int sql_u_exists(char *name)
+static int sql_u_exists(char *name)
 {
     char buf[BUFLEN];
     PGresult *res;
@@ -84,34 +84,34 @@ int sql_u_exists(char *name)
     }
 }
 
-int sql_deleteuser(char *name)
+static int sql_deleteuser(char *name)
 {
     return(0);
 }
 
-void sql_storeuser(struct user u)
+static void sql_storeuser(struct user u)
 {
     return;
 }
 
-void sql_eraseuserdb(void)
+static void sql_eraseuserdb(void)
 {
     return;
 }
 
-int sql_parseusers(void)
+static int sql_parseusers(void)
 {
     return 0;
 }
 
-struct user sql_getuser(char *name)
+static struct user sql_getuser(char *name)
 {
     struct user u;
     memset(&u, 0x00, sizeof(u));
     return(u);
 }
 
-char **sql_listusers(char *term)
+static char **sql_listusers(char *term)
 {
     return(NULL);
 }

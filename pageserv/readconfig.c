@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.33 1998/01/10 01:33:07 dustin Exp $
+ * $Id: readconfig.c,v 1.34 1998/01/11 11:03:04 dustin Exp $
  */
 
 #include <readconfig.h>
@@ -98,6 +98,7 @@ static void showusage(char *cmd)
     printf("Usage:  %s -b{d|r|q|k|p} [-dx] or\n", cmd);
     printf("        %s -p{l|q} [-dx]   or\n", cmd);
     printf("        %s -v [-dx]\n", cmd);
+    printf("        %s -h", cmd);
 
     puts("\n-b is run modes, can be one of the following:");
     puts("\td: starts a pager server");
@@ -122,7 +123,7 @@ void getoptions(int argc, char **argv)
     int c;
     extern char *optarg;
 
-    while( (c=getopt(argc, argv, "vb:p:d:")) != -1)
+    while( (c=getopt(argc, argv, "hvb:p:d:")) != -1)
     {
 	switch(c)
 	{
@@ -158,6 +159,8 @@ void getoptions(int argc, char **argv)
 		conf.debug=atoi(optarg); break;
 	    case 'v':
 		conf.mode=MODE_VERS; break;
+	    case 'h':
+		showusage(argv[0]); exit(1); break;
 	    case '?':
 		showusage(argv[0]); exit(1); break;
 	}
