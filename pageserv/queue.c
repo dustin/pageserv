@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.24 1997/06/22 07:43:30 dustin Exp $
+ * $Id: queue.c,v 1.25 1997/07/03 06:09:26 dustin Exp $
  * $State: Exp $
  */
 
@@ -106,6 +106,7 @@ void runqueue(void)
 					q[i].qid);
                             logqueue(q[i], SUC_LOG, NULL);
                             dequeue(q[i].qid);
+			    usleep(2600);
                         }
                         else
                         {
