@@ -1,12 +1,15 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: serial.c,v 2.7 1997/08/20 06:04:54 dustin Exp $
+ * $Id: serial.c,v 2.8 1997/09/10 08:00:49 dustin Exp $
  */
 
 /*
  * Client delivery local serial code
  */
+
+#include <pageserv.h>
+#include <tap.h>
 
 #include <stdio.h>
 #include <unistd.h>
@@ -16,10 +19,14 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/termios.h>
 
-#include <pageserv.h>
-#include <tap.h>
+#ifdef HAVE_SYS_TERMIOS_H
+#include <sys/termios.h>
+#else
+# ifdef HAVE_TERMIOS_H
+#  include <termios.h>
+# endif
+#endif
 
 #ifndef PATH_LOCKS
 #define PATH_LOCKS "/var/spool/locks/"

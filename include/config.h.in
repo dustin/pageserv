@@ -27,6 +27,10 @@
 /* Define if you have the <rpcsvc/ypclnt.h> header file.  */
 #undef HAVE_RPCSVC_YPCLNT_H
 
+/* looking for termios.h */
+#undef HAVE_TERMIOS_H
+#undef HAVE_SYS_TERMIOS_H
+
 /* Define for the yp_match function */
 #undef HAVE_YP_MATCH
 
