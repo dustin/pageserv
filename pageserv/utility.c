@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: utility.c,v 1.6 1997/04/14 03:51:58 dustin Exp $
+ * $Id: utility.c,v 1.7 1997/04/16 19:44:23 dustin Exp $
  * $State: Exp $
  */
 
@@ -39,7 +39,7 @@ int gettext(int s, char *buf)
 
 int gettextcr(int s, char *buf)
 {
-    int size=1, len=0, cr=0, lf=0;
+    int size=1, len=0;
 
     /* eat any extra CR's and LF's */
     while( (len=recv(s, buf, 1, 0)) >0)

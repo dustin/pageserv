@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parseusers.c,v 1.6 1997/04/16 18:23:04 dustin Exp $
+ * $Id: parseusers.c,v 1.7 1997/04/16 19:44:22 dustin Exp $
  * $State: Exp $
  */
 
@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <ndbm.h>
 #include <ctype.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>

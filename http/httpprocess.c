@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpprocess.c,v 1.6 1997/04/16 19:26:37 dustin Exp $
+ * $Id: httpprocess.c,v 1.7 1997/04/16 19:44:19 dustin Exp $
  */
 
 #define IWANTDOCINFO 1
@@ -77,13 +77,14 @@ void http_process_get(int s, struct http_request r)
 
 int http_verifydoc(int s, struct http_request *r)
 {
-    int i;
+    int i, ret=1;
     char buf[2048];
 
     for(i=0; i<NDOCS; i++)
     {
         if(strcmp(r->request, docnames[i])==0)
         {
+	    ret=0;
             break;
         }
     }
@@ -100,16 +101,17 @@ int http_verifydoc(int s, struct http_request *r)
         if(access(buf, R_OK)==0)
         {
             r->special=0;
-            return(0);
+	    ret=0;
         }
-
     }
     else
     {
         r->special=1;
         r->docnum=i;
-        return(0);
+	ret=0;
     }
+
+    return(ret);
 }
 
 void http_process(int s, struct http_request r)

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.14 1997/04/16 18:23:01 dustin Exp $
+ * $Id: main.c,v 1.15 1997/04/16 19:44:20 dustin Exp $
  * $State: Exp $
  */
 
@@ -65,7 +65,7 @@ void detach(void)
 void daemon_main(void)
 {
     struct sockaddr_in fsin;
-    int i, s, ns, fromlen, pid, upper;
+    int i, s, fromlen, pid, upper;
     fd_set fdset, tfdset;
     struct timeval t;
     module *m;

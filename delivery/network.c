@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: network.c,v 2.7 1997/04/13 22:00:38 dustin Exp $
+ * $Id: network.c,v 2.8 1997/04/16 19:44:14 dustin Exp $
  * $State: Exp $
  */
 
@@ -46,7 +46,7 @@ int s_openhost(char *host, int port)
 {
 struct hostent *hp;
 int success, i, flag;
-register int s;
+register int s=-1;
 struct linger l;
 struct sockaddr_in sin;
 

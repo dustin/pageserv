@@ -1,10 +1,8 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpmain.c,v 1.2 1997/04/16 06:10:28 dustin Exp $
+ * $Id: httpmain.c,v 1.3 1997/04/16 19:44:17 dustin Exp $
  */
-
-#define IWANTMETHODNAMES 1
 
 #include <config.h>
 #include <pageserv.h>
@@ -69,7 +67,6 @@ void _http_init(void)
 void _http_main(modpass p)
 {
     struct http_request r;
-    char buf[BUFLEN];
     int s;
 
     s=p.socket;
@@ -80,17 +77,6 @@ void _http_main(modpass p)
     r=http_parserequest(s);
 
     http_process(s, r);
-
-    close(s);
-    exit(0);
-
-    puttext(s, "HTTP/1.0 200 OK\n\n<html><head><title>Dustin's Pager Server");
-    puttext(s, "</title></head><body bgcolor=\"#fFfFfF\"><h2>");
-    puttext(s, "Dustin's Pager Server</h2>");
-    puttext(s, "Sorry, but the web listener isn't quite done yet...<br>\n");
-    puttext(s, "Your request was: ");
-    puttext(s, r.request);
-    puttext(s, "</body></html>\n");
 
     close(s);
     exit(0);
