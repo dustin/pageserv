@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.48 1998/03/06 03:13:14 dustin Exp $
+ * $Id: queue.c,v 1.49 1998/03/11 07:35:04 dustin Exp $
  */
 
 #include <stdio.h>
@@ -519,6 +519,7 @@ int _splitsq(int s, struct queuent q, int flags)
 	    done=1;
 	}
     } while(!done);
+    return(ret);
 }
 
 int storequeue(int s, struct queuent q, int flags)
