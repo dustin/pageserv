@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: sendpage.c,v 1.2 1997/04/18 20:40:12 dustin Exp $
+ * $Id: sendpage.c,v 1.3 1997/08/07 07:22:33 dustin Exp $
  */
 
 #include <pageserv.h>
@@ -37,6 +37,8 @@ void _http_sendpage(int s, struct http_request r)
 
     if(conf.debug>2)
 	puts("Sendpage request");
+
+    memset(&q, 0x00, sizeof(q));
 
     tmp=_http_getcgiinfo(r, "priority");
     if(tmp==NULL)
