@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parsemail.c,v 2.7 1998/06/03 08:38:22 dustin Exp $
+ * $Id: parsemail.c,v 2.8 1998/06/03 15:47:14 dustin Exp $
  */
 
 #include <stdio.h>
@@ -31,7 +31,8 @@ extern int optind, opterr;
 
 static void usage(char *name)
 {
-    fprintf(stderr, "Usage:\n%s [-p priority] [-t tag] <to>\n", name);
+    fprintf(stderr, "Usage:\n%s [-p priority] [-H SNPPserver] [-P port] "
+                    "[-t tag] <to>\n", name);
 }
 
 static char *getdata(int l, char *line)
