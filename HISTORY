@@ -48,10 +48,5 @@ more generic databases.userdbType and databases.termdbType.  These now
 use a string as an argument, and it is matched against known database
 types.  The term database info is currently ignored.
 
---------------------
-
-As of release_2_9_3, there are multiple developers, starting with
-spberry@iastate.edu
-
 ----------------------------------------
-$Id: HISTORY,v 2.7 1998/06/03 16:23:42 dustin Exp $
+$Id: HISTORY,v 2.8 1998/06/28 23:49:19 dustin Exp $
