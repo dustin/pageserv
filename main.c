@@ -1,7 +1,7 @@
 /*
- * Copyright (c{) 1997  Dustin Sallings
+ * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.3 1997/03/11 21:05:46 dustin Exp $
+ * $Id: main.c,v 1.4 1997/03/11 22:24:17 dustin Exp $
  */
 
 #include <stdio.h>
@@ -59,10 +59,6 @@ void main(void)
 	         else
 		     close(ns);
              }
-	     else
-	     {
-		 perror("accept");
-	     }
 	}
 	reaper();
     }
