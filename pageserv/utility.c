@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: utility.c,v 1.22 1998/07/15 07:56:05 dustin Exp $
+ * $Id: utility.c,v 1.23 1998/07/15 08:05:49 dustin Exp $
  */
 
 #include <config.h>
@@ -10,6 +10,7 @@
 #include <ctype.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <string.h>
 #include <syslog.h>
 #include <sys/types.h>
