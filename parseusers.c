@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parseusers.c,v 1.8 1997/03/14 21:33:30 dustin Exp $
+ * $Id: parseusers.c,v 1.9 1997/03/24 15:39:12 dustin Exp $
  */
 
 #include <stdio.h>
@@ -59,7 +59,7 @@ struct user parseuser(char *line)
     return(u);
 }
 
-void main(void)
+int parseusers(void)
 {
     FILE *f;
     char buf[BUFLEN];
@@ -89,8 +89,16 @@ void main(void)
         }
     }
 
-    printf("Parsed %d users.\n", i);
-
     fclose(f);
     dbm_close(db);
+
+    return(i);
+}
+
+void main(void)
+{
+    int users;
+
+    users=parseusers();
+    printf("Parsed %d users.\n", users);
 }

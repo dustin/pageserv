@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.17 1997/03/14 16:28:19 dustin Exp $
+ * $Id: pageserv.h,v 1.18 1997/03/24 15:39:10 dustin Exp $
  */
 
 /* for DBM type */
@@ -93,6 +93,7 @@ int f_exists(char *file);
 int gettext(int s, char *buf);
 int gettextcr(int s, char *buf);
 int initialize(void);
+int parseusers(void);
 int queuedepth(void);
 int set_bit(int bmap, int which);
 int storequeue(int s, struct queuent q, int flags);
