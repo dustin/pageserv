@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: ypuserdb.c,v 1.6 1998/01/10 01:33:14 dustin Exp $
+ * $Id: ypuserdb.c,v 1.7 1998/01/18 00:27:25 dustin Exp $
  */
 
 #include <config.h>
@@ -27,14 +27,14 @@ static char *domainname;
 
 static int nis_u_exists(char *name)
 {
-    char *data;
+    char *data=NULL;
     int yperr, len;
 
     yperr=yp_match(domainname, conf.userdb, name,
 	  strlen(name), &data, &len);
 
-    if(!yperr)
-	free(data);
+    if(data!=NULL && (!yperr) )
+	    free(data);
 
     return(!yperr);
 }
