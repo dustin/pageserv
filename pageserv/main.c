@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.28 1997/12/29 07:44:50 dustin Exp $
+ * $Id: main.c,v 1.29 1997/12/29 09:52:33 dustin Exp $
  */
 
 #include <config.h>
@@ -42,7 +42,7 @@ void writepid(int pid)
         case PID_NOFILE:
             break;
         case PID_STALE:
-            puts("Stale PID file found, overwriting.");
+            puts("Stale PID file found, overriding.");
             break;
         case PID_ACTIVE:
             puts("Active PID file found, exiting...");

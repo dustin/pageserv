@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: utility.c,v 1.14 1997/07/31 03:28:01 dustin Exp $
+ * $Id: utility.c,v 1.15 1997/12/29 09:52:34 dustin Exp $
  * $State: Exp $
  */
 
@@ -10,6 +10,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
+#include <signal.h>
 #include <sys/socket.h>
 #include <sys/wait.h>
 
@@ -21,13 +23,30 @@ extern struct config conf;
 
 int checkpidfile(char *filename)
 {
-    if(access(filename, F_OK)!=0)
+    int pid, ret;
+    FILE *f;
+
+    if( (f=fopen(filename, "r")) == NULL)
     {
         return(PID_NOFILE);
     }
+    else
+    {
+	fscanf(f, "%d", &pid);
 
-    /* This is a lie, but I don't want to go through all that right now */
-    return(PID_STALE);
+	_ndebug(2, ("Checking pid %d for life\n", pid));
+
+	if( kill(pid, 0) ==0)
+	{
+	    ret=PID_ACTIVE;
+	}
+	else
+	{
+	    ret=PID_STALE;
+	}
+    }
+
+    return(ret);
 }
 
 void quicksort(char **a, int l, int r)
