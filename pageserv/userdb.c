@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.24 1998/07/16 07:17:30 dustin Exp $
+ * $Id: userdb.c,v 1.25 1998/12/27 15:05:50 dustin Exp $
  */
 
 #include <stdio.h>
@@ -272,6 +272,9 @@ void printusers(void)
     int i;
 
     users=conf.udb.listusers("*");
+
+	if(users==NULL)
+		return;
 
     for(i=0; users[i]; i++)
     {

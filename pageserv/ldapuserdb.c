@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: ldapuserdb.c,v 1.2 1998/12/26 08:54:37 dustin Exp $
+ * $Id: ldapuserdb.c,v 1.3 1998/12/27 15:05:49 dustin Exp $
  */
 
 #include <config.h>
@@ -25,21 +25,22 @@
 
 extern struct config conf;
 
-#ifndef BASE
-#define BASE "dc=spy,dc=net"
-#endif
-
 static LDAP    *
 ldap_getld(void)
 {
 	LDAP           *ld;
 	int             ret;
+	char           *binddn, *server, *bindpw;
 
-	ld = ldap_open(NULL, 0);
+	binddn=rcfg_lookup(conf.cf, "databases.ldap.binddn");
+	bindpw=rcfg_lookup(conf.cf, "databases.ldap.bindpw");
+	server=rcfg_lookup(conf.cf, "databases.ldap.server");
+
+	ld = ldap_open(server, 0);
 	if (ld == NULL)
 		return (NULL);
 
-	ret = ldap_bind_s(ld, BASE, NULL, LDAP_AUTH_SIMPLE);
+	ret = ldap_bind_s(ld, binddn, bindpw, LDAP_AUTH_SIMPLE);
 	if (ret != LDAP_SUCCESS) {
 		return (NULL);
 	}
@@ -52,9 +53,9 @@ ldap_u_exists(char *name)
 	LDAP           *ld;
 
 	ld = ldap_getld();
-	if (ld == NULL) {
+	if (ld == NULL)
 		return (0);
-	}
+
 	ldap_unbind(ld);
 	return (1);
 }
@@ -66,6 +67,7 @@ ldap_getuser(char *name)
 	LDAPMessage    *res = 0;
 	char            filter[8192];
 	char          **values;
+	char           *base;
 	struct user     u;
 	char           *att[] = {
 		"uid",
@@ -81,9 +83,13 @@ ldap_getuser(char *name)
 	memset(&u, 0x00, sizeof(struct user));
 	snprintf(filter, 8190, "uid=%s", name);
 
-	ld = ldap_getld();
+	base=rcfg_lookup(conf.cf, "databases.ldap.base");
 
-	if (ldap_search_st(ld, BASE, LDAP_SCOPE_SUBTREE, filter, att, 0, 0, &res)
+	ld = ldap_getld();
+	if(ld==NULL)
+		return(u);
+
+	if (ldap_search_st(ld, base, LDAP_SCOPE_SUBTREE, filter, att, 0, 0, &res)
 	    == -1) {
 		return (u);
 		ldap_unbind(ld);
@@ -119,14 +125,40 @@ ldap_getuser(char *name)
 	}
 	ldap_value_free(values);
 	ldap_unbind(ld);
-	printuser(u);
 	return (u);
 }
 
 static char   **
 ldap_listusers(char *term)
 {
-	return (NULL);
+	LDAP *ld;
+	LDAPMessage *res;
+	char **values;
+	char  *base;
+	char *att[] = {
+		"uid",
+		0
+	};
+	char filter[8192];
+
+	if(strlen(term)>4096)
+		return(NULL);
+
+	snprintf(filter, 8190, "pagestatid=%s", term);
+	base=rcfg_lookup(conf.cf, "databases.ldap.base");
+
+	ld=ldap_getld();
+	if(ld==NULL)
+		return(NULL);
+
+	if(ldap_search_st(ld, base, LDAP_SCOPE_SUBTREE, filter, att, 0, 0, &res)
+		== -1) {
+		ldap_unbind(ld);
+		return(NULL);
+	}
+	values=ldap_get_values(ld, res, "uid");
+	ldap_unbind(ld);
+	return(values);
 }
 
 static int
