@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: serial.c,v 2.17 1998/10/27 18:31:32 dustin Exp $
+ * $Id: serial.c,v 2.18 1999/06/08 07:25:31 dustin Exp $
  */
 
 /*
@@ -92,12 +92,14 @@ p_unlock(char *dev)
 	return (unlink(lockfile));
 }
 
+/* Return -1 if we can't lock */
 static int
 p_lock(char *dev)
 {
 	FILE   *f;
 	char    lock[50];
 	char    lockfile[80];
+	int     lock_status, ret = -1;
 
 	if (strncmp(dev, "/dev/", 5) == 0)
 		strcpy(lock, dev + 5);
@@ -110,22 +112,39 @@ p_lock(char *dev)
 
 	_ndebug(2, ("lockfile is %s\n", lockfile));
 
-	if (access(lockfile, F_OK) == 0) {
-		_ndebug(2, ("Port is already locked.\n"));
-		return (-1);
-	} else {
+	lock_status = checkpidfile(lockfile);
+
+	switch (lock_status) {
+	case PID_ACTIVE:
+		_ndebug(2, ("Active lockfile found.\n"));
+		ret = -1;
+		break;
+	case PID_NOT_OWNER:
+		_ndebug(2, ("Found a valid lockfile, but I'm not the owner."));
+		ret = -1;
+		break;
+	case PID_STALE:
+		_ndebug(2, ("Found stale lockfile."));
+		if(unlink(lockfile)<0) {
+			/* We can't pass through if we couldn't unlink */
+			return(-1);
+		}
+		/* pass through */
+	case PID_NOFILE:
 		if ((f = fopen(lockfile, "w")) == NULL) {
 			_ndebug(2, ("Cannot create lockfile.\n"));
-			return (-1);
+			ret = -1;
 		}
 		fprintf(f, "%10d\n", (int) getpid());
 
 		fclose(f);
-		return (0);
+		ret = 0;
+		break;
+	default:
+		ret = -1;
 	}
 
-	/*NOTREACHED */
-	return (-1);
+	return (ret);
 }
 
 int
