@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: ldapuserdb.c,v 1.6 1998/12/28 03:36:44 dustin Exp $
+ * $Id: ldapuserdb.c,v 1.7 1998/12/28 04:25:18 dustin Exp $
  */
 
 #include <config.h>
