@@ -1,18 +1,61 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: utility.c,v 1.9 1997/07/09 07:26:23 dustin Exp $
+ * $Id: utility.c,v 1.10 1997/07/10 06:47:45 dustin Exp $
  * $State: Exp $
  */
 
 #include <stdio.h>
 #include <ctype.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include <sys/socket.h>
 
 #include <pageserv.h>
 
 extern struct config conf;
+
+int addtostr(int size, char *dest, char *str)
+{
+    int new=0;
+
+    if(size==0)
+    {
+	if(conf.debug>5)
+	    puts("Doing initial malloc");
+
+	size=DEFAULT_STRLEN;
+	dest=(char *)malloc(size*sizeof(char));
+	if(dest==NULL)
+	{
+	    perror("malloc");
+	    exit(1);
+        }
+	new=1;
+    }
+
+    if(strlen(dest)+strlen(str)>=size)
+    {
+	if(conf.debug>4)
+	    printf("Realloc'in to %d bytes, need more than %d bytes\n",
+		size<<1, size);
+
+	size<<=1;
+	realloc(dest, size*sizeof(char));
+	if(dest==NULL)
+	{
+	    perror("realloc");
+	    exit(1);
+	}
+    }
+
+    if(new)
+	strcpy(dest, str);
+    else
+        strcat(dest, str);
+
+    return(size);
+}
 
 int pack_timebits(int early, int late)
 {
@@ -48,6 +91,15 @@ int pack_timebits(int early, int late)
     }
 
     return(t);
+}
+
+/* This is a function instead of a macro because as a macro it
+ * forces all constant strings to be duplicated at compile time
+ */
+
+int puttext(int s, char *txt)
+{
+    write(s, txt, strlen(txt));
 }
 
 int gettext(int s, char *buf)

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.16 1997/04/29 05:14:08 dustin Exp $
+ * $Id: readconfig.c,v 1.17 1997/07/10 06:47:44 dustin Exp $
  * $State: Exp $
  */
 
@@ -266,10 +266,10 @@ void readconfig(char *file)
 	}
     }
 
+    fclose(f);
+
     setdefaults();
     initmodules();
-
-    fclose(f);
 }
 
 void cleanconfig(void)

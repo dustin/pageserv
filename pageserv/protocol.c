@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: protocol.c,v 1.5 1997/04/10 06:23:48 dustin Exp $
+ * $Id: protocol.c,v 1.6 1997/07/10 06:47:43 dustin Exp $
  * $State: Exp $
  */
 
@@ -16,31 +16,6 @@
 #include <pageserv.h>
 
 extern struct config conf;
-
-/* This is broken, but pretty */
-
-void p_apage(int s)
-{
-    struct queuent q;
-    int size=0, ack;
-
-    if(conf.debug>1)
-	puts("Entering p_apage");
-
-    size+=recv(s, (char *)&q, sizeof(q), 0);
-    printf("Received %d bytes, wanted %d\n", size, sizeof(q));
-
-    ack=htonl(1);
-
-    send(s, (char *)&ack, sizeof(ack), 0);
-
-    q.priority=ntohl(q.priority);
-
-    if(u_exists(q.to))
-    {
-        ack=storequeue(s, q, STORE_QUIET);
-    }
-}
 
 void p_epage(int s)
 {
@@ -164,7 +139,7 @@ void process(int s, char *cmd)
 {
     static char *commands[P_MAX+1]={
         "mash", "farkle", "depth", "quit",
-	"epage", "apage", "login"
+	"epage", "login"
     };
 
     char buf[BUFLEN];
@@ -210,9 +185,6 @@ void process(int s, char *cmd)
 
         case P_EPAGE:
             p_epage(s); break;
-
-        case P_APAGE:
-            p_apage(s); break;
 
         case P_LOGIN:
             p_login(s); break;
