@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: ypuserdb.c,v 1.9 1998/01/22 10:40:36 dustin Exp $
+ * $Id: ypuserdb.c,v 1.10 1998/01/25 11:12:20 dustin Exp $
  */
 
 #include <config.h>
@@ -164,6 +164,12 @@ void nis_userdbInit(void)
 {
     char *data;
     int len, yperr;
+
+    if(conf.udb.u_exists==nis_u_exists)
+    {
+	_ndebug(2, ("nis_userdbInit has already been called\n"));
+	return;
+    }
 
     domainname=rcfg_lookup(conf.cf, "etc.nisdomain");
     if(domainname==NULL)

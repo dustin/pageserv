@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.18 1998/01/22 10:23:53 dustin Exp $
+ * $Id: userdb.c,v 1.19 1998/01/25 11:12:19 dustin Exp $
  */
 
 #include <stdio.h>
@@ -325,6 +325,12 @@ static struct user dbm_getuser(char *name)
 
 void dbm_userdbInit(void)
 {
+    if(conf.udb.listusers==dbm_listusers)
+    {
+	_ndebug(2, ("dbm_userdbInit has already been called\n"));
+	return;
+    }
+
     conf.udb.listusers=dbm_listusers;
     conf.udb.eraseuserdb=dbm_eraseuserdb;
     conf.udb.deleteuser=dbm_deleteuser;

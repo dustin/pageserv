@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.46 1998/01/25 07:20:22 dustin Exp $
+ * $Id: main.c,v 1.47 1998/01/25 11:12:18 dustin Exp $
  */
 
 #include <config.h>
@@ -159,6 +159,12 @@ static int deliveryd_main(void)
        syslog(conf.log_que|LOG_NOTICE,
 	      "deliveryd exiting, didn't get initial pid");
        closelog();
+
+       /*
+	* Let's sleep for another 60 seconds, to keep the thing from
+        * looping too fast
+	*/
+       sleep(60);
        exit(0);
     }
 
