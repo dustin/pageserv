@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: snppmain.c,v 1.19 1998/01/18 00:27:55 dustin Exp $
+ * $Id: snppmain.c,v 1.20 1998/01/18 10:03:58 dustin Exp $
  */
 
 #include <config.h>
@@ -54,6 +54,7 @@ static char *snpp_message=NULL;
 static int  snpp_nid=0;
 static int  snpp_priority=PR_NORMAL;
 static int  snpp_holdtime=0;
+static int  snpp_lastsend=0;
 
 static void snpp_onalarm()
 {
@@ -203,7 +204,7 @@ static void snpp_setpageid(int s, char *id)
 
     if(conf.udb.u_exists(id))
     {
-        if((max>0) && (snpp_nid>=SNPP_NID) )
+        if((max>0) && (snpp_nid>=max) )
         {
             puttext(s, "552 Maximum Entries exceeded.\n");
             return;
@@ -265,13 +266,21 @@ static void snpp_cleanstuff(void)
     /* These are set to NULL, because they're used by RESEt, too */
     int i;
 
-    for(i=0; i<SNPP_NID; i++)
+
+    if(snpp_pageid!=NULL)
     {
-        if(snpp_pageid[i])
-            free(snpp_pageid[i]);
+        for(i=0; i<snpp_nid; i++)
+        {
+            if(snpp_pageid[i])
+                free(snpp_pageid[i]);
+        }
+        free(snpp_pageid);
+        snpp_pageid=NULL;
     }
+
     snpp_nid=0;
     snpp_holdtime=0;
+    snpp_lastsend=0;
     snpp_priority=PR_NORMAL;
 
     if(snpp_message)
@@ -292,6 +301,12 @@ static void snpp_send(int s, struct sockaddr_in fsin)
         return;
     }
 
+    if(snpp_lastsend!=0)
+    {
+	puttext(s, "554 Message already sent\n");
+	return;
+    }
+
     memset(&q, 0x00, sizeof(q));
 
     q.rem_addr=ntohl(fsin.sin_addr.s_addr);
@@ -308,9 +323,15 @@ static void snpp_send(int s, struct sockaddr_in fsin)
     }
 
     if(j==snpp_nid)
+    {
         puttext(s, "250 Message queued successfully\n");
+	snpp_lastsend=1;
+    }
     else
+    {
         puttext(s, "554 Message failed\n");
+	snpp_lastsend=0;
+    }
 
     _ndebug(2, ("j is %d, snpp_nid is %d\n", j, snpp_nid));
 
@@ -319,13 +340,20 @@ static void snpp_send(int s, struct sockaddr_in fsin)
 
 static void _snpp_main(modpass p)
 {
-    int s, going=1, c, tries=0;
+    int s, going=1, c, tries=0, maxtries;
     char buf[BUFLEN];
 
     s=p.socket;
 
     alarm(conf.childlifetime);
     signal(SIGALRM, snpp_onalarm);
+
+    /*
+     * The maximum number of resets/sends
+     */
+    maxtries=rcfg_lookupInt(conf.cf, "modules.snpp.maxtries");
+    if(maxtries==0)
+	maxtries=SNPP_MAXTRIES;
 
     sprintf(buf, "220 Dustin's SNPP gateway version %s ready\n", VERSION);
     puttext(s, buf);
@@ -355,7 +383,6 @@ static void _snpp_main(modpass p)
 
             case SNPP_SEND:
                 snpp_send(s, p.fsin);
-                tries++;
                 break;
 
             case SNPP_RESE:
@@ -382,7 +409,7 @@ static void _snpp_main(modpass p)
                 break;
         }
 
-        if(tries>SNPP_MAXTRIES)
+        if(tries>maxtries)
         {
             puttext(s, "421 Too many pages, call back later\n");
             going=0;
