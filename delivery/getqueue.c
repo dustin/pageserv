@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: getqueue.c,v 2.3 1997/03/31 23:12:00 dustin Exp $
+ * $Id: getqueue.c,v 2.4 1997/04/01 02:22:16 dustin Exp $
  */
 
 #include <stdio.h>
@@ -22,15 +22,21 @@ void runqueue(void)
 
     for(i=0; q[i].to[0] != 0x00 ; i++)
     {
-	printf("%d to %s\n", i, q[i].to);
+	printf("%d to %s  ``%s''\n", i, q[i].to, q[i].message);
     }
+
+    cleanqueuelist(q);
 }
 
 int gq_checkit(struct queuent q, char *number)
 {
     if( (strcmp(q.u.statid, number))!=0)
     {
-        return(0);
+	/* Splat means grab 'em all */
+	if(strcmp(number, "*") != 0)
+	{
+            return(0);
+	}
     }
 
     if( readytodeliver(q) == 0)
@@ -39,6 +45,16 @@ int gq_checkit(struct queuent q, char *number)
     }
 
     return(1);
+}
+
+int queuecompare(const struct queuent *a, const struct queuent *b)
+{
+    return( a->submitted > b->submitted );
+}
+
+void cleanqueuelist(struct queuent *list)
+{
+    free(list);
 }
 
 struct queuent *listqueue(char *number)
@@ -60,17 +76,7 @@ struct queuent *listqueue(char *number)
     {
         if(d->d_name[0]=='q')
         {
-            f=fopen(d->d_name, "r");
-
-            fgets(buf, BUFLEN, f);
-            sscanf(buf, "%d", &q.priority);
-            fgets(q.to, TOLEN, f);
-            fgets(q.message, BUFLEN, f);
-            kw(q.to);
-            kw(q.message);
-            strcpy(q.qid, d->d_name);
-
-            fclose(f);
+            q=readqueuefile(d->d_name);
 
 	    getqueueinfo(&q);
 
@@ -79,8 +85,13 @@ struct queuent *listqueue(char *number)
 		if(index == size-1)
 		{
 		    size<<=1;
-		    printf("Reallocating, now need %d bytes for %d\n",
-			size*sizeof(struct queuent *), size);
+
+		    if(conf.debug>2)
+		    {
+		        printf("Reallocating, now need %d bytes for %d\n",
+			    size*sizeof(struct queuent *), size);
+		    }
+
 		    list=realloc(list, size*sizeof(struct queuent));
 		}
 		list[index++]=q;
@@ -90,5 +101,8 @@ struct queuent *listqueue(char *number)
     }
     list[index].to[0]==0x00;
     closedir(dir);
+
+    /* sort the list */
+    qsort(list, index, sizeof(struct queuent), queuecompare);
     return(list);
 }

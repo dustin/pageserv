@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 2.3 1997/03/31 23:15:02 dustin Exp $
+# $Id: Makefile.in,v 2.4 1997/04/01 02:22:10 dustin Exp $
 
 MAJOR=2
 MINOR=3
@@ -24,6 +24,7 @@ AUTOJUNK=config.status config.cache config.log Makefile clients/Makefile \
 	delivery/Makefile pageserv/Makefile include/config.h
 
 all:
+	rm -f pageserv/pageserv
 	for i in $(DIRS) ; \
 	do cd $$i && $(MAKE) VERSION=\"$(VERSION)\" all ; \
 	cd .. ; \

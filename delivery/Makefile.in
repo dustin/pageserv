@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 2.1 1997/03/30 06:38:31 dustin Exp $
+# $Id: Makefile.in,v 2.2 1997/04/01 02:22:15 dustin Exp $
 
 SHELL=/bin/sh
 CC=@CC@
@@ -20,7 +20,7 @@ STUFF=
 JUNK=$(EXES) *.o *.a *.core core
 AUTOJUNK=
 
-all: $(EXES)
+all: deliver.a
 
 taptest: taptest.o deliver.a
 	$(CC) -o taptest taptest.o deliver.a @top_srcdir@/pageserv/utility.o

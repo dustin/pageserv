@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.4 1997/03/31 23:12:02 dustin Exp $
+ * $Id: pageserv.h,v 1.5 1997/04/01 02:22:19 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -21,9 +21,9 @@
 /* Config file location */
 #define CONFIGFILE "/tmp/sample.config"
 
-#define BUFLEN 300
+#define BUFLEN 1000
 #define TOLEN 40
-#define FNSIZE 40
+#define FNSIZE 256
 
 #define NAMELEN 15
 #define IDLEN   9
@@ -83,7 +83,8 @@ static char *modenames[]={
     "rehashing",
     "listing database",
     "print queue",
-    "printing version info"
+    "printing version info",
+    "running queue"
 };
 #endif
 
@@ -105,6 +106,7 @@ struct queuent {
     char to[TOLEN];
     char message[BUFLEN];
     char qid[FNSIZE];
+    time_t submitted;
     struct user u;
 };
 
@@ -152,12 +154,14 @@ int t_exists(char *number);
 int u_exists(char *name);
 struct queuent *listqueue(char *number);
 struct queuent dofarkle();
+struct queuent readqueuefile(char *fn);
 struct terminal getterm(char *key);
 struct terminal open_getterm(DBM *db, char *key);
 struct user getuser(char *key);
 struct user open_getuser(DBM *db, char *key);
 void childmain(int s);
 void cleanconfig(void);
+void cleanqueuelist(struct queuent *list);
 void getnormtimes(int times, int *ret);
 void getoptions(int argc, char **argv);
 void getqueueinfo( struct queuent *q );
