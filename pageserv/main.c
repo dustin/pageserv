@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.54 1998/07/15 07:55:56 dustin Exp $
+ * $Id: main.c,v 1.55 1998/07/16 07:17:25 dustin Exp $
  */
 
 #include <config.h>
@@ -454,6 +454,7 @@ void runqueue_main(void)
     if(libname==NULL)
     {
 	_ndebug(2, ("libs.delivery isn't in the config file.\n"));
+	page_log("libs.delivery isn't in the config file");
 	return;
     }
 
@@ -461,6 +462,7 @@ void runqueue_main(void)
     if(lib==NULL)
     {
         _ndebug(2, ("dlopen: %s\n", dlerror()));
+	page_log("dlopen: %s\n", dlerror());
 	return;
     }
 
@@ -468,11 +470,17 @@ void runqueue_main(void)
     if(runqueue==NULL)
     {
 	_ndebug(2, ("dlsym: %s\n", dlerror()));
+	page_log("dlsym: %s\n", dlerror());
 	return;
     }
 #endif
 
     runqueue();
+
+#if (DYNLIBS)
+    if(lib)
+        dlclose(lib);
+#endif
 }
 
 int main(int argc, char **argv)

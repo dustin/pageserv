@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.23 1998/03/18 08:33:31 dustin Exp $
+ * $Id: userdb.c,v 1.24 1998/07/16 07:17:30 dustin Exp $
  */
 
 #include <stdio.h>
@@ -214,8 +214,7 @@ static struct user dbm_open_getuser(DBM *db, char *name)
     k.dsize=strlen(name);
     d=dbm_fetch(db, k);
 
-    if(d.dptr!=NULL)
-    {
+    if(d.dptr!=NULL) {
         memcpy( (void *)&u, (void *)d.dptr, sizeof(u));
     }
 
@@ -358,8 +357,7 @@ static struct user dbm_getuser(char *name)
     DBM *db;
     struct user u;
 
-    if( (db=dbm_open(conf.userdb, O_RDONLY, 0644)) == NULL)
-    {
+    if( (db=dbm_open(conf.userdb, O_RDONLY, 0644)) == NULL) {
         perror(conf.userdb);
         exit(1);
     }

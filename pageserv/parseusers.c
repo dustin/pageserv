@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parseusers.c,v 1.14 1998/03/18 08:33:28 dustin Exp $
+ * $Id: parseusers.c,v 1.15 1998/07/16 07:17:28 dustin Exp $
  */
 
 #include <stdio.h>
@@ -29,41 +29,28 @@ struct user parseuser(char *line, char *delim, int flags)
     memset(&u, 0x00, sizeof(struct user));
 
     tmp=strtok(line, delim);
-    if(tmp==NULL)
-    {
+    if(tmp==NULL) {
         return(u);
-    }
-    else
-    {
-        if(strlen(tmp)>(size_t)NAMELEN)
-        {
+    } else {
+        if(strlen(tmp)>(size_t)NAMELEN) {
             printf("Name ``%s'' is too long, skipping\n", tmp);
             return(u);
-        }
-        else
-        {
+        } else {
             kw(tmp);
             strcpy(u.name, tmp);
         }
     }
 
-    if(flags & PARSE_GETPASSWD)
-    {
+    if(flags & PARSE_GETPASSWD) {
 	_ndebug(4, ("Getting password field\n"));
         tmp=strtok(NULL, delim);
-        if(tmp==NULL)
-        {
+        if(tmp==NULL) {
             return(u);
-        }
-        else
-        {
-            if(strlen(tmp)>(size_t)PWLEN)
-            {
+        } else {
+            if(strlen(tmp)>(size_t)PWLEN) {
                 printf("ID ``%s'' is too long, skipping\n", tmp);
                 return(u);
-            }
-            else
-            {
+            } else {
 		kw(tmp);
                 strcpy(u.passwd, tmp);
             }
@@ -71,91 +58,64 @@ struct user parseuser(char *line, char *delim, int flags)
     }
 
     tmp=strtok(NULL, delim);
-    if(tmp==NULL)
-    {
+    if(tmp==NULL) {
         return(u);
-    }
-    else
-    {
-        if(strlen(tmp)>(size_t)IDLEN)
-        {
+    } else {
+        if(strlen(tmp)>(size_t)IDLEN) {
             printf("ID ``%s'' is too long, skipping\n", tmp);
             return(u);
-        }
-        else
-        {
+        } else {
 	    kw(tmp);
             strcpy(u.pageid, tmp);
         }
     }
 
     tmp=strtok(NULL, delim);
-    if(tmp==NULL)
-    {
+    if(tmp==NULL) {
         return(u);
-    }
-    else
-    {
-        if(strlen(tmp)>(size_t)STATLEN)
-        {
+    } else {
+        if(strlen(tmp)>(size_t)STATLEN) {
             printf("Station ID ``%s'' is too long, skipping\n", tmp);
             return(u);
-        }
-        else
-        {
+        } else {
 	    kw(tmp);
             strcpy(u.statid, tmp);
         }
     }
 
     tmp=strtok(NULL, delim);
-    if(tmp==NULL)
-    {
+    if(tmp==NULL) {
         return(u);
-    }
-    else
-    {
+    } else {
         early=atoi(tmp);
     }
 
     tmp=strtok(NULL, delim);
-    if(tmp==NULL)
-    {
+    if(tmp==NULL) {
         return(u);
-    }
-    else
-    {
+    } else {
         late=atoi(tmp);
     }
 
     u.times=pack_timebits(early, late);
 
     tmp=strtok(NULL, delim);
-    if(tmp==NULL)
-    {
+    if(tmp==NULL) {
         return(u);
-    }
-    else
-    {
-        if(strlen(tmp)>(size_t)EMAILLEN)
-        {
+    } else {
+        if(strlen(tmp)>(size_t)EMAILLEN) {
             printf("Notify Email ``%s'' is too long, skipping\n", tmp);
             return(u);
-        }
-        else
-        {
+        } else {
 	    kw(tmp);
             strcpy(u.notify, tmp);
         }
     }
 
     tmp=strtok(NULL, delim);
-    if(tmp==NULL)
-    {
+    if(tmp==NULL) {
         return(u);
-    }
-    else
-    {
+    } else {
         u.flags=atoi(tmp);
     }
 
