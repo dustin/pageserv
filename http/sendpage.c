@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: sendpage.c,v 1.5 1997/08/11 03:54:51 dustin Exp $
+ * $Id: sendpage.c,v 1.6 1997/08/11 08:16:55 dustin Exp $
  */
 
 #include <pageserv.h>
@@ -31,7 +31,7 @@ void _http_sendpagesuccess(int s)
     puttext(s, "Page accepted and queued.");
 }
 
-void _http_sendpage(int s, struct http_request r)
+void _http_sendpage(int s, struct http_request r, modpass p)
 {
     struct queuent q;
     char *tmp;
@@ -47,6 +47,8 @@ void _http_sendpage(int s, struct http_request r)
 	_http_sendpageerror(s, "somebody screwed up");
 	return;
     }
+
+    q.rem_addr=ntohl(p.fsin.sin_addr.s_addr);
 
     if(conf.debug>2)
 	printf("Page is being sent priority ``%s''\n", tmp);

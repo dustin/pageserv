@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.23 1997/08/11 03:54:57 dustin Exp $
+ * $Id: main.c,v 1.24 1997/08/11 08:17:08 dustin Exp $
  */
 
 #include <config.h>
@@ -82,7 +82,7 @@ void detach(void)
         close(i);
    }
 
-   chdir("/");
+   /* chdir("/"); */
    umask(7);
 }
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: ypuserdb.c,v 1.2 1997/08/11 07:23:25 dustin Exp $
+ * $Id: ypuserdb.c,v 1.3 1997/08/11 08:17:12 dustin Exp $
  */
 
 #include <config.h>
@@ -33,6 +33,9 @@ int nis_u_exists(char *name)
     yperr=yp_match(domainname, "pageserv.users", name,
 	  strlen(name), &data, &len);
 
+    if(!yperr)
+	free(data);
+
     return(!yperr);
 }
 
@@ -56,6 +59,8 @@ struct user nis_getuser(char *name)
 	times[0]=atoi(strtok(NULL, ":"));
 	times[1]=atoi(strtok(NULL, ":"));
 	u.times=pack_timebits(times[0], times[1]);
+
+	free(data);
     }
 
     return(u);
@@ -85,6 +90,9 @@ char **nis_listusers(char *term)
 	    strncpy(ret[index], key, keylen);
 	    ret[index++][keylen]=0x00;
 	}
+
+	free(key);
+	free(val);
 
 	if(index == size-1)
 	{

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpprocess.c,v 1.16 1997/07/10 06:46:53 dustin Exp $
+ * $Id: httpprocess.c,v 1.17 1997/08/11 08:16:54 dustin Exp $
  */
 
 #define IWANTDOCINFO 1
@@ -52,14 +52,14 @@ void http_senddoc(int s, struct http_request r)
 }
 #endif
 
-void _http_process_get(int s, struct http_request r)
+void _http_process_get(int s, struct http_request r, modpass p)
 {
     if(r.special==1)
     {
         switch(r.docnum)
         {
             case DOC_MODUSER: _http_moduser(s, r);   break;
-            case DOC_SENDPAGE: _http_sendpage(s, r); break;
+            case DOC_SENDPAGE: _http_sendpage(s, r, p); break;
             case DOC_ADMIN: _http_admin(s, r); break;
         }
 
@@ -111,7 +111,7 @@ int http_verifydoc(int s, struct http_request *r)
     return(ret);
 }
 
-void http_process(int s, struct http_request r)
+void http_process(int s, struct http_request r, modpass p)
 {
     if(http_verifydoc(s, &r)!=0)
     {
@@ -132,7 +132,7 @@ void http_process(int s, struct http_request r)
         /* Get and post can use the same function */
         case HTTP_GET:
         case HTTP_POST:
-            _http_process_get(s, r); break;
+            _http_process_get(s, r, p); break;
 
         default:
             _http_error(s, r);

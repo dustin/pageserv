@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpmain.c,v 1.6 1997/07/31 07:31:31 dustin Exp $
+ * $Id: httpmain.c,v 1.7 1997/08/11 08:16:52 dustin Exp $
  */
 
 #include <config.h>
@@ -76,7 +76,7 @@ void _http_main(modpass p)
 
     r=http_parserequest(s);
 
-    http_process(s, r);
+    http_process(s, r, p);
 
     _http_free_request(r);
 
