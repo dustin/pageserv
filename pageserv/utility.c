@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: utility.c,v 1.21 1998/06/29 01:07:03 dustin Exp $
+ * $Id: utility.c,v 1.22 1998/07/15 07:56:05 dustin Exp $
  */
 
 #include <config.h>
@@ -11,6 +11,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <syslog.h>
 #include <sys/types.h>
 #include <signal.h>
 #include <sys/socket.h>
@@ -26,6 +27,29 @@ extern struct config conf;
 
 /* Static declarations */
 static int set_bit(int map, int bit);
+
+/*
+ * Each main module will have its own logging that does essentially the
+ * same thing.  yes, this is a little bad for maintenence, *but* it makes
+ * it a little easier to upgrade part of it and improve on it without
+ * shutting the server down.
+ */
+
+void page_log(char *format, ...)
+{
+    va_list ap;
+    char buf[BUFLEN];
+
+    openlog("pageserv", LOG_PID|LOG_NDELAY, conf.log_que);
+
+    va_start(ap, format);
+    vsnprintf(buf, BUFLEN-1, format, ap);
+    va_end(ap);
+
+    syslog(conf.log_que|LOG_INFO, buf);
+
+    closelog();
+}
 
 /*
  * find the number of seconds off of GMT (including DST)

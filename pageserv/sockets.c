@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: sockets.c,v 1.8 1997/12/31 16:38:10 dustin Exp $
+ * $Id: sockets.c,v 1.9 1998/07/15 07:56:03 dustin Exp $
  */
 
 #include <stdio.h>
@@ -13,7 +13,6 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
-#include <syslog.h>
 
 #include <pageserv.h>
 #include <nettools.h>
@@ -44,8 +43,6 @@ void logConnect(struct sockaddr_in fsin, module *m)
 {
     char *ip_addr, *hostname;
 
-    openlog("pageserv", LOG_PID|LOG_NDELAY, conf.log_que);
-
     if(rcfg_lookupInt(conf.cf, "log.hostnames") ==1)
 	hostname=getHostName(fsin.sin_addr.s_addr);
     else
@@ -53,12 +50,9 @@ void logConnect(struct sockaddr_in fsin, module *m)
 
     ip_addr=nmc_intToDQ(ntohl(fsin.sin_addr.s_addr));
 
-    syslog(conf.log_que|LOG_INFO, "connect from %s (%s) for %s",
-	   hostname, ip_addr, m->name);
+    page_log("connect from %s (%s) for %s", hostname, ip_addr, m->name);
 
     _ndebug(2, ("connect from %s (%s) for %s\n", hostname, ip_addr, m->name));
-
-    closelog();
 }
 
 int getservsocket(int port)

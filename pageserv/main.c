@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.53 1998/06/29 01:06:59 dustin Exp $
+ * $Id: main.c,v 1.54 1998/07/15 07:55:56 dustin Exp $
  */
 
 #include <config.h>
@@ -15,7 +15,6 @@
 #include <signal.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <syslog.h>
 #include <fcntl.h>
 #include <sys/wait.h>
 
@@ -44,8 +43,7 @@ static void writepid(int pid)
 
     r=checkpidfile(conf.pidfile);
 
-    switch(r)
-    {
+    switch(r) {
         case PID_NOFILE:
             break;
         case PID_STALE:
@@ -57,8 +55,7 @@ static void writepid(int pid)
             exit(1);
     }
 
-    if(NULL ==(f=fopen(conf.pidfile, "w")) )
-    {
+    if(NULL ==(f=fopen(conf.pidfile, "w")) ) {
 	perror(conf.pidfile);
 	return;
     }
@@ -75,8 +72,7 @@ static void detach(void)
 
    pid=fork();
 
-   if(pid>0)
-   {
+   if(pid>0) {
        printf("Running on PID %d\n", pid);
        writepid(pid);
        exit(0);
@@ -87,9 +83,7 @@ static void detach(void)
    /* close uneeded file descriptors */
 
    for(i=0; i<256; i++)
-   {
         close(i);
-   }
 
    tmp=rcfg_lookup(conf.cf, "etc.working_directory");
    if(tmp==NULL)
@@ -104,8 +98,7 @@ static int deliveryd_checkmom(int oldpid)
     int pid, i;
     FILE *f;
 
-    for(i=0; i<3; i++)
-    {
+    for(i=0; i<3; i++) {
         f=fopen(conf.pidfile, "r");
         if(f!=NULL)
 	    break;
@@ -120,8 +113,7 @@ static int deliveryd_checkmom(int oldpid)
 
     fclose(f);
 
-    if(oldpid!=0)
-    {
+    if(oldpid!=0) {
 	if(pid!=oldpid)
 	    pid=-1;
     }
@@ -146,8 +138,7 @@ static int deliveryd_main(void)
     for(t=0; t<255; t++)
 	close(t);
 
-    openlog("pageserv", LOG_PID|LOG_NDELAY, conf.log_que);
-    syslog(conf.log_que|LOG_INFO, "deliveryd started");
+    page_log("deliveryd started");
 
     /*
      * Defaultify everything, keep the thing from deleting its pid file.
@@ -161,11 +152,8 @@ static int deliveryd_main(void)
      * know the pid so we can exit, so if it's not there, we go away.
      */
     ppid=deliveryd_checkmom(0);
-    if(ppid<0)
-    {
-       syslog(conf.log_que|LOG_NOTICE,
-	      "deliveryd exiting, didn't get initial pid");
-       closelog();
+    if(ppid<0) {
+       page_log("deliveryd exiting, didn't get initial pid");
 
        /*
 	* Let's sleep for another 60 seconds, to keep the thing from
@@ -178,31 +166,21 @@ static int deliveryd_main(void)
     if(t<1)
         t=DEFAULT_DELSLEEP;
 
-    for(;;)
-    {
+    for(;;) {
 	sleep(t);
-	if(readyqueue()>0)
-	{
-	    if( (pid=fork())==0)
-	    {
-		closelog();
+	if(readyqueue()>0) {
+	    if( (pid=fork())==0) {
 	        runqueue_main();
 		exit(0);
-	    }
-	    else
-	    {
-                syslog(conf.log_que|LOG_INFO, "delivering pages on pid %d",
-		       pid);
+	    } else {
+                page_log("delivering pages on pid %d", pid);
 	        wait(&stat);
 	    }
 	}
 
 	/* See if it's ``our time'' */
-        if(deliveryd_checkmom(ppid)<0)
-	{
-             syslog(conf.log_que|LOG_NOTICE,
-	            "deliveryd exiting, parent isn't %d", ppid);
-	    closelog();
+        if(deliveryd_checkmom(ppid)<0) {
+             page_log("deliveryd exiting, parent isn't %d", ppid);
 	    exit(0);
 	}
     }
@@ -226,28 +204,22 @@ static void daemon_main(void)
     conf.udb.dbinit();
 
     if(rcfg_lookupInt(conf.cf, "etc.deliveryd")==0)
-    {
 	deliveryd=-1;
-    }
     else
-    {
 	deliveryd=0;
-    }
 
     resetservtraps(); /* set signal traps */
 
     FD_ZERO(&tfdset);
 
     m=conf.modules;
-    for(i=0; i<conf.nmodules; i++)
-    {
+    for(i=0; i<conf.nmodules; i++) {
         _ndebug(2, ("Loading module ``%s''\n", m->name));
 
 	m->init();
 
 	s=m->socket();
-        if(s>=0)
-	{
+        if(s>=0) {
             _ndebug(2, ("Module is listening, fdsetting %d\n", s));
 
 	    if(s >upper)
@@ -259,27 +231,25 @@ static void daemon_main(void)
 	m++;
     }
 
+    page_log("Pageserv %s initialized on pid %d (deliveryd=%d)",
+	     VERSION, getpid(), deliveryd+1);
+
     upper++;  /* one more, just because */
 
-    for(;;)
-    {
+    for(;;) {
         fdset=tfdset;
         t.tv_sec=conf.childlifetime;
         t.tv_usec=0;
         fromlen=sizeof(fsin);
 
-        if( select(upper, &fdset, NULL, NULL, &t) > 0)
-        {
+        if( select(upper, &fdset, NULL, NULL, &t) > 0) {
 	    m=conf.modules;
-	    for(i=0; i<conf.nmodules; i++)
-	    {
-		if( (m->socket()>0) && (FD_ISSET(m->socket(), &fdset)) )
-		{
+	    for(i=0; i<conf.nmodules; i++) {
+		if( (m->socket()>0) && (FD_ISSET(m->socket(), &fdset)) ) {
                     _ndebug(2, ("Got a connection for ``%s''\n", m->name));
 
 		    if( (p.socket=accept(m->socket(),
-			(struct sockaddr *)&fsin, &fromlen)) >=0 )
-		    {
+			(struct sockaddr *)&fsin, &fromlen)) >=0 ) {
 			logConnect(fsin, m);
 
 			if(checkIPAccess(fsin, m) == 0) {
@@ -308,16 +278,11 @@ static void daemon_main(void)
         reaper();
 
 	/* Check deliveryd */
-	if(deliveryd>=0)
-	{
-	    if(deliveryd==0)
-	    {
+	if(deliveryd>=0) {
+	    if(deliveryd==0) {
 		deliveryd=deliveryd_main();
-	    }
-	    else
-	    {
-	        if(kill(deliveryd, 0)!=0)
-	        {
+	    } else {
+	        if(kill(deliveryd, 0)!=0) {
 		    deliveryd=deliveryd_main();
 	        }
 	    }
@@ -330,10 +295,8 @@ static char *getcachepw(char *name, char **names, char **passwords)
     int i;
     char *p=NULL;
 
-    for(i=0; names[i]; i++)
-    {
-	if(strcmp(name, names[i])==0)
-	{
+    for(i=0; names[i]; i++) {
+	if(strcmp(name, names[i])==0) {
 	    p=passwords[i];
 	    break;
 	}
@@ -350,13 +313,11 @@ static void rehash_main(void)
     conf.udb.dbinit();
 
     names=conf.udb.listusers("*");
-    if(names)
-    {
+    if(names) {
         for(i=0; names[i]; i++);
 
         passwords=(char **)malloc(i*sizeof(char *));
-        for(i=0; names[i]; i++)
-        {
+        for(i=0; names[i]; i++) {
 	    u=conf.udb.getuser(names[i]);
 	    passwords[i]=strdup(u.passwd);
         }
@@ -368,15 +329,12 @@ static void rehash_main(void)
     i=conf.udb.parseusers();
     printf("Parsed %d users.\n", i);
 
-    if(names)
-    {
+    if(names) {
         names2=conf.udb.listusers("*");
 
-        for(i=0; names2[i]; i++)
-        {
+        for(i=0; names2[i]; i++) {
 	    tmp=getcachepw(names2[i], names, passwords);
-	    if(tmp)
-	    {
+	    if(tmp) {
 	        u=conf.udb.getuser(names2[i]);
 	        strcpy(u.passwd, tmp);
 	        conf.udb.storeuser(u);
@@ -387,12 +345,9 @@ static void rehash_main(void)
     i=parseterms();
     printf("Parsed %d terminal servers.\n", i);
 
-    if(names)
-    {
+    if(names) {
         for(i=0; names[i]; i++)
-        {
             free(passwords[i]);
-        }
         free(passwords);
         cleanuserlist(names);
     }
@@ -400,24 +355,23 @@ static void rehash_main(void)
 
 static void killserver(void)
 {
-    int pid;
+    int pid, r;
     FILE *f;
 
-    if(access(conf.pidfile, F_OK)!=0)
-    {
+    r=checkpidfile(conf.pidfile);
+
+    if(r==PID_NOFILE) {
 	puts("Error, no PID file found, is it running?");
 	exit(1);
     }
 
     f=fopen(conf.pidfile, "r");
-    if(f==NULL)
-    {
+    if(f==NULL) {
 	perror(conf.pidfile);
 	exit(1);
     }
 
-    if( fscanf(f, "%d", &pid) == EOF)
-    {
+    if( fscanf(f, "%d", &pid) == EOF) {
 	puts("Error:  No PID found in pidfile");
 	exit(1);
     }
@@ -425,15 +379,24 @@ static void killserver(void)
     kill(pid, SIGTERM);
     sleep(1);
 
-    if(access(conf.pidfile, F_OK)==0)
-    {
-	puts("Error, pid file still exists, may not have shut down properly");
-	exit(1);
-    }
-    else
-    {
-	puts("Successfully shut down.");
-	exit(1);
+    r=checkpidfile(conf.pidfile);
+
+    switch(r) {
+	case PID_NOFILE:
+	    puts("Successfully shut down.");
+	    break;
+	case PID_STALE:
+	    if(unlink(conf.pidfile)<0) {
+		puts("Server shut down and left its pid file, I could not "
+		     "remove it.");
+		perror(conf.pidfile);
+	    } else {
+		puts("Server shut down and left its pid file, I removed it");
+	    }
+	    break;
+	case PID_ACTIVE:
+	    puts("Server could not be shut down");
+	    break;
     }
 
     fclose(f);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: signals.c,v 1.13 1998/03/03 16:46:54 dustin Exp $
+ * $Id: signals.c,v 1.14 1998/07/15 07:56:01 dustin Exp $
  */
 
 #include <stdio.h>
@@ -18,6 +18,8 @@ static RETSIGTYPE serv_sigint(int sig)
 {
     _ndebug(0, ("Exit type signal caught, shutting down...\n"));
 
+    page_log("Got signal %d, shutting down", sig);
+
     unlink(conf.pidfile);
     cleanconfig();
     exit(0);
@@ -28,8 +30,7 @@ static RETSIGTYPE serv_sighup(int sig)
     cleanconfig();
     rdconfig(CONFIGFILE);
 
-    if(conf.debug>0)
-    {
+    if(conf.debug>0) {
 	puts("Server reconfiguring...\n");
 	showconfig();
     }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.52 1998/06/28 23:11:34 dustin Exp $
+ * $Id: queue.c,v 1.53 1998/07/15 07:55:59 dustin Exp $
  */
 
 #include <stdio.h>
@@ -10,7 +10,6 @@
 #include <string.h>
 #include <dirent.h>
 #include <time.h>
-#include <syslog.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -90,28 +89,25 @@ void dq_notify(struct queuent q, char *message, int flags)
 
 void logqueue(struct queuent q, int type, char *reason)
 {
-    openlog("pageserv", LOG_PID|LOG_NDELAY, conf.log_que);
-
-    switch(type)
-    {
+    switch(type) {
         case QUE_LOG:
-            syslog(conf.log_que|LOG_INFO, "queued %s to %s:  %d bytes",
-                q.qid, q.to, strlen(q.message)); break;
+            page_log("queued %s to %s:  %d bytes", q.qid, q.to,
+		     strlen(q.message));
+            break;
         case SUC_LOG:
-            syslog(conf.log_que|LOG_INFO, "delivered %s to %s: %d bytes",
-                q.qid, q.to, strlen(q.message)); break;
+            page_log("delivered %s to %s: %d bytes", q.qid, q.to,
+		     strlen(q.message));
+	    break;
         case FAIL_LOG:
-            syslog(conf.log_que|LOG_NOTICE, "failed %s to %s: %s", q.qid,
-                q.to, reason); break;
+            page_log("failed %s to %s: %s", q.qid, q.to, reason);
+	    break;
         case EXP_LOG:
-            syslog(conf.log_que|LOG_NOTICE, "expired %s to %s:  dequeuing",
-	        q.qid, q.to ); break;
+            page_log("expired %s to %s:  dequeuing", q.qid, q.to );
+	    break;
         case DEQUE_LOG:
-            syslog(conf.log_que|LOG_INFO,
-                   "dequeued %s to %s, %s", q.qid, q.to, reason);
+            page_log("dequeued %s to %s, %s", q.qid, q.to, reason);
             break;
     }
-    closelog();
 }
 
 void dequeue(char *qid)
