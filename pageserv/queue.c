@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.12 1997/04/02 16:54:15 dustin Exp $
+ * $Id: queue.c,v 1.13 1997/04/02 23:24:10 dustin Exp $
  */
 
 #include <stdio.h>
@@ -366,14 +366,14 @@ int storequeue(int s, struct queuent q, int flags)
 	    (int)q.submitted);
         fclose(qf);
 
-        sprintf(buf, "Queued to %s, thank you\n", fn);
+	strcpy(q.qid, fntoqid(fn));
+
+        sprintf(buf, "Queued to %s, thank you\n", q.qid);
 
 	if(conf.debug>1)
 	    printf("Queued %s for %s\n", fn, q.to);
 
-	strcpy(q.qid, fntoqid(fn));
-
-	if(conf.debug>2);
+	if(conf.debug>2)
 	    printf("Qid is now %s\n", q.qid);
         logqueue(q, QUE_LOG, NULL);
     }

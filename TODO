@@ -1,5 +1,6 @@
 Overall:
 
+    * Completely internal delivery stuff (no need for -bq all the time)
     * Make compliant with SNPP (RFC1861)
     * Queue postponing
     * A login method into the server to allow clients to modify stuff
@@ -13,10 +14,10 @@ Delivery:
 Clients:
 
     * Cleaner client stuff
-    * Add more options to clients: remot host, options to parsemail,
+    * Add more options to clients: remote host, options to parsemail,
       etc...
     * CGI client
 
 ----------------------------------------
 Copyright (c) 1997  Dustin Sallings
-$Id: TODO,v 2.6 1997/04/02 16:54:10 dustin Exp $
+$Id: TODO,v 2.7 1997/04/02 23:24:04 dustin Exp $

@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.14 1997/04/02 16:54:13 dustin Exp $
+ * $Id: pageserv.h,v 1.15 1997/04/02 23:24:08 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -92,6 +92,7 @@
 #define SUC_LOG     1
 #define FAIL_LOG    2
 #define EXP_LOG     3
+
 #ifdef IWANT_MODENAMES
 static char *modenames[]={
     "daemon",
