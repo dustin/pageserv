@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: login.c,v 1.8 1997/04/14 05:46:19 dustin Exp $
+ * $Id: login.c,v 1.9 1997/04/21 16:54:44 dustin Exp $
  * $State: Exp $
  */
 
@@ -117,9 +117,7 @@ void login_usermain(int s, struct user u)
 	}
 	else
 	{
-	    if(times[0]>0)
-		times[0]--;
-            else
+	    if(times[0]==0)
 		times[0]=23;
 
 	    if(times[0]<times[1])
