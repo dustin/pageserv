@@ -1,5 +1,8 @@
 /* config.h.in.  Generated automatically from configure.in by autoheader.  */
 
+/* Define for <crypt.h> */
+#undef HAVE_CRYPT_H
+
 /* Define if you have <sys/wait.h> that is POSIX.1 compatible.  */
 #undef HAVE_SYS_WAIT_H
 

@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 2.1 1997/04/11 03:45:35 dustin Exp $
+dnl $Id: configure.in,v 2.2 1997/04/11 03:52:26 dustin Exp $
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(pageserv)
 AC_CONFIG_HEADER(include/config.h)
@@ -21,7 +21,6 @@ case "$OS" in
 	;;
     'netbsd')
 	echo "NetBSD!  One of my favs"
-	LIBS="$LIBS -lcrypt"
 	;;
     'solaris')
 	echo "Solaris kind of sucks, but that's OK"
@@ -44,7 +43,7 @@ dnl Checks for header files.
 AC_HEADER_DIRENT
 AC_HEADER_STDC
 AC_HEADER_SYS_WAIT
-AC_CHECK_HEADERS(fcntl.h sys/time.h unistd.h)
+AC_CHECK_HEADERS(fcntl.h sys/time.h unistd.h crypt.h)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_TIME

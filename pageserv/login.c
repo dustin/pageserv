@@ -1,11 +1,16 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: login.c,v 1.2 1997/04/11 03:45:50 dustin Exp $
+ * $Id: login.c,v 1.3 1997/04/11 03:52:37 dustin Exp $
  * $State: Exp $
  */
 
+#include <config.h>
+
+#ifdef HAVE_CRYPT_H
 #include <crypt.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
