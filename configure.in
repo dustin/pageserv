@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 2.32 1998/09/27 06:45:14 dustin Exp $
+dnl $Id: configure.in,v 2.33 1998/10/27 18:31:22 dustin Exp $
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(pageserv)
 AC_CONFIG_HEADER(include/config.h)
@@ -105,7 +105,7 @@ AC_HEADER_SYS_WAIT
 AC_HEADER_TIME
 AC_CHECK_HEADERS(fcntl.h sys/time.h unistd.h crypt.h sys/select.h)
 AC_CHECK_HEADERS(termio.h dlfcn.h rpcsvc/ypclnt.h rpcsvc/yp_prot.h)
-AC_CHECK_HEADERS(termios.h sys/termios.h)
+AC_CHECK_HEADERS(termios.h sys/termios.h stropts.h)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_STRUCT_TM

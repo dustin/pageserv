@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  SPY Internetworking
  *
- * $Id: tap.c,v 2.26 1998/10/21 00:34:24 dustin Exp $
+ * $Id: tap.c,v 2.27 1998/10/27 18:31:34 dustin Exp $
  */
 
 #include <stdio.h>
@@ -10,7 +10,9 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
+#ifdef HAVE_STROPTS_H
 #include <stropts.h>
+#endif /* HAVE_STROPTS_H */
 #include <sys/conf.h>
 
 #include <pageserv.h>
@@ -139,8 +141,14 @@ s_tap_send(int s, char *id, char *message)
 		    __FILE__, __LINE__);
 		return (-1);
 	}
+/*
+ * I ifdef'd this for portability.  It seemed that the FLUSH stuff wasn't
+ * existing everywhere I needed to build this.
+ */
+#if defined(I_FLUSH) && defined(FLUSHR)
 	/* Probably this is important. */
 	ioctl(s, I_FLUSH, FLUSHR);
+#endif
 
 	sprintf(buf, "%c%s%c%s%c%c", C_STX, id, C_CR, message, C_CR, C_ETX);
 
@@ -163,15 +171,21 @@ s_tap_send(int s, char *id, char *message)
 			_ndebug(2, ("%s\n", buf));
 		} else {
 			/* Over so soon? */
-			_ndebug(2, ("nothing returned that we like\n", buf));
+			_ndebug(2, ("nothing returned that we like\n"));
 			/* X == EOF */
 			c = 'X';
 			break;
 		}
 	}
 
+/*
+ * I ifdef'd this for portability.  It seemed that the FLUSH stuff wasn't
+ * existing everywhere I needed to build this.
+ */
+#if defined(I_FLUSH) && defined(FLUSHR)
 	/* This may not be quite as important. */
 	ioctl(s, I_FLUSH, FLUSHR);
+#endif
 
 	/* Another random sleepy thing, just to get the timing right */
 	usleep(1700);

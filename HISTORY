@@ -1,3 +1,11 @@
+Tue Oct 27 10:25:06 PST 1998
+
+History sucks.
+
+Added the ability to do a holduntil based on a time_t in the client stuff.
+
+--------------------
+
 Wed Jun  3 08:50:13 PDT 1998
 
 The client library is now a keen little SNPP library that simplifies things
@@ -49,4 +57,4 @@ use a string as an argument, and it is matched against known database
 types.  The term database info is currently ignored.
 
 ----------------------------------------
-$Id: HISTORY,v 2.8 1998/06/28 23:49:19 dustin Exp $
+$Id: HISTORY,v 2.9 1998/10/27 18:31:19 dustin Exp $

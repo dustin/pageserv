@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1996-1998  Dustin Sallings
  *
- * $Id: snppclient.h,v 1.3 1998/07/23 15:42:47 dustin Exp $
+ * $Id: snppclient.h,v 1.4 1998/10/27 18:31:36 dustin Exp $
  */
 
 #ifndef _SNPP_CLIENT_H
@@ -18,6 +18,9 @@
 #ifndef SNPP_PORT
 # define SNPP_PORT 1031
 #endif
+
+/* HOLDuntil flags */
+#define SNPP_COMPAT 1 /* YYMMDDHHMMSS[+/-GMT] */
 
 /* Client structure */
 
@@ -51,6 +54,7 @@ struct snpp_client {
     int (*page)(struct snpp_client *snpp, char *whom);
     int (*message)(struct snpp_client *snpp, char *message);
     int (*send)(struct snpp_client *snpp);
+	int (*hold)(struct snpp_client *snpp, time_t when, int flags);
 
     int (*sendAPage)(struct snpp_client *snpp, char *towhom, char *message);
 

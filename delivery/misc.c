@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: misc.c,v 2.8 1998/10/21 00:34:23 dustin Exp $
+ * $Id: misc.c,v 2.9 1998/10/27 18:31:28 dustin Exp $
  */
 
 #include <stdio.h>
@@ -82,7 +82,7 @@ runqueue(void)
 	struct queuent *q;
 	char  **termlist;
 	struct terminal term;
-	int     t, i, s, r;
+	int     t = 0, i = 0, s = 0, r = 0;
 
 	conf.udb.dbinit();
 	resetdelivertraps();
@@ -121,7 +121,7 @@ runqueue(void)
 
 						/* Too debuggy */
 						/* del_log("attempt s_tap_send mess: %s",
-						   q[i].message); */
+						 * q[i].message); */
 						r = s_tap_send(s, q[i].u.pageid, q[i].message);
 
 						if (r == 0) {
@@ -189,7 +189,7 @@ runqueue(void)
 	/* del_log("end of runqueue"); */
 }
 
-static RETSIGTYPE
+static  RETSIGTYPE
 del_sigint(int sig)
 {
 	cleanmylocks();
