@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.11 1997/04/14 03:51:54 dustin Exp $
+ * $Id: readconfig.c,v 1.12 1997/04/14 04:36:43 dustin Exp $
  * $State: Exp $
  */
 
@@ -60,6 +60,7 @@ void W_command(char s, char *arg)
     {
 	case 'D': conf.webroot=strdup(arg); break;
 	case 'r': conf.webserver=atoi(arg); break;
+	case 'p': conf.webport=atoi(arg); break;
     }
 }
 
@@ -230,6 +231,7 @@ void readconfig(char *file)
     conf.log_que=LOG_LOCAL7|LOG_INFO;
     conf.maxconattempts=MAX_CONATTEMPTS;
     conf.conattemptsleep=CONATTEMPTSSLEEP;
+    conf.webport=WEBPORT;
     conf.webserver=0;
 
     f=fopen(file, "r");
@@ -278,6 +280,7 @@ void showconfig(void)
     printf("\tPID file:     %s\n", conf.pidfile);
     printf("\tWebRoot:      %s\n", conf.webroot);
     printf("\tWebserver:    %d\n", conf.webserver);
+    printf("\tWeb port:     %d\n", conf.webport);
     printf("\tFarkle        %d\n", conf.farkle);
     printf("\tChild life:   %d\n", conf.childlifetime);
     printf("\tMax queue tm: %d\n", conf.maxqueuetime);

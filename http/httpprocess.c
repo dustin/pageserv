@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpprocess.c,v 1.1 1997/04/14 03:51:33 dustin Exp $
+ * $Id: httpprocess.c,v 1.2 1997/04/14 04:36:28 dustin Exp $
  */
 
 #define IWANTDOCINFO 1
@@ -47,13 +47,13 @@ void http_process_get(int s, struct http_request r)
     if(r.special==1)
     {
         puttext(s, "<html><head><title>OK</title></head>");
-    puttext(s, "<body bgcolor=\"ffffff\">");
+        puttext(s, "<body bgcolor=\"ffffff\">");
         puttext(s, "Your special request was ");
         puttext(s, r.request);
     }
     else
     {
-    http_senddoc(s, r);
+        http_senddoc(s, r);
     }
 
     http_footer(s);
@@ -92,7 +92,7 @@ int http_verifydoc(int s, struct http_request *r)
     {
         r->special=1;
         r->docnum=i;
-    return(0);
+        return(0);
     }
 }
 
@@ -100,24 +100,24 @@ void http_process(int s, struct http_request r)
 {
     if(http_verifydoc(s, &r)!=0)
     {
-    http_header_notfound(s, r);
+        http_header_notfound(s, r);
     }
 
     if(conf.debug)
     {
-    puts("Request was good");
-    if(r.special==1)
-        puts("It was a special request");
-    else
-        puts("It was a normal request");
+        puts("Request was good");
+        if(r.special==1)
+            puts("It was a special request");
+        else
+            puts("It was a normal request");
     }
 
     switch(r.method)
     {
-    case HTTP_GET:
-        http_process_get(s, r); break;
+        case HTTP_GET:
+            http_process_get(s, r); break;
 
-    default:
-        http_error(s, r);
+        default:
+            http_error(s, r);
     }
 }

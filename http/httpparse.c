@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpparse.c,v 1.1 1997/04/14 03:51:31 dustin Exp $
+ * $Id: httpparse.c,v 1.2 1997/04/14 04:36:26 dustin Exp $
  */
 
 #define IWANTMETHODNAMES 1
@@ -22,13 +22,14 @@ extern struct config conf;
 struct http_request http_parserequest(int s)
 {
     char buf[REQUESTSIZE];
-    int i, j, start;
+    int i, j, start, finished=0, tmp;
     struct http_request r;
 
+    r.method=-1;
     buf[0]=0x00;
     gettextcr(s, buf);
 
-    while(strlen(buf)>0)
+    while(!finished)
     {
         for(i=0; i<4; i++)
         {
@@ -42,19 +43,34 @@ struct http_request http_parserequest(int s)
 
                 r.method=i;
                 start=strlen(methodnames[i])+1;
-                for(j=start; j<strlen(buf); j++)
+                tmp=strlen(buf);
+                for(j=start; j<tmp; j++)
                 {
                     if(buf[j]==' ')
                     {
                         buf[j]=0x00;
-                        strcpy(r.request, buf+start);
                         break;
                     }
                 }
+                if(j==tmp)
+                {
+                    r.version=0;
+                    finished=1;
+                }
+                else
+                {
+                    r.version=1;
+                }
+                strcpy(r.request, buf+start);
                 break;
             }
         }
-        gettextcr(s, buf);
+        if(!finished)
+        {
+            gettextcr(s, buf);
+            if(strlen(buf)==0)
+                finished=1;
+        }
     }
     return(r);
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.9 1997/04/14 03:51:52 dustin Exp $
+ * $Id: main.c,v 1.10 1997/04/14 04:36:41 dustin Exp $
  * $State: Exp $
  */
 
@@ -78,7 +78,7 @@ void daemon_main(void)
 
     if(conf.webserver)
     {
-        ws=getservsocket(WEBPORT);
+        ws=getservsocket(conf.webport);
 
         if(ws>upper)
 	    upper=ws;

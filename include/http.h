@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * "$Id: http.h,v 1.1 1997/04/14 03:51:40 dustin Exp $"
+ * "$Id: http.h,v 1.2 1997/04/14 04:36:35 dustin Exp $"
  */
 
 #ifndef HTTP_H
@@ -40,6 +40,7 @@ static char *docnames[]={
 
 struct http_request {
     char request[REQUESTSIZE];
+    int version;
     int docnum;
     int special;
     int method;
