@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.48 1997/08/27 06:10:22 dustin Exp $
+ * $Id: pageserv.h,v 1.49 1997/08/27 07:08:42 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -65,6 +65,9 @@
 #define TERMDB "/tmp/termdb"
 #define PIDFILE "/tmp/pageserv.pid"
 #define WEBROOT "/tmp"
+
+/* Default NIS databases */
+#define NIS_DEFAULTUDB "pageserv.users"
 
 /* Default child lifetime */
 #define CHILD_LIFETIME 120
@@ -292,7 +295,6 @@ void getqueueinfo( struct queuent *q );
 void initmodules(void);
 void logConnect(struct sockaddr_in fsin, module *m);
 void logqueue(struct queuent q, int type, char *reason);
-void nis_userdbInit(void);
 void p_getpasswd(int s, char *to);
 void p_login(int s);
 void printqueue(void);
@@ -311,6 +313,11 @@ void showconfig(void);
 void showversion(void);
 void storeterm(DBM *db, struct terminal t);
 void stringListSort(char **list);
+
+/* This doesn't even get defined if HAVE_NIS isn't set */
+#ifdef HAVE_NIS
+void nis_userdbInit(void);
+#endif
 
 /* client stuff */
 
