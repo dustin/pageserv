@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: ldapuserdb.c,v 1.1 1998/12/26 08:43:32 dustin Exp $
+ * $Id: ldapuserdb.c,v 1.2 1998/12/26 08:54:37 dustin Exp $
  */
 
 #include <config.h>
@@ -102,23 +102,24 @@ ldap_getuser(char *name)
 	ldap_value_free(values);
 	values = ldap_get_values(ld, res, "pageid");
 	if (values && values[0]) {
-		strncpy(u.passwd, values[0],
+		strncpy(u.pageid, values[0],
 		 strlen(values[0]) < IDLEN ? strlen(values[0]) : IDLEN - 1);
 	}
 	ldap_value_free(values);
 	values = ldap_get_values(ld, res, "pagestatid");
 	if (values && values[0]) {
-		strncpy(u.passwd, values[0],
+		strncpy(u.statid, values[0],
 			strlen(values[0]) < STATLEN ? strlen(values[0]) : STATLEN - 1);
 	}
 	ldap_value_free(values);
 	values = ldap_get_values(ld, res, "pagenotify");
 	if (values && values[0]) {
-		strncpy(u.passwd, values[0],
+		strncpy(u.notify, values[0],
 			strlen(values[0]) < EMAILLEN ? strlen(values[0]) : EMAILLEN - 1);
 	}
 	ldap_value_free(values);
 	ldap_unbind(ld);
+	printuser(u);
 	return (u);
 }
 
