@@ -1,7 +1,14 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: client.c,v 1.1 1997/03/13 00:31:46 dustin Exp $
+ * $Id: client.c,v 1.2 1997/03/14 00:52:51 dustin Exp $
+ */
+
+/*
+ * This is the generic client code stuff.  Probably all that will
+ * be needed out of this is pushqueue().  There's also ckw() which
+ * is basically the same as kw() from utility.c, but I didn't want
+ * to include utility.c in this crap.
  */
 
 #include <stdio.h>
@@ -14,12 +21,10 @@
 
 #include <pageserv.h>
 
-#define REMHOST "localhost"
-
 void timeout(void)
 {
-	fputs("Connection timed out.\n", stderr);
-	exit(1);
+    fputs("Connection timed out.\n", stderr);
+    exit(1);
 }
 
 int openhost(void)
@@ -29,31 +34,31 @@ register int s;
 int linger;
 struct sockaddr_in sin;
 
-	if((hp=gethostbyname(REMHOST)) == NULL)
-	{
-		herror("gethostbyname");
-		exit(1);
-	}
+    if((hp=gethostbyname(REMHOST)) == NULL)
+    {
+        herror("gethostbyname");
+        exit(1);
+    }
 
-	if((s=socket(AF_INET, SOCK_STREAM, 0))<0)
-	{
-		perror("socket");
-		exit(1);
-	}
+    if((s=socket(AF_INET, SOCK_STREAM, 0))<0)
+    {
+        perror("socket");
+        exit(1);
+    }
 
-	sin.sin_family = AF_INET;
-	sin.sin_port=htons(PORT);
-	bcopy(hp->h_addr, &sin.sin_addr, hp->h_length);
+    sin.sin_family = AF_INET;
+    sin.sin_port=htons(PORT);
+    bcopy(hp->h_addr, &sin.sin_addr, hp->h_length);
 
-	setsockopt(s, SOL_SOCKET, SO_LINGER, (char *)&linger, sizeof(int));
+    setsockopt(s, SOL_SOCKET, SO_LINGER, (char *)&linger, sizeof(int));
 
-	if(connect(s, (struct sockaddr *)&sin, sizeof(sin))<0)
-	{
-		perror("connect");
-		exit(1);
-	}
+    if(connect(s, (struct sockaddr *)&sin, sizeof(sin))<0)
+    {
+        perror("connect");
+        exit(1);
+    }
 
-	return(s);
+    return(s);
 }
 
 char *ckw(char *in)
