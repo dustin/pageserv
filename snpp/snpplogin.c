@@ -1,7 +1,7 @@
 /*
  * Copyright (c)  1996-1998  Dustin Sallings
  *
- * $Id: snpplogin.c,v 1.2 1998/01/20 06:00:49 dustin Exp $
+ * $Id: snpplogin.c,v 1.3 1998/01/23 08:59:02 dustin Exp $
  */
 
 #include <config.h>
@@ -113,15 +113,25 @@ static void snpp_displayqlong(int s, char *quename, char *username)
     puttext(s, buf);
     puttext(s, "214 ");
     puttext(s, q.message);
-    puttext(s, "\n250 End of queue entry\n");
+    puttext(s, "\n");
+
+    if(q.soonest>q.submitted)
+    {
+	sprintf(buf, "214     To be delivered no sooner than %s",
+	    ctime(&q.soonest));
+	puttext(s, buf);
+    }
+
+    puttext(s, "250 End of queue entry\n");
 }
 
 static void snpp_displayq(int s, struct queuent q)
 {
     char buf[BUFLEN];
 
-    sprintf(buf, "214 %s: Pri: %d, size: %d, sent: %s", q.qid,
-            q.priority, strlen(q.message), ctime(&q.submitted));
+    sprintf(buf, "214 %s: Pri: %d, size: %d, sent: %s%s", q.qid,
+            q.priority, strlen(q.message), (q.soonest>q.submitted?"*":""),
+	    ctime(&q.submitted));
 
     puttext(s, buf);
 }
