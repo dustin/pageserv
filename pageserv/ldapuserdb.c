@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: ldapuserdb.c,v 1.8 1998/12/29 02:24:33 dustin Exp $
+ * $Id: ldapuserdb.c,v 1.9 1998/12/29 03:24:52 dustin Exp $
  */
 
 #include <config.h>
@@ -148,8 +148,9 @@ ldap_listusers(char *term)
 {
 	LDAP *ld;
 	LDAPMessage *res, *e;
-	char **values;
+	char **values, **ret;
 	char  *base;
+	int index;
 	char *att[] = {
 		"uid",
 		0
@@ -174,10 +175,17 @@ ldap_listusers(char *term)
 		ldap_unbind(ld);
 		return(NULL);
 	}
-	values=ldap_get_values(ld, res, "uid");
-	_ndebug(3, ("Got %d entries\n", ldap_count_values(values)));
+	_ndebug(2, ("Found %d entries\n", ldap_count_entries(ld, res)));
+	index=0;
+	ret=malloc( (ldap_count_entries(ld, res)+2)*sizeof(char *));
+	for(e=ldap_first_entry(ld, res); e; e=ldap_next_entry(ld, e)) {
+		values=ldap_get_values(ld, e, "uid");
+		ret[index++]=strdup(values[0]);
+		ldap_value_free(values);
+	}
 	ldap_unbind(ld);
-	return(values);
+	ret[index]=NULL;
+	return(ret);
 }
 
 static int

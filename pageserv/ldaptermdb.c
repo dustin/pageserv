@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: ldaptermdb.c,v 1.2 1998/12/29 02:24:32 dustin Exp $
+ * $Id: ldaptermdb.c,v 1.3 1998/12/29 03:24:51 dustin Exp $
  */
 
 #include <config.h>
@@ -144,9 +144,10 @@ static char   **
 ldap_listterms(void)
 {
 	LDAP *ld;
-	LDAPMessage *res;
-	char **values;
+	LDAPMessage *res, *e;
+	char **values, **ret;
 	char *base;
+	int index;
 	char *att[]={
 		"pageNumber",
 		0
@@ -166,10 +167,17 @@ ldap_listterms(void)
 		ldap_unbind(ld);
 		return(NULL);
 	}
-
-	values=ldap_get_values(ld, res, "pageNumber");
+	_ndebug(2, ("Found %d entries\n", ldap_count_entries(ld, res)));
+	ret=malloc( (ldap_count_entries(ld, res)+2)*sizeof(char *));
+	index=0;
+	for(e=ldap_first_entry(ld, res); e; e=ldap_next_entry(ld, e)) {
+		values=ldap_get_values(ld, e, "pageNumber");
+		ret[index++]=strdup(values[0]);
+		ldap_value_free(values);
+	}
 	ldap_unbind(ld);
-	return(values);
+	ret[index]=NULL;
+	return(ret);
 }
 
 static void
