@@ -1,5 +1,11 @@
 This isn't much of a history, but it may be if we start using it.
 
+    I'm working on SQL based user and terminal databases right now using
+PostgreSQL.  Potentially, any RDBMS that uses SQL could work, but I'm
+using Postgres because it's the best.  :)
+
+--------------------
+
     The first major change I made after release_2_9_3 I made consisted of
 configuration file movement.  This is very important:
 
@@ -20,4 +26,4 @@ As of release_2_9_3, there are multiple developers, starting with
 spberry@iastate.edu
 
 ----------------------------------------
-$Id: HISTORY,v 2.2 1997/08/27 07:07:49 dustin Exp $
+$Id: HISTORY,v 2.3 1997/10/10 08:23:59 dustin Exp $
