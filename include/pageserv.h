@@ -1,11 +1,27 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.52 1997/10/10 08:24:16 dustin Exp $
+ * $Id: pageserv.h,v 1.53 1997/12/29 07:44:05 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
 #define PAGESERV_H 1 /* included more than once. */
+
+/* Debug stuff */
+#ifndef PDEBUG
+#define PDEBUG 1
+#endif
+
+#if (PDEBUG>0)
+# ifndef _ndebug
+#  define _ndebug(a, b) if(conf.debug > a ) printf b;
+# endif
+#endif
+
+/* In case it didn't make it */
+#ifndef _ndebug
+#define _ndebug(a, b)
+#endif
 
 /* for DBM type */
 #include <ndbm.h>
@@ -198,11 +214,13 @@ struct config {
     int log_que;           /* logging facility */
     int maxconattempts;    /* maximum attempts to connect to modem server */
     int conattemptsleep;   /* sleep between tries */
+    int pageserv;          /* oldschool module */
+    int pageport;          /* port to run it on */
     int webserver;         /* start the webserver? */
     int webport;           /* webserver port num */
 
-    int snppserver;         /* start the snppserver? */
-    int snppport;           /* snppserver port num */
+    int snppserver;        /* start the snppserver? */
+    int snppport;          /* snppserver port num */
     int gmtoffset;         /* number of hours off of gmt */
 
     char *servhost;        /* server fqdn */
