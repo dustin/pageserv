@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: pushqueue.c,v 2.5 1998/01/10 01:32:22 dustin Exp $
+ * $Id: pushqueue.c,v 2.6 1998/01/14 05:48:40 dustin Exp $
  */
 
 #include <stdio.h>
@@ -24,7 +24,7 @@ static void usage(char *command)
     puts("priority can be either high or normal");
 }
 
-void main(int argc, char **argv)
+int main(int argc, char **argv)
 {
 struct queuent q;
 int c;
@@ -51,7 +51,13 @@ int c;
     cgettext(q.message, BUFLEN);
 
     if( (pushqueue(q.to, q.message, q.priority)) == 0)
+    {
         puts("Looks successful");
+	return(0);
+    }
     else
+    {
         puts("Didn't work.");
+	return(75);
+    }
 }

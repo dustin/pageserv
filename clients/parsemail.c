@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parsemail.c,v 2.3 1998/01/10 01:32:21 dustin Exp $
+ * $Id: parsemail.c,v 2.4 1998/01/14 05:48:34 dustin Exp $
  */
 
 #include <stdio.h>
@@ -30,10 +30,10 @@ static char *getdata(int l, char *line)
 }
 
 
-void main(int argc, char **argv)
+int main(int argc, char **argv)
 {
     char line[LINELEN];
-    int priority, c;
+    int priority, c, r;
     char *subject="(no subject)", *from=NULL, *to=NULL;
     extern int optind;
 
@@ -77,8 +77,12 @@ void main(int argc, char **argv)
 
     sprintf(line, "Mail: %s -- %s", from, subject);
 
-    pushqueue(to, line, priority);
+    if( pushqueue(to, line, priority) == 0)
+	r=0;
+    else
+	r=75;
 
     free(from);
     free(subject);
+    return(r);
 }
