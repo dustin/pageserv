@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile,v 1.7 1997/03/11 22:24:14 dustin Exp $
+# $Id: Makefile,v 1.8 1997/03/12 06:00:33 dustin Exp $
 
 MAJOR=2
 MINOR=0
@@ -7,7 +7,7 @@ PATCH=0
 VERSION=$(MAJOR).$(MINOR).$(PATCH)
 
 CC=cc
-CFLAGS=-O2 -g -Wall -DVERSION=\"$(VERSION)\"
+CFLAGS=-g -DVERSION=\"$(VERSION)\"
 
 LIBS=
 
@@ -18,20 +18,25 @@ LDFLAGS=-g $(LIBS)
 
 SERV_OBJS=sockets.o main.o utility.o kids.o queue.o protocol.o
 PQ_OBJS=pqueue.o utility.o queue.o
-SOURCES=sockets.c main.c utility.c kids.c queue.c protocol.c pqueue.c
-EXES=pageserv pqueue
+PU_OBJS=parseusers.o userdb.o
+SOURCES=sockets.c main.c utility.c kids.c queue.c protocol.c pqueue.c \
+	parseusers.c userdb.c
+EXES=pageserv pqueue parseusers
 NAME=pageserv
 ARCHIVE=$(NAME)-$(VERSION)
 STUFF=$(SOURCES) pageserv.h Makefile
-JUNK=$(EXES) *.o *.core core
+JUNK=$(EXES) *.o *.core core *.dir *.pag
 
-all: pageserv pqueue
+all: $(EXES)
 
 pageserv: $(SERV_OBJS)
 	$(CC) -o $@ $(SERV_OBJS) $(LDFLAGS)
 
 pqueue: $(PQ_OBJS)
 	$(CC) -o $@ $(PQ_OBJS) $(LDFLAGS)
+
+parseusers: $(PU_OBJS)
+	$(CC) -o $@ $(PU_OBJS) $(LDFLAGS)
 
 tgz: $(ARCHIVE).tar.gz
 
