@@ -873,7 +873,7 @@ fi
 echo "Checking out your OS..."
 OS=`$UNAMEPROG|$TRPROG '[A-Z]' '[a-z]'`
 VER=`$UNAMEPROG -r`
-if test "$OS" = "SunOS" && test "$VER" -ge 5
+if test "$OS" = "SunOS" -a "$VER" -ge 5
 then
     OS="solaris"
 fi
