@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.37 1998/01/10 01:33:05 dustin Exp $
+ * $Id: queue.c,v 1.38 1998/01/14 05:56:06 dustin Exp $
  */
 
 #include <stdio.h>
@@ -626,7 +626,10 @@ void printqueue(void)
 
     for(j=0; q[j].to[0] != 0x00; j++);
 
-    printf("There are %d items in the queue\n\n", j);
+    if(j==1)
+        printf("There is 1 item in the queue\n\n");
+    else
+        printf("There are %d items in the queue\n\n", j);
 
     for(i=0; i<j; i++)
         displayq(q[i]);
