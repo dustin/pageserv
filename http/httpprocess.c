@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpprocess.c,v 1.12 1997/07/08 06:40:06 dustin Exp $
+ * $Id: httpprocess.c,v 1.13 1997/07/08 06:53:37 dustin Exp $
  */
 
 #define IWANTDOCINFO 1
@@ -38,7 +38,7 @@ void http_senddoc(int s, struct http_request r)
     if(r.version>0)
     {
         stat(buf, &st);
-	_http_header_ok(s, (int)st.st_size+strlen(HTTP_FOOTER)+1);
+        _http_header_ok(s, (int)st.st_size+strlen(HTTP_FOOTER)+1);
     }
 
     f=fopen(buf, "r");
@@ -55,10 +55,10 @@ void _http_process_get(int s, struct http_request r)
     if(r.special==1)
     {
         switch(r.docnum)
-	{
-	    case DOC_MODUSER: _http_moduser(s, r);   break;
-	    case DOC_SENDPAGE: _http_sendpage(s, r); break;
-	}
+        {
+            case DOC_MODUSER: _http_moduser(s, r);   break;
+            case DOC_SENDPAGE: _http_sendpage(s, r); break;
+        }
     }
     else
     {
@@ -77,7 +77,7 @@ int http_verifydoc(int s, struct http_request *r)
     {
         if(strcmp(r->request, docnames[i])==0)
         {
-	    ret=0;
+            ret=0;
             break;
         }
     }
@@ -94,14 +94,14 @@ int http_verifydoc(int s, struct http_request *r)
         if(access(buf, R_OK)==0)
         {
             r->special=0;
-	    ret=0;
+            ret=0;
         }
     }
     else
     {
         r->special=1;
         r->docnum=i;
-	ret=0;
+        ret=0;
     }
 
     return(ret);
@@ -125,7 +125,7 @@ void http_process(int s, struct http_request r)
 
     switch(r.method)
     {
-	/* Get and post can use the same function */
+        /* Get and post can use the same function */
         case HTTP_GET:
         case HTTP_POST:
             _http_process_get(s, r); break;

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: moduser.c,v 1.1 1997/07/08 06:40:07 dustin Exp $
+ * $Id: moduser.c,v 1.2 1997/07/08 06:53:38 dustin Exp $
  */
 
 #include <pageserv.h>
@@ -43,12 +43,12 @@ void _http_moduser_timelist(int s, int def)
 
     for(i=0; i<24; i++)
     {
-	if(i==def)
-	    sprintf(buf, "<option selected>%d\n", i);
-	else
-	    sprintf(buf, "<option>%d\n", i);
+        if(i==def)
+            sprintf(buf, "<option selected>%d\n", i);
+        else
+            sprintf(buf, "<option>%d\n", i);
 
-	puttext(s, buf);
+        puttext(s, buf);
     }
 }
 
@@ -57,21 +57,20 @@ void _http_moduser_moduserpage(int s, struct http_request r)
     struct user u;
     char buf[BUFLEN];
     int times[2];
-    int flag, changes=0, i;
 
     strcpy(buf, r.auth.name);
 
     if(u_exists(buf))
     {
         if(conf.debug>2)
-	    printf("Getting mod data for user ``%s''\n", r.auth.name);
+            printf("Getting mod data for user ``%s''\n", r.auth.name);
 
-	u=getuser(buf);
+        u=getuser(buf);
     }
     else
     {
-	_http_modusererror(s, "Weird, must've raced.  Go home.");
-	return;
+        _http_modusererror(s, "Weird, must've raced.  Go home.");
+        return;
     }
 
     getnormtimes(u.times, times);
@@ -112,15 +111,15 @@ void _http_moduser_process(int s, struct http_request r)
     if(u_exists(r.auth.name))
     {
         if(conf.debug>2)
-	    printf("Getting mod data for user ``%s'' for update\n",
-		r.auth.name);
+            printf("Getting mod data for user ``%s'' for update\n",
+                r.auth.name);
 
-	u=getuser(r.auth.name);
+        u=getuser(r.auth.name);
     }
     else
     {
-	_http_modusererror(s, "Weird, must've raced.  Go home.");
-	return;
+        _http_modusererror(s, "Weird, must've raced.  Go home.");
+        return;
     }
 
     _http_moduserheader(s);
@@ -133,24 +132,24 @@ void _http_moduser_process(int s, struct http_request r)
 
     if(strcmp(passwd1, passwd2)==0)
     {
-	if(strlen(passwd1)>0)
-	{
-	    if(strlen(passwd1)<5)
-	    {
-		puttext(s,
-		    "Password must be at least 5 chars, not set.<br>\n");
-	    }
-	    else
-	    {
-		u=setpasswd(u, passwd1);
-		puttext(s, "Password set.<br>\n");
-	    }
-	}
+        if(strlen(passwd1)>0)
+        {
+            if(strlen(passwd1)<5)
+            {
+                puttext(s,
+                    "Password must be at least 5 chars, not set.<br>\n");
+            }
+            else
+            {
+                u=setpasswd(u, passwd1);
+                puttext(s, "Password set.<br>\n");
+            }
+        }
     }
     else
     {
-	puttext(s, "Passwords don't match.<br>\n");
-	return;
+        puttext(s, "Passwords don't match.<br>\n");
+        return;
     }
 
     tmp=_http_getcgiinfo(r, "early");
@@ -162,31 +161,31 @@ void _http_moduser_process(int s, struct http_request r)
 
     if(times[0]==times[1])
     {
-	puttext(s, "You will receive normal priority pages at any time<br>\n");
-	u.times=0xffffffff;
+        puttext(s, "You will receive normal priority pages at any time<br>\n");
+        u.times=0xffffffff;
     }
     else
     {
-	if(times[0]==0)
-	    times[0]=23;
+        if(times[0]==0)
+            times[0]=23;
 
-	if(times[0]<times[1])
-	{
-	    for(i=times[0]; i<times[1]; i++)
-		u.times=set_bit(u.times, i);
-	}
-	else
-	{
-	    for(i=times[0]; i<24; i++)
-		u.times=set_bit(u.times, i);
+        if(times[0]<times[1])
+        {
+            for(i=times[0]; i<times[1]; i++)
+                u.times=set_bit(u.times, i);
+        }
+        else
+        {
+            for(i=times[0]; i<24; i++)
+                u.times=set_bit(u.times, i);
 
-	    for(i=0; i<times[1]; i++)
-		u.times=set_bit(u.times, i);
-	}
+            for(i=0; i<times[1]; i++)
+                u.times=set_bit(u.times, i);
+        }
     }
 
     sprintf(buf, "Early:  %d<br>\nLate:  %d<br>\nMask:  %x<br>\n",
-	times[0], times[1], u.times);
+        times[0], times[1], u.times);
 
     puttext(s, buf);
 
@@ -196,18 +195,17 @@ void _http_moduser_process(int s, struct http_request r)
 
 void _http_moduser(int s, struct http_request r)
 {
-    struct queuent q;
     char buf[1024];
 
     _http_auth_require(s, r, "user");
 
     if(conf.debug>2)
-	puts("Moduser request");
+        puts("Moduser request");
 
     if(r.nargs==0)
         _http_moduser_moduserpage(s, r);
     else
-	_http_moduser_process(s, r);
+        _http_moduser_process(s, r);
 
     puttext(s, buf);
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpparse.c,v 1.10 1997/07/08 06:40:05 dustin Exp $
+ * $Id: httpparse.c,v 1.11 1997/07/08 06:53:35 dustin Exp $
  */
 
 #define IWANTMETHODNAMES 1
@@ -58,21 +58,21 @@ void _http_authdecode(struct http_request *r)
         string[3]=_http_authdecode_match(string[3]);
 
         dest[i]=string[0]<<2;
-	if(string[1]!=64)
-	{
+        if(string[1]!=64)
+        {
             dest[i++]|= (string[1] & 0x30) >>4;
 
             dest[i]=(string[1]&0x0f) << 4;
-	    if(string[2]!=64)
-	    {
+            if(string[2]!=64)
+            {
                 dest[i++]|= (string[2]&0x3c) >> 2;
 
                 dest[i]= (string[2]&0x03) << 6;
 
-		if(string[3]!=64)
+                if(string[3]!=64)
                     dest[i++]|= string[3];
-	    }
-	}
+            }
+        }
     }
 
     for(i=0; dest[i]!=':'; i++);
@@ -82,7 +82,7 @@ r->auth.name=strdup(dest);
 
     if(conf.debug>2)
         printf("User:  ``%s'', Pass:  ``%s''\n", r->auth.name,
-	    r->auth.pass);
+            r->auth.pass);
 
     free(dest);
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpauth.c,v 1.1 1997/07/08 06:40:04 dustin Exp $
+ * $Id: httpauth.c,v 1.2 1997/07/08 06:53:32 dustin Exp $
  */
 
 #include <config.h>
@@ -45,22 +45,22 @@ void http_checkauth(int s, struct http_request r, char *path)
     {
         striptopath(pathname);
 
-	strcpy(buf, pathname);
-	strcat(buf, "/");
-	strcat(buf, ".htaccess");
+        strcpy(buf, pathname);
+        strcat(buf, "/");
+        strcat(buf, ".htaccess");
 
-	if(conf.debug>2)
-	    printf("trying ``%s''\n", buf);
+        if(conf.debug>2)
+            printf("trying ``%s''\n", buf);
 
-	if( (f=fopen(buf, "r")) != NULL)
-	{
-	    fgets(authname, 180, f);
-	    for(i=strlen(authname); (i=='\n' || i=='\r' || i==' ') &&
-	        i>0; i--);
-	    if(i>0)
-		authname[i+1]=0x00;
-	    fclose(f);
-	}
+        if( (f=fopen(buf, "r")) != NULL)
+        {
+            fgets(authname, 180, f);
+            for(i=strlen(authname); (i=='\n' || i=='\r' || i==' ') &&
+                i>0; i--);
+            if(i>0)
+                authname[i+1]=0x00;
+            fclose(f);
+        }
     }
 
     if(authname[0]!=0x00)
@@ -74,19 +74,19 @@ void _http_auth_require(int s, struct http_request r, char *authname)
     struct user u;
 
     if(r.auth.name == NULL)
-	_http_header_needauth(s, authname, r);
+        _http_header_needauth(s, authname, r);
 
     if(!u_exists(r.auth.name))
-	_http_header_needauth(s, authname, r);
+        _http_header_needauth(s, authname, r);
 
     u=getuser(r.auth.name);
 
     if(checkpass(u.passwd, r.auth.pass))
     {
-	 return;
+         return;
     }
     else
     {
-	_http_header_needauth(s, authname, r);
+        _http_header_needauth(s, authname, r);
     }
 }

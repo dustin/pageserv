@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpmain.c,v 1.4 1997/07/07 08:47:49 dustin Exp $
+ * $Id: httpmain.c,v 1.5 1997/07/08 06:53:34 dustin Exp $
  */
 
 #include <config.h>
@@ -41,26 +41,26 @@ int _http_socket(void)
     if(mod_webserv.listening)
         return(mod_webserv.s);
     else
-	return(-1);
+        return(-1);
 }
 
 void _http_init(void)
 {
     if(conf.webserver)
     {
-	mod_webserv.s=getservsocket(conf.webport);
-	if(mod_webserv.s>=0)
-	{
-	    mod_webserv.listening=1;
-	}
-	else
-	{
-	    mod_webserv.listening=0;
-	}
+        mod_webserv.s=getservsocket(conf.webport);
+        if(mod_webserv.s>=0)
+        {
+            mod_webserv.listening=1;
+        }
+        else
+        {
+            mod_webserv.listening=0;
+        }
     }
     else
     {
-	mod_webserv.listening=0;
+        mod_webserv.listening=0;
     }
 }
 
