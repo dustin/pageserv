@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.42 1998/01/18 09:59:13 dustin Exp $
+ * $Id: main.c,v 1.43 1998/01/18 11:36:11 dustin Exp $
  */
 
 #include <config.h>
@@ -96,10 +96,17 @@ static void detach(void)
 
 static int deliveryd_checkmom(int oldpid)
 {
-    int pid;
+    int pid, i;
     FILE *f;
 
-    f=fopen(conf.pidfile, "r");
+    for(i=0; i<3; i++)
+    {
+        f=fopen(conf.pidfile, "r");
+        if(f!=NULL)
+	    break;
+	sleep(2);
+    }
+
     if(f==NULL)
 	return(-1);
 
@@ -131,6 +138,8 @@ static void deliveryd_main(void)
     if(fork()>0)
 	return;
 
+    _ndebug(2, ("deliveryd started...\n"));
+
     t=rcfg_lookupInt(conf.cf, "etc.deliverysleep");
 
     /*
@@ -139,7 +148,10 @@ static void deliveryd_main(void)
      */
     ppid=deliveryd_checkmom(0);
     if(ppid<0)
+    {
+       _ndebug(2, ("deliveryd exiting, didn't get initial pid\n"));
        exit(0);
+    }
 
     if(t<1)
         t=DEFAULT_DELSLEEP;
@@ -162,7 +174,10 @@ static void deliveryd_main(void)
 
 	/* See if it's ``our time'' */
         if(deliveryd_checkmom(ppid)<0)
+	{
+	    _ndebug(2, ("deliveryd exiting, parent isn't %d\n", ppid));
 	    exit(0);
+	}
     }
 }
 
@@ -179,6 +194,8 @@ static void daemon_main(void)
 
     if(conf.debug==0)
         detach();
+    else
+	writepid(getpid());
 
     /* *NOW* let's initialize the database, shall we? */
     conf.udb.dbinit();
