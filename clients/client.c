@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: client.c,v 1.5 1997/03/14 21:33:58 dustin Exp $
+ * $Id: client.c,v 1.6 1997/03/26 23:39:53 dustin Exp $
  */
 
 /*
@@ -120,6 +120,9 @@ int pushqueue(char *to, char *message, int priority)
        ret=0;
     else
        ret=size;
+
+    /* Sleep a second, unless I can figure out how to do it right... */
+    sleep(1);
 
     close(s);
     return(ret);
