@@ -26,9 +26,8 @@ Technical:
     * Check the return value of all system calls.  Gotta be sure stuff got
       There.
     * Automate module adding.
-    * Automate command adding.
     * Documentation
 
 ----------------------------------------
 Copyright (c) 1997  Dustin Sallings
-$Id: TODO,v 2.31 1998/01/15 10:17:22 dustin Exp $
+$Id: TODO,v 2.32 1998/01/22 07:38:28 dustin Exp $
