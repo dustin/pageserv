@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile,v 1.10 1997/03/12 07:00:53 dustin Exp $
+# $Id: Makefile,v 1.11 1997/03/12 16:02:20 dustin Exp $
 
 MAJOR=2
 MINOR=0
@@ -18,7 +18,7 @@ LDFLAGS=-g $(LIBS)
 
 SERV_OBJS=sockets.o main.o utility.o kids.o queue.o protocol.o userdb.o
 PQ_OBJS=pqueue.o utility.o queue.o
-PU_OBJS=parseusers.o userdb.o
+PU_OBJS=parseusers.o userdb.o utility.o
 LU_OBJS=listusers.o userdb.o
 SOURCES=sockets.c main.c utility.c kids.c queue.c protocol.c pqueue.c \
 	parseusers.c userdb.c listusers.c

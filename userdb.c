@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.4 1997/03/12 06:50:20 dustin Exp $
+ * $Id: userdb.c,v 1.5 1997/03/12 16:02:25 dustin Exp $
  */
 
 #include <stdio.h>
@@ -15,7 +15,7 @@ void printuser(struct user u)
 {
     printf("ID:        %s\nPager ID:  %s\nStation:   %s\n", u.name,
          u.pageid, u.statid);
-    printf("Early:     %d\nLate:      %d\n", u.early, u.late);
+    printf("Times:     %x\n", u.times);
 }
 
 void storeuser(DBM *db, struct user u)
