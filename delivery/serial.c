@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: serial.c,v 2.13 1998/03/11 03:54:35 dustin Exp $
+ * $Id: serial.c,v 2.14 1998/03/11 08:09:52 dustin Exp $
  */
 
 /*
@@ -182,9 +182,9 @@ static int p_openport(char *port)
     if(tcgetattr(s, &tm)<0)
 	perror("tcgetattr");
 
-    if (cfsetispeed(&tm, B2400) == -1)
+    if (cfsetispeed(&tm, B38400) == -1)
 	perror("cfsetispeed");
-    if (cfsetospeed(&tm, B2400) == -1)
+    if (cfsetospeed(&tm, B38400) == -1)
 	perror("cfsetospeed");
 
     tm.c_cc[VMIN]=1;
