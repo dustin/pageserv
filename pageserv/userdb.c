@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.5 1997/04/04 22:21:15 dustin Exp $
+ * $Id: userdb.c,v 1.6 1997/04/09 21:09:11 dustin Exp $
  * $State: Exp $
  */
 
@@ -67,8 +67,8 @@ void eraseuserdb(void)
 
     if( (db=dbm_open(conf.userdb, O_RDWR, 0644)) ==NULL)
     {
-	perror(conf.userdb);
-	exit(1);
+	/* There isn't one, just return */
+	return;
     }
 
     for(d=dbm_firstkey(db); d.dptr!=NULL; d=dbm_firstkey(db))

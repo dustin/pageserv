@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.16 1997/04/04 21:27:23 dustin Exp $
+ * $Id: pageserv.h,v 1.17 1997/04/09 21:09:05 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -57,8 +57,14 @@
 /* Max queue time before deletion */
 #define MAX_QUEUETIME  180
 
-/* Farkle by default */
+/* Don't farkle by default */
 #define DEFAULT_FARKLE 0
+
+/* Default maximum modem connection tries */
+#define MAX_CONATTEMPTS 15
+
+/* Default sleep between attempts */
+#define CONATTEMPTSSLEEP 5
 
 /* The protocol */
 
@@ -138,17 +144,19 @@ struct terminal {
 };
 
 struct config {
-    int mode;           /* execution mode */
-    int debug;
-    int childlifetime;
-    int maxqueuetime;
-    int farkle;
-    int log_que;
-    char *servhost;
-    char *userdb;
-    char *termdb;
-    char *qdir;
-    char *pidfile;
+    int mode;              /* execution mode */
+    int debug;             /* debug level */
+    int childlifetime;     /* child lifetime */
+    int maxqueuetime;      /* max queue time */
+    int farkle;            /* farkle toggle */
+    int log_que;           /* logging facility */
+    int maxconattempts;    /* maximum attempts to connect to modem server */
+    int conattemptsleep;   /* sleep between tries */
+    char *servhost;        /* server fqdn */
+    char *userdb;          /* path to user database */
+    char *termdb;          /* path to terminal database */
+    char *qdir;            /* path to queue directory */
+    char *pidfile;         /* path to pid file */
 };
 
 /* macros */

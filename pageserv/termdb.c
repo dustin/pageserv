@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: termdb.c,v 1.5 1997/04/04 22:21:14 dustin Exp $
+ * $Id: termdb.c,v 1.6 1997/04/09 21:09:09 dustin Exp $
  * $State: Exp $
  */
 
@@ -33,8 +33,8 @@ void erasetermdb(void)
 
     if( (db=dbm_open(conf.termdb, O_RDWR, 0644)) ==NULL)
     {
-        perror(conf.termdb);
-        exit(1);
+	/* there isn't one, just return */
+	return;
     }
 
     for(d=dbm_firstkey(db); d.dptr!=NULL; d=dbm_firstkey(db))

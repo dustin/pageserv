@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: network.c,v 2.3 1997/04/04 22:20:57 dustin Exp $
+ * $Id: network.c,v 2.4 1997/04/09 21:09:01 dustin Exp $
  * $State: Exp $
  */
 
@@ -19,6 +19,8 @@
 
 #include <pageserv.h>
 #include <tap.h>
+
+extern struct config conf;
 
 int s_openterm(struct terminal t)
 {
@@ -41,6 +43,7 @@ void net_timeout(void)
 int s_openhost(char *host, int port)
 {
 struct hostent *hp;
+int success, i;
 register int s;
 struct linger l;
 struct sockaddr_in sin;
@@ -69,10 +72,22 @@ struct sockaddr_in sin;
     l.l_linger = 60;
     setsockopt(s, SOL_SOCKET, SO_LINGER, (char *)&l, sizeof(l));
 
-    if(connect(s, (struct sockaddr *)&sin, sizeof(sin))<0)
+    success=0;
+
+    for(i=0; i<conf.maxconattempts; i++)
     {
-        perror("connect");
-        exit(1);
+        if(connect(s, (struct sockaddr *)&sin, sizeof(sin))<0)
+        {
+	    if(conf.debug>2)
+		printf("Error getting modem, %d attempt, sleeping...\n", i);
+
+	    sleep(conf.conattemptsleep);
+        }
+	else
+	{
+	    success=1;
+	    break;
+	}
     }
 
     return(s);

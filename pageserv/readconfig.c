@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.7 1997/04/04 22:21:10 dustin Exp $
+ * $Id: readconfig.c,v 1.8 1997/04/09 21:09:08 dustin Exp $
  * $State: Exp $
  */
 
@@ -73,6 +73,8 @@ void T_command(char s, char *arg)
     {
 	case 'l': conf.childlifetime=atoi(arg); break;
 	case 'Q': conf.maxqueuetime=atoi(arg); break;
+	case 'c': conf.maxconattempts=atoi(arg); break;
+	case 's': conf.conattemptsleep=atoi(arg); break;
     }
 }
 
@@ -207,6 +209,8 @@ void readconfig(char *file)
     conf.maxqueuetime=MAX_QUEUETIME;
     conf.farkle=DEFAULT_FARKLE;
     conf.log_que=LOG_LOCAL7|LOG_INFO;
+    conf.maxconattempts=MAX_CONATTEMPTS;
+    conf.conattemptsleep=CONATTEMPTSSLEEP;
 
     f=fopen(file, "r");
     if(f==NULL)
