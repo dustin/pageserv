@@ -979,9 +979,8 @@ else
   echo "$ac_t""no" 1>&6
 fi
 
-fi
-echo $ac_n "checking for main in -lndbm""... $ac_c" 1>&6
-echo "configure:985: checking for main in -lndbm" >&5
+    echo $ac_n "checking for main in -lndbm""... $ac_c" 1>&6
+echo "configure:984: checking for main in -lndbm" >&5
 ac_lib_var=`echo ndbm'_'main | sed 'y%./+-%__p_%'`
 if eval "test \"`echo '$''{'ac_cv_lib_$ac_lib_var'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
@@ -989,14 +988,14 @@ else
   ac_save_LIBS="$LIBS"
 LIBS="-lndbm  $LIBS"
 cat > conftest.$ac_ext <<EOF
-#line 993 "configure"
+#line 992 "configure"
 #include "confdefs.h"
 
 int main() {
 main()
 ; return 0; }
 EOF
-if { (eval echo configure:1000: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest; then
+if { (eval echo configure:999: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest; then
   rm -rf conftest*
   eval "ac_cv_lib_$ac_lib_var=yes"
 else
@@ -1023,8 +1022,8 @@ else
   echo "$ac_t""no" 1>&6
 fi
 
-echo $ac_n "checking for main in -lnsl""... $ac_c" 1>&6
-echo "configure:1028: checking for main in -lnsl" >&5
+    echo $ac_n "checking for main in -lnsl""... $ac_c" 1>&6
+echo "configure:1027: checking for main in -lnsl" >&5
 ac_lib_var=`echo nsl'_'main | sed 'y%./+-%__p_%'`
 if eval "test \"`echo '$''{'ac_cv_lib_$ac_lib_var'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
@@ -1032,14 +1031,14 @@ else
   ac_save_LIBS="$LIBS"
 LIBS="-lnsl  $LIBS"
 cat > conftest.$ac_ext <<EOF
-#line 1036 "configure"
+#line 1035 "configure"
 #include "confdefs.h"
 
 int main() {
 main()
 ; return 0; }
 EOF
-if { (eval echo configure:1043: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest; then
+if { (eval echo configure:1042: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest; then
   rm -rf conftest*
   eval "ac_cv_lib_$ac_lib_var=yes"
 else
@@ -1066,8 +1065,8 @@ else
   echo "$ac_t""no" 1>&6
 fi
 
-echo $ac_n "checking for main in -lsocket""... $ac_c" 1>&6
-echo "configure:1071: checking for main in -lsocket" >&5
+    echo $ac_n "checking for main in -lsocket""... $ac_c" 1>&6
+echo "configure:1070: checking for main in -lsocket" >&5
 ac_lib_var=`echo socket'_'main | sed 'y%./+-%__p_%'`
 if eval "test \"`echo '$''{'ac_cv_lib_$ac_lib_var'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
@@ -1075,14 +1074,14 @@ else
   ac_save_LIBS="$LIBS"
 LIBS="-lsocket  $LIBS"
 cat > conftest.$ac_ext <<EOF
-#line 1079 "configure"
+#line 1078 "configure"
 #include "confdefs.h"
 
 int main() {
 main()
 ; return 0; }
 EOF
-if { (eval echo configure:1086: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest; then
+if { (eval echo configure:1085: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest; then
   rm -rf conftest*
   eval "ac_cv_lib_$ac_lib_var=yes"
 else
@@ -1109,6 +1108,7 @@ else
   echo "$ac_t""no" 1>&6
 fi
 
+fi
 
 if test "$OS" = "unixware"
 then
