@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.51 1998/03/18 08:42:33 dustin Exp $
+ * $Id: queue.c,v 1.52 1998/06/28 23:11:34 dustin Exp $
  */
 
 #include <stdio.h>
@@ -542,10 +542,13 @@ char *fntoqid(char *fn)
     return(fn+i);
 }
 
+/*
+ * This does the word wrappin'
+ */
 int _splitsq(int s, struct queuent q, int flags)
 {
-    char buf[BUFLEN], current[BUFLEN];
-    int ret=0, maxlen, p, done=0;
+    char buf[BUFLEN], *current;
+    int ret=0, maxlen, p, done=0, sofar=0;
 
     maxlen=rcfg_lookupInt(conf.cf, "tuning.maxMessageLength");
     if(maxlen==0)
@@ -555,35 +558,49 @@ int _splitsq(int s, struct queuent q, int flags)
 
     _ndebug(3, ("Beginning a truncation loop for %s\n", q.message));
 
-    strcpy(current, q.message);
+    current=strdup(q.message);
+    assert(strlen(current)<BUFLEN); /* Make sure the buffer won't overflow */
 
     do {
-	strncpy(buf, current, maxlen);
-	p=strlen(buf);
-	while(--p>0 && !isspace(buf[p]));
-	if(p==0)
+	strcpy(buf, current+sofar);
+
+	/* Wrap if this part is too long. */
+	if(strlen(buf)>maxlen) {
 	    p=maxlen;
 
-	buf[p]=0x00;
+	    while(--p>0 && !isspace(buf[p]));
+	    if(p==0)
+	        p=maxlen; /* Big word, reset to max len */
+            else
+	        sofar++;  /* Normal word, landed on a space, skip over it.  */
+
+	    buf[p]=0x00;
+        }
+
+	sofar+=strlen(buf);
 
 	strcpy(q.message, buf);
 
         _ndebug(3, ("Trying to queue ``%s''\n", q.message));
 
 	ret+=storequeue(s, q, flags);
-	if(ret!=0)
+	if(ret!=0) {
+	    free(current);
 	    return(ret);
+        }
 
-	if(current[strlen(q.message)+1]!=NULL)
-	{
-	    strncpy(buf, &current[strlen(q.message)+1], maxlen);
-	    strcpy(current, buf);
-	}
-	else
-	{
+	if(current[sofar]!=NULL) {
+	    if(strlen(current+sofar)>maxlen) {
+	        strncpy(buf, current+sofar, maxlen);
+	    } else {
+		strcpy(buf, current+sofar);
+	    }
+	} else {
 	    done=1;
 	}
     } while(!done);
+
+    free(current);
     return(ret);
 }
 
