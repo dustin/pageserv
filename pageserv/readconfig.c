@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.23 1997/08/09 06:35:49 dustin Exp $
+ * $Id: readconfig.c,v 1.24 1997/08/09 07:18:28 dustin Exp $
  */
 
 #include <readconfig.h>
@@ -184,6 +184,12 @@ void rdconfig(char *file)
 
     conf.cf=rcfg_readconfig(file);
     cf=conf.cf;
+
+    if(cf==NULL)
+    {
+	perror(file);
+	exit(1);
+    }
 
     /* Hook up with some log facility action */
     conf.log_que=getlogFacility(rcfg_lookup(cf, "log.facility"));

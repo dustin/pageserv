@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: sockets.c,v 1.6 1997/08/09 06:48:36 dustin Exp $
+ * $Id: sockets.c,v 1.7 1997/08/09 07:18:30 dustin Exp $
  */
 
 #include <stdio.h>
@@ -33,7 +33,7 @@ char *getHostName(unsigned int addr)
 
     h=gethostbyaddr((void *)&addr, sizeof(unsigned int), AF_INET);
     if(h==NULL)
-	name=nmc_intToDQ(addr);
+	name=nmc_intToDQ(ntohl(addr));
     else
 	name=h->h_name;
 
@@ -49,9 +49,9 @@ void logConnect(struct sockaddr_in fsin, module *m)
     if(rcfg_lookupInt(conf.cf, "log.hostnames") ==1)
 	hostname=getHostName(fsin.sin_addr.s_addr);
     else
-        hostname=nmc_intToDQ(fsin.sin_addr.s_addr);
+        hostname=nmc_intToDQ(ntohl(fsin.sin_addr.s_addr));
 
-    ip_addr=nmc_intToDQ(fsin.sin_addr.s_addr);
+    ip_addr=nmc_intToDQ(ntohl(fsin.sin_addr.s_addr));
 
     syslog(conf.log_que|LOG_INFO, "connect from %s (%s) for %s",
 	   hostname, ip_addr, m->name);
