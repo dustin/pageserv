@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: protocol.c,v 1.13 1997/03/14 21:33:31 dustin Exp $
+ * $Id: protocol.c,v 1.14 1997/03/24 18:47:20 dustin Exp $
  */
 
 #include <stdio.h>
@@ -12,6 +12,8 @@
 #include <netinet/in.h>
 
 #include "pageserv.h"
+
+extern struct config conf;
 
 int gettext(int s, char *buf)
 {

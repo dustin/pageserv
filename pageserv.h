@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.18 1997/03/24 15:39:10 dustin Exp $
+ * $Id: pageserv.h,v 1.19 1997/03/24 18:47:19 dustin Exp $
  */
 
 /* for DBM type */
@@ -77,6 +77,10 @@ struct user {
     char pageid[IDLEN];
     char statid[STATLEN];
     int  times;
+};
+
+struct config {
+    int debug;
 };
 
 /* macros */

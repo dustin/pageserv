@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: sockets.c,v 1.4 1997/03/14 21:33:32 dustin Exp $
+ * $Id: sockets.c,v 1.5 1997/03/24 18:47:23 dustin Exp $
  */
 
 #include <stdio.h>
@@ -16,7 +16,7 @@
 
 #include "pageserv.h"
 
-extern struct global *glob;
+extern struct config conf;
 
 int initialize(void)
 {

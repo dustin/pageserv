@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: kids.c,v 1.6 1997/03/14 16:28:18 dustin Exp $
+ * $Id: kids.c,v 1.7 1997/03/24 18:47:16 dustin Exp $
  */
 
 #include <signal.h>
@@ -12,6 +12,8 @@
 #include <sys/socket.h>
 
 #include "pageserv.h"
+
+extern struct config conf;
 
 /* The reaper is called after every connection or every 120 seconds,
  * whichever is sooner.  It waits on all the children that have died

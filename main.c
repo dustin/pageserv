@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.5 1997/03/14 21:33:30 dustin Exp $
+ * $Id: main.c,v 1.6 1997/03/24 18:47:18 dustin Exp $
  */
 
 #include <stdio.h>
@@ -13,6 +13,8 @@
 #include <netinet/in.h>
 
 #include "pageserv.h"
+
+struct config conf;
 
 void detach(void)
 {

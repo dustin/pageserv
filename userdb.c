@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.12 1997/03/14 21:33:33 dustin Exp $
+ * $Id: userdb.c,v 1.13 1997/03/24 18:47:25 dustin Exp $
  */
 
 #include <stdio.h>
@@ -12,6 +12,8 @@
 #include <sys/types.h>
 
 #include "pageserv.h"
+
+extern struct config conf;
 
 /* bounds checker for hour loop things */
 #define BC (i<24)

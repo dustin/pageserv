@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.8 1997/03/14 21:33:32 dustin Exp $
+ * $Id: queue.c,v 1.9 1997/03/24 18:47:22 dustin Exp $
  */
 
 #include <stdio.h>
@@ -14,6 +14,8 @@
 #include <sys/socket.h>
 
 #include "pageserv.h"
+
+extern struct config conf;
 
 char *newtmp(void)
 {
