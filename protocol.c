@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: protocol.c,v 1.2 1997/03/11 19:36:34 dustin Exp $
+ * $Id: protocol.c,v 1.3 1997/03/11 19:47:52 dustin Exp $
  */
 
 #include <stdio.h>
@@ -27,7 +27,7 @@ int gettext(int s, char *buf)
     }
 }
 
-void queueup(int s)
+void p_queueup(int s)
 {
     char buf1[BUFLEN], buf2[BUFLEN];
 
@@ -37,6 +37,14 @@ void queueup(int s)
     gettext(s, buf2);
 
     storequeue(s, PR_NORMAL, buf1, buf2);
+}
+
+void p_depth(int s)
+{
+    char buf[BUFLEN];
+
+    sprintf(buf, "%d items in the queue\n", queuedepth());
+    puttext(s, buf);
 }
 
 void process(int s, char *cmd)
@@ -72,7 +80,10 @@ void process(int s, char *cmd)
     switch(c)
     {
 	case P_MASH:
-	    queueup(s); break;
+	    p_queueup(s); break;
+
+	case P_DEPTH:
+	    p_depth(s); break;
 
         case P_QUIT:
 	    quit(s);
