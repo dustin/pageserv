@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 2.18 1997/07/07 08:47:18 dustin Exp $
+dnl $Id: configure.in,v 2.19 1997/07/09 07:24:08 dustin Exp $
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(pageserv)
 AC_CONFIG_HEADER(include/config.h)
@@ -6,6 +6,7 @@ AC_CONFIG_HEADER(include/config.h)
 dnl Checks for programs.
 AC_PROG_CC(-g)
 AC_PROG_YACC
+AC_PROG_LEX
 AC_PROG_RANLIB
 AC_PATH_PROG(AR, ar, /bin/ar, $PATH)
 AC_PROGRAM_CHECK(UNAMEPROG, uname, uname, )
