@@ -1,7 +1,7 @@
 /*
  * Copyright (c)  1996-1998  Dustin Sallings
  *
- * $Id: snpplogin.c,v 1.4 1998/01/23 09:27:36 dustin Exp $
+ * $Id: snpplogin.c,v 1.5 1998/01/23 09:47:31 dustin Exp $
  */
 
 #include <config.h>
@@ -178,7 +178,6 @@ void snpp_showUserQ(int s, char *user, char *arg)
 void snpp_delUserQ(int s, char *user, char *arg)
 {
     struct queuent q;
-    int i;
 
     if(rcfg_lookupInt(conf.cf, "modules.snpp.dequeue")==0)
     {

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.43 1998/01/23 09:26:06 dustin Exp $
+ * $Id: queue.c,v 1.44 1998/01/23 09:47:28 dustin Exp $
  */
 
 #include <stdio.h>
@@ -159,7 +159,7 @@ void logqueue(struct queuent q, int type, char *reason)
 	        q.qid, q.to ); break;
         case DEQUE_LOG:
             syslog(conf.log_que|LOG_INFO,
-                   "dequeued %s to %s, request by user", q.qid, q.to, reason);
+                   "dequeued %s to %s, %s", q.qid, q.to, reason);
             break;
     }
     closelog();
