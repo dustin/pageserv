@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.45 1998/01/22 10:40:28 dustin Exp $
+ * $Id: main.c,v 1.46 1998/01/25 07:20:22 dustin Exp $
  */
 
 #include <config.h>
@@ -15,6 +15,7 @@
 #include <signal.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <syslog.h>
 #include <fcntl.h>
 #include <sys/wait.h>
 
@@ -127,18 +128,24 @@ static int deliveryd_checkmom(int oldpid)
 /*
  * This is a hack.
  */
-static void deliveryd_main(void)
+static int deliveryd_main(void)
 {
-    int t, stat, ppid;
+    int t, stat, ppid, pid;
 
     /*
      * We return here because we're still the main server daemon until
      * we fork().
      */
-    if(fork()>0)
-	return;
+    if( (pid=fork())>0)
+	return(pid);
 
-    _ndebug(2, ("deliveryd started...\n"));
+    for(t=0; t<255; t++)
+	close(t);
+
+    openlog("pageserv", LOG_PID|LOG_NDELAY, conf.log_que);
+    syslog(conf.log_que|LOG_INFO, "deliveryd started");
+
+    resetdelivertraps();
 
     t=rcfg_lookupInt(conf.cf, "etc.deliverysleep");
 
@@ -149,7 +156,9 @@ static void deliveryd_main(void)
     ppid=deliveryd_checkmom(0);
     if(ppid<0)
     {
-       _ndebug(2, ("deliveryd exiting, didn't get initial pid\n"));
+       syslog(conf.log_que|LOG_NOTICE,
+	      "deliveryd exiting, didn't get initial pid");
+       closelog();
        exit(0);
     }
 
@@ -161,13 +170,16 @@ static void deliveryd_main(void)
 	sleep(t);
 	if(readyqueue()>0)
 	{
-	    if(fork()==0)
+	    if( (pid=fork())==0)
 	    {
+		closelog();
 	        runqueue();
 		exit(0);
 	    }
 	    else
 	    {
+                syslog(conf.log_que|LOG_INFO, "delivering pages on pid %d",
+		       pid);
 	        wait(&stat);
 	    }
 	}
@@ -175,7 +187,9 @@ static void deliveryd_main(void)
 	/* See if it's ``our time'' */
         if(deliveryd_checkmom(ppid)<0)
 	{
-	    _ndebug(2, ("deliveryd exiting, parent isn't %d\n", ppid));
+             syslog(conf.log_que|LOG_NOTICE,
+	            "deliveryd exiting, parent isn't %d", ppid);
+	    closelog();
 	    exit(0);
 	}
     }
@@ -184,13 +198,11 @@ static void deliveryd_main(void)
 static void daemon_main(void)
 {
     struct sockaddr_in fsin;
-    int i, s, fromlen, pid, upper;
+    int i, s, fromlen, pid, upper=0, deliveryd;
     fd_set fdset, tfdset;
     struct timeval t;
     module *m;
     modpass p;
-
-    upper=0;
 
     if(conf.debug==0)
         detach();
@@ -200,10 +212,13 @@ static void daemon_main(void)
     /* *NOW* let's initialize the database, shall we? */
     conf.udb.dbinit();
 
-    if(rcfg_lookupInt(conf.cf, "etc.deliveryd"))
+    if(rcfg_lookupInt(conf.cf, "etc.deliveryd")==0)
     {
-	/* fork off a deliveryd */
-	deliveryd_main();
+	deliveryd=-1;
+    }
+    else
+    {
+	deliveryd=0;
     }
 
     resetservtraps(); /* set signal traps */
@@ -284,6 +299,22 @@ static void daemon_main(void)
 
         } /* end of select loop */
         reaper();
+
+	/* Check deliveryd */
+	if(deliveryd>=0)
+	{
+	    if(deliveryd==0)
+	    {
+		deliveryd=deliveryd_main();
+	    }
+	    else
+	    {
+	        if(kill(deliveryd, 0)!=0)
+	        {
+		    deliveryd=deliveryd_main();
+	        }
+	    }
+	}
     }
 }
 

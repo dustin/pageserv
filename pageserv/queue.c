@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.44 1998/01/23 09:47:28 dustin Exp $
+ * $Id: queue.c,v 1.45 1998/01/25 07:20:24 dustin Exp $
  */
 
 #include <stdio.h>
@@ -206,6 +206,10 @@ void dequeue(char *qid)
 
 int gq_checkit(struct queuent q, char *number)
 {
+    /* make sure we got a valid queue file */
+    if(q.to[0]==NULL)
+	return(0);
+
     if( (strcmp(q.u.statid, number))!=0)
     {
         /* Splat means grab 'em all */
@@ -423,35 +427,46 @@ struct queuent readqueuefile(char *fn)
 	return(q);
     }
 
+    #define readQFline(a, b) \
+	fgets(a, b, f); \
+	if(a==NULL || strlen(a)==0) \
+	{ \
+	    q.to[0]=0x00; \
+	    fclose(f); \
+	    _ndebug(3, ("Removing invalid queue file: %s\n", filename)); \
+	    unlink(filename); \
+	    return(q); \
+        }
+
     /* priority */
-    fgets(buf, BUFLEN, f);
+    readQFline(buf, BUFLEN);
     sscanf(buf, "%d", &q.priority);
 
     /* Whom it's to */
-    fgets(q.to, TOLEN, f);
+    readQFline(q.to, TOLEN);
     kw(q.to);
 
     /* The date it was submitted */
-    fgets(buf, BUFLEN, f);
+    readQFline(buf, BUFLEN);
     q.submitted=atoi(buf);
 
     /* The qid */
     strcpy(q.qid, fntoqid(fn));
 
     /* Soonest it can be delivered */
-    fgets(buf, BUFLEN, f);
+    readQFline(buf, BUFLEN);
     q.soonest=atoi(buf);
 
     /* Latest it can be delivered */
-    fgets(buf, BUFLEN, f);
+    readQFline(buf, BUFLEN);
     q.latest=atoi(buf);
 
     /* The submitter's IP address */
-    fgets(buf, BUFLEN, f);
+    readQFline(buf, BUFLEN);
     q.rem_addr=atoi(buf);
 
     /* The actual message data */
-    fgets(q.message, BUFLEN, f);
+    readQFline(q.message, BUFLEN);
     kw(q.message);
 
     fclose(f);
@@ -538,6 +553,10 @@ int readytodeliver(struct queuent q)
 
 void getqueueinfo( struct queuent *q )
 {
+    /* make sure we got a valid queue file */
+    if(q->to[0]==NULL)
+	return;
+
     q->u=conf.udb.getuser(q->to);
 }
 
