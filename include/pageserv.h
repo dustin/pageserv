@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.50 1997/09/04 06:18:37 dustin Exp $
+ * $Id: pageserv.h,v 1.51 1997/09/12 05:30:50 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -119,11 +119,6 @@
 #define FAIL_LOG    2
 #define EXP_LOG     3
 
-/* port types */
-
-#define PORT_NET    0
-#define PORT_DIRECT 1
-
 /* Function returns */
 #define FUNC_UNKNOWN -1
 
@@ -175,7 +170,6 @@ struct terminal {
     char number[STATLEN];
     char ts[FNSIZE];
     char predial[STATLEN];
-    int  contype;
     int  flags;
     int  port;
 };

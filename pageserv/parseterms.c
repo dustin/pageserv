@@ -1,8 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parseterms.c,v 1.5 1997/09/04 06:18:46 dustin Exp $
- * $State: Exp $
+ * $Id: parseterms.c,v 1.6 1997/09/12 05:30:53 dustin Exp $
  */
 
 #include <stdio.h>
@@ -28,11 +27,6 @@ struct terminal parseterm(char *line)
 
     sscanf(line, "%s %d %s %d %s", t.number, &t.flags, t.ts, &t.port,
         t.predial);
-
-    if(t.ts[0]=='/')
-	t.contype=PORT_DIRECT;
-    else
-	t.contype=PORT_NET;
 
     return(t);
 }

@@ -1,8 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: modem.c,v 2.11 1997/08/02 01:26:20 dustin Exp $
- * $State: Exp $
+ * $Id: modem.c,v 2.12 1997/09/12 05:30:47 dustin Exp $
  */
 
 #include <stdio.h>
@@ -28,20 +27,10 @@ int any_openterm(struct terminal term)
 {
     int s=-1;
 
-    if(conf.debug>2)
-	printf("any_openterm contype is %d\n", term.contype);
-
-    switch(term.contype)
-    {
-	case PORT_NET:
-            s=s_openterm(term);
-	    break;
-	case PORT_DIRECT:
-	    s=p_openterm(term);
-	    break;
-	default:
-	    printf("Unkown con type:  %d\n", term.contype);
-    }
+    if(term.ts[0]=='/')
+        s=p_openterm(term);
+    else
+        s=s_openterm(term);
 
     if(conf.debug>2)
 	printf("Looks like the modem for today will be %d\n", s);
