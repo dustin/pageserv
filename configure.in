@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 2.7 1997/04/11 20:38:34 dustin Exp $
+dnl $Id: configure.in,v 2.8 1997/04/13 21:59:50 dustin Exp $
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(pageserv)
 AC_CONFIG_HEADER(include/config.h)
@@ -11,6 +11,7 @@ AC_PATH_PROG(AR, ar, /bin/ar, $PATH)
 AC_PROGRAM_CHECK(UNAMEPROG, uname, uname, )
 AC_PROGRAM_CHECK(TRPROG, tr, tr, )
 AC_PROGRAM_CHECK(SEDPROG, sed, sed, )
+AC_PROGRAM_CHECK(CUTPROG, cut, cut, )
 
 dnl What we on, boys?
 echo "Checking out your OS..."
@@ -31,7 +32,16 @@ case "$OS" in
 	echo "Solaris?!?  Oh, alright..."
 	;;
     'irix')
-	echo "Irix, I did a lot of the development under Irix"
+	echo "Looks like IRIX it's going to be..."
+	if test GCC = "yes"
+	then
+	    echo "That's odd, we're using gcc...  OK."
+	    echo "If you have the IDO, please set the environ CC to cc"
+	    echo "to use the native compiler."
+	else
+	    echo "Using the native IDO, let's set some CFLAGS"
+	    CFLAGS="$CFLAGS -fullwarn"
+	fi
 	;;
 esac
 
@@ -61,3 +71,14 @@ AC_TYPE_SIGNAL
 AC_CHECK_FUNCS(select socket herror getopt)
 
 AC_OUTPUT(Makefile pageserv/Makefile clients/Makefile delivery/Makefile)
+
+dnl Now let's make depend if he wants to.
+
+echo "Would you like to make depend now?"
+read theanswer
+
+theanswer=`echo $theanswer | cut -b1`
+if test $theanswer = "y"
+then
+    make depend
+fi
