@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.31 1997/12/29 08:55:05 dustin Exp $
+ * $Id: readconfig.c,v 1.32 1998/01/01 08:41:13 dustin Exp $
  */
 
 #include <readconfig.h>
@@ -74,11 +74,11 @@ void setdefaults(void)
     {
 	fputs("Unknown, or unconfigured user database type, using dbm\n",
               stderr);
-	dbm_userdbInit();
+	conf.udb.dbinit=dbm_userdbInit;
     }
     else
     {
-	userdbtypes[i].func();
+	conf.udb.dbinit=userdbtypes[i].func;
     }
 }
 

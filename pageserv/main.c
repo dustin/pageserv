@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.30 1997/12/31 16:38:06 dustin Exp $
+ * $Id: main.c,v 1.31 1998/01/01 08:41:11 dustin Exp $
  */
 
 #include <config.h>
@@ -85,9 +85,12 @@ void detach(void)
         close(i);
    }
 
+/*
    open("/dev/null", O_RDWR);
    open("/dev/null", O_RDWR);
    open("/dev/null", O_RDWR);
+   open("/dev/null", O_RDWR);
+*/
 
    tmp=rcfg_lookup(conf.cf, "etc.working_directory");
    if(tmp==NULL)
@@ -110,6 +113,9 @@ void daemon_main(void)
 
     if(conf.debug==0)
         detach();
+
+    /* *NOW* let's initialize the database, shall we? */
+    conf.udb.dbinit();
 
     resetservtraps(); /* set signal traps */
 
@@ -177,6 +183,7 @@ void daemon_main(void)
 			}
 			else
 			{
+			    _ndebug(-1, ("Closing %d\n", p.socket));
 			    close(p.socket);
 
 			    /* This used to be if(conf.debug>2 && pid>1) */

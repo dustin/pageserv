@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.54 1997/12/31 16:38:01 dustin Exp $
+ * $Id: pageserv.h,v 1.55 1998/01/01 08:41:05 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -208,6 +208,7 @@ struct userDB {
     struct user (*getuser)(char *name);
     int (*u_exists)(char *name);
     int (*parseusers)(void);
+    void (*dbinit)(void);
 };
 
 struct config {
