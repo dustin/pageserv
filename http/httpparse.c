@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpparse.c,v 1.12 1997/07/31 07:18:45 dustin Exp $
+ * $Id: httpparse.c,v 1.13 1997/07/31 07:31:32 dustin Exp $
  */
 
 #define IWANTMETHODNAMES 1
@@ -94,8 +94,8 @@ struct http_request http_parserequest(int s)
     int i, j, start, finished=0, tmp;
     struct http_request r;
 
+    _http_init_request(&r);
     r.method=-1;
-    r.args=NULL;
     buf[0]=0x00;
     gettextcr(s, buf);
 
