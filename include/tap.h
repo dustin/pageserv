@@ -1,13 +1,17 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * "$Id: tap.h,v 1.8 1998/07/13 23:41:42 dustin Exp $"
+ * "$Id: tap.h,v 1.9 1998/07/15 07:55:14 dustin Exp $"
  */
 
 #ifndef TAP_H
 #define TAP_H 1
 
 #include <stdio.h>
+#include <string.h>
+
+/* This really should be defined somewhere... */
+extern int errno;
 
 /* macros */
 
