@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.41 1998/01/20 05:57:52 dustin Exp $
+ * $Id: queue.c,v 1.42 1998/01/22 10:40:34 dustin Exp $
  */
 
 #include <stdio.h>
@@ -405,7 +405,7 @@ struct queuent readqueuefile(char *fn)
         strcat(filename, "/");
 	if(strlen(fn)+strlen(filename)>=(size_t)FNSIZE)
 	{
-	    _ndebug(2, ("Ack, stack smash on ``%s'' + ``%s''\n", fn));
+	    _ndebug(2, ("Ack, stack smash on ``%s'' + ``%s''\n",fn,filename));
 	    return(q);
 	}
         strcat(filename, fn);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.44 1998/01/21 22:32:18 dustin Exp $
+ * $Id: main.c,v 1.45 1998/01/22 10:40:28 dustin Exp $
  */
 
 #include <config.h>
@@ -306,7 +306,7 @@ static char *getcachepw(char *name, char **names, char **passwords)
 static void rehash_main(void)
 {
     int i;
-    char **names, **names2, **passwords, *tmp;
+    char **names, **names2, **passwords=NULL, *tmp;
     struct user u;
 
     conf.udb.dbinit();

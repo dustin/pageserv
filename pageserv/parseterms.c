@@ -1,11 +1,12 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parseterms.c,v 1.7 1998/01/22 10:23:50 dustin Exp $
+ * $Id: parseterms.c,v 1.8 1998/01/22 10:40:32 dustin Exp $
  */
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <ndbm.h>
 #include <ctype.h>
 #include <sys/types.h>

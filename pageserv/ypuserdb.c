@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: ypuserdb.c,v 1.8 1998/01/22 10:23:53 dustin Exp $
+ * $Id: ypuserdb.c,v 1.9 1998/01/22 10:40:36 dustin Exp $
  */
 
 #include <config.h>
@@ -44,7 +44,7 @@ static struct user nis_getuser(char *name)
 {
     struct user u;
     char *data;
-    int yperr, len, times[2];
+    int yperr, len;
 
     yperr=yp_match(domainname, conf.userdb, name,
 	  strlen(name), &data, &len);
