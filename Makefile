@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile,v 1.9 1997/03/12 06:49:53 dustin Exp $
+# $Id: Makefile,v 1.10 1997/03/12 07:00:53 dustin Exp $
 
 MAJOR=2
 MINOR=0
@@ -26,7 +26,7 @@ EXES=pageserv pqueue parseusers listusers
 NAME=pageserv
 ARCHIVE=$(NAME)-$(VERSION)
 STUFF=$(SOURCES) pageserv.h Makefile
-JUNK=$(EXES) *.o *.core core *.dir *.pag
+JUNK=$(EXES) *.o *.core core
 
 all: $(EXES)
 
