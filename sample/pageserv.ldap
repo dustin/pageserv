@@ -1,6 +1,6 @@
 # LDAP classes for Pageserv
 # Copyright (c) 1998  Dustin Sallings <dustin@spy.net>
-# $Id: pageserv.ldap,v 1.1 1998/12/28 03:23:56 dustin Exp $
+# $Id: pageserv.ldap,v 1.2 1998/12/29 06:15:32 dustin Exp $
 
 objectclass pageservUser
 	requires
@@ -12,7 +12,8 @@ objectclass pageservUser
 		pageNotify,
 		pageFlags,
 		pageEarly,
-		pageLate
+		pageLate,
+		uid
 
 objectclass pageservTerminal
 	requires
