@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 1.1 1997/03/13 02:49:29 dustin Exp $
+# $Id: Makefile.in,v 1.2 1997/03/13 02:57:25 dustin Exp $
 
 MAJOR=2
 MINOR=0
@@ -50,8 +50,12 @@ $(ARCHIVE).tar.gz: $(STUFF)
 	rm -rf $(ARCHIVE)
 	gzip -9v $(ARCHIVE).tar
 
-clean:
+# irix globbing shit.
+irixhack.o:
+	@touch irixhack.o
+
+clean:  irixhack.o
 	rm -f $(JUNK)
 
-ultrabrite:
+ultrabrite: irixhack.o
 	rm -f $(JUNK) $(AUTOJUNK)
