@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: client.c,v 1.2 1997/03/14 00:52:51 dustin Exp $
+ * $Id: client.c,v 1.3 1997/03/14 05:37:18 dustin Exp $
  */
 
 /*
@@ -36,7 +36,11 @@ struct sockaddr_in sin;
 
     if((hp=gethostbyname(REMHOST)) == NULL)
     {
+#ifdef HAVE_HERROR
         herror("gethostbyname");
+#else
+        fprintf(stderr, "Error looking up %s\n", REMHOST);
+#endif
         exit(1);
     }
 
