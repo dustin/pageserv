@@ -2,7 +2,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: lexer.l,v 1.4 1997/07/10 07:02:20 dustin Exp $
+ * $Id: lexer.l,v 1.5 1997/07/14 00:19:00 dustin Exp $
  */
 
 #include <config.h>
@@ -66,37 +66,49 @@ void _parse_maketimelist(int frwhen)
     }
 }
 
+void _parse_listTerms(void)
+{
+    char **terms;
+    char buf[1024];
+    int i;
+
+    terms=listterms();
+    stringListSort(terms);
+
+    for(i=0; terms[i]!=NULL; i++)
+    {
+	sprintf(buf, "<option>%s\n", terms[i]);
+	_parse_strlen=addtostr(_parse_strlen, _parse_sendstr, buf);
+    }
+
+    cleantermlist(terms);
+}
+
+void _parse_selectTimeE(void)
+{
+    _parse_maketimelist(EARLY);
+}
+
+void _parse_selectTimeL(void)
+{
+    _parse_maketimelist(LATE);
+}
+
 void _http_lex_dofunc(char *func)
 {
     int i;
-    static char *parse_funcs[]={
-	"&selectTimeE",
-	"&selectTimeL",
-	NULL
+    struct namedfunc f[]={
+	{ "&selectTimeE", _parse_selectTimeE },
+	{ "&selectTimeL", _parse_selectTimeL },
+	{ "&selectListTerms", _parse_listTerms },
+	{ NULL, NULL }
     };
 
     if(conf.debug>2)
 	printf("_http_lex_dofunc got %s\n", func);
 
-    for(i=0; parse_funcs[i]!=NULL; i++)
-    {
-	if(strcmp(parse_funcs[i], func)==0)
-	    break;
-    }
-
-    switch(i)
-    {
-	case 0:
-	    _parse_maketimelist(EARLY);
-	    break;
-
-	case 1:
-	    _parse_maketimelist(LATE);
-	    break;
-
-	default:
-	    _parse_strlen=addtostr(_parse_strlen, _parse_sendstr, func);
-    }
+    if(execnamedfunc(func, f)<0)
+        _parse_strlen=addtostr(_parse_strlen, _parse_sendstr, func);
 }
 
 void _http_lex_showthing(char *thing)

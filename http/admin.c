@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: admin.c,v 1.3 1997/07/10 07:00:31 dustin Exp $
+ * $Id: admin.c,v 1.4 1997/07/14 00:18:59 dustin Exp $
  */
 
 #include <pageserv.h>
@@ -30,71 +30,141 @@ void _http_adminheader(int s)
     puttext(s, "<body bgcolor=\"fFfFfF\">\n");
 }
 
-void _http_admin_process(int s, struct http_request r)
+void _http_doadduser(int s, struct http_request r)
 {
     struct user u;
     int times[2];
-    char *tmp, *passwd1, *passwd2;
-    char buf[BUFLEN];
+    char *name, *terminal, *pageid, *pass1, *pass2, *tmp;
 
-    if(u_exists(r.auth.name))
+    name=_http_getcgiinfo(r, "username");
+    pageid=_http_getcgiinfo(r, "pageid");
+    terminal=_http_getcgiinfo(r, "terminal");
+    terminal=_http_getcgiinfo(r, "terminal");
+    pass1=_http_getcgiinfo(r, "passwd1");
+    pass2=_http_getcgiinfo(r, "passwd2");
+
+    if(!(name && terminal && pageid && pass1 && pass2))
     {
-        if(conf.debug>2)
-            printf("Getting mod data for user ``%s'' for update\n",
-                r.auth.name);
-
-        u=getuser(r.auth.name);
-    }
-    else
-    {
-        _http_adminerror(s, "Weird, must've raced.  Go home.");
-        return;
-    }
-
-    _http_adminheader(s);
-    puttext(s, "<h2>Modified user ");
-    puttext(s, r.auth.name);
-    puttext(s, "</h2>");
-
-    passwd1=_http_getcgiinfo(r, "passwd1");
-    passwd2=_http_getcgiinfo(r, "passwd2");
-
-    if(strcmp(passwd1, passwd2)==0)
-    {
-        if(strlen(passwd1)>0)
-        {
-            if(strlen(passwd1)<5)
-            {
-                puttext(s,
-                    "Password must be at least 5 chars, not set.<br>\n");
-            }
-            else
-            {
-                u=setpasswd(u, passwd1);
-                puttext(s, "Password set.<br>\n");
-            }
-        }
-    }
-    else
-    {
-        puttext(s, "Passwords don't match.<br>\n");
-        return;
+        _http_adminerror(s, "Invalid form");
     }
 
     tmp=_http_getcgiinfo(r, "early");
-    times[0]=atoi(tmp);
-    tmp=_http_getcgiinfo(r, "late");
-    times[1]=atoi(tmp);
+    if(tmp==NULL)
+    {
+	times[0]=0;
+    }
+    else
+    {
+	times[0]=atoi(tmp);
+    }
 
+    tmp=_http_getcgiinfo(r, "late");
+    if(tmp==NULL)
+    {
+	times[1]=0;
+    }
+    else
+    {
+	times[1]=atoi(tmp);
+    }
+
+    strcpy(u.name, name);
+    strcpy(u.pageid, pageid);
+    strcpy(u.statid, terminal);
+    u=setpasswd(u, pass1);
     u.times=pack_timebits(times[0], times[1]);
 
-    sprintf(buf, "Early:  %d<br>\nLate:  %d<br>\nMask:  %x<br>\n",
-        times[0], times[1], u.times);
+    if(u_exists(name))
+    {
+	_http_adminerror(s, "User already exists");
+	return;
+    }
 
-    puttext(s, buf);
+    if( strcmp(pass1, pass2) != 0)
+    {
+	_http_adminerror(s, "Passwords differ.");
+	return;
+    }
 
-    puttext(s, "Storing changes<br>\n");
     storeuser(u);
+
+    if(u_exists(name))
+    {
+	_http_adminheader(s);
+	puttext(s, "<h2>User successfully added</h2>");
+    }
+    else
+    {
+	_http_adminerror(s, "Error adding user");
+    }
+}
+
+void _http_dodeluser(int s, struct http_request r)
+{
+     struct user u;
+     char *user;
+
+     user=_http_getcgiinfo(r, "username");
+
+     if(user == NULL)
+     {
+	 _http_adminerror(s, "Invalid form");
+	 return;
+     }
+
+     if(!u_exists(user))
+     {
+	 _http_adminerror(s, "Can't delete a nonexistant user.");
+	 return;
+     }
+
+     _http_adminheader(s);
+     puttext(s, "<h2>Deleting a user</h2>");
+
+     if(deleteuser(user))
+     {
+	 puttext(s, "Successful");
+     }
+     else
+     {
+	 puttext(s, "ERROR!  User not deleted.");
+     }
+}
+
+void _http_admin_process(int s, struct http_request r)
+{
+    int i;
+    char *form;
+    char *forms[]={
+        "adduser",
+	"deluser",
+        NULL
+    };
+
+    form=_http_getcgiinfo(r, "formname");
+
+    if(form==NULL)
+        form="invalid";
+
+    for(i=0; forms[i]!=NULL; i++)
+    {
+        if(strcmp(forms[i], form)==0)
+            break;
+    }
+
+    switch(i)
+    {
+        case 0:
+            _http_doadduser(s, r);
+            break;
+
+	case 1:
+	    _http_dodeluser(s, r);
+	    break;
+
+        default:
+            _http_adminerror(s, "Invalid form");
+    }
 }
 
 void _http_admin(int s, struct http_request r)

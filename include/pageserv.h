@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.35 1997/07/10 06:47:08 dustin Exp $
+ * $Id: pageserv.h,v 1.36 1997/07/14 00:19:06 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -118,6 +118,9 @@
 #define PORT_NET    0
 #define PORT_DIRECT 1
 
+/* Function returns */
+#define FUNC_UNKNOWN -1
+
 #ifdef IWANT_MODENAMES
 static char *modenames[]={
     "daemon",
@@ -165,6 +168,11 @@ struct terminal {
     int  port;
 };
 
+struct namedfunc {
+    char *name;
+    void (*func)(void);
+};
+
 struct config {
     int mode;              /* execution mode */
     int debug;             /* debug level */
@@ -210,6 +218,8 @@ int any_closeterm(int s, struct terminal t);
 int any_openterm(struct terminal t);
 int bit_set(int bmap, int which);
 int check_time(int priority, char *whom);
+int deleteuser(char *name);
+int execnamedfunc(char *name, struct namedfunc *f);
 int f_exists(char *file);
 int getservsocket(int port);
 int gettext(int s, char *buf);
@@ -274,6 +284,7 @@ void showconfig(void);
 void showversion(void);
 void storeterm(DBM *db, struct terminal t);
 void storeuser(struct user u);
+void stringListSort(char **list);
 
 /* client stuff */
 
