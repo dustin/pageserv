@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.9 1997/03/14 00:52:11 dustin Exp $
+ * $Id: userdb.c,v 1.10 1997/03/14 14:27:07 dustin Exp $
  */
 
 #include <stdio.h>
@@ -46,6 +46,11 @@ void getnormtimes(int times, int *ret)
         for(; bit_set(times, i) && BC; i++);
 	ret[1]=i;
     }
+    /* add one to early so it'll make sense */
+    if(ret[0]<23)
+        ret[0]++;
+    else
+	ret[0]=0;
 }
 
 void printuser(struct user u)

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parseusers.c,v 1.5 1997/03/13 00:31:16 dustin Exp $
+ * $Id: parseusers.c,v 1.6 1997/03/14 14:27:06 dustin Exp $
  */
 
 #include <stdio.h>
@@ -29,6 +29,12 @@ struct user parseuser(char *line)
     }
     else
     {
+	/* subtract one from early so it will make sense. */
+	if(early>0)
+	    early--;
+	else
+	    early=23;
+
 	if(early < late)
 	{
 	    for(i=early; i<late ; i++)
