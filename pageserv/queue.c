@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.50 1998/03/18 08:33:30 dustin Exp $
+ * $Id: queue.c,v 1.51 1998/03/18 08:42:33 dustin Exp $
  */
 
 #include <stdio.h>
@@ -57,6 +57,7 @@ int sendmail(char *to, char **cc, char *message)
     fprintf(f, message);
 
     pclose(f);
+    return(0);
 }
 
 void dq_notify(struct queuent q, char *message, int flags)
