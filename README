@@ -4,10 +4,9 @@ Developed under:
 
     PC NetBSD 1.2
     SGI Irix 6.2
-    Sun Solaris 2.5.1
-    Sun SunOS 4.1.3_u1
+    Sun SunOS 4.1.4
 
-Tested on the following platforms:
+Tested (at one time or another) on the following platforms:
 
     BSDi 2.1
     DEC Digital Unix 3.2
@@ -18,7 +17,7 @@ Tested on the following platforms:
     RedHat Linux 4.1
     SGI Irix 6.2
     Sun Solaris 2.5.1
-    Sun SunOS 4.1.3_u1
+    Sun SunOS 4.1.4
 
 Would like it to work on:
 
@@ -30,4 +29,4 @@ Documentation:
 
 ----------------------------------------
 Copyright (c) 1997  Dustin Sallings
-$Id: README,v 2.1 1997/03/30 06:38:22 dustin Exp $
+$Id: README,v 2.2 1997/07/10 07:16:48 dustin Exp $
