@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.32 1998/01/01 08:43:21 dustin Exp $
+ * $Id: main.c,v 1.33 1998/01/01 08:50:31 dustin Exp $
  */
 
 #include <config.h>
@@ -176,7 +176,6 @@ void daemon_main(void)
 			}
 			else
 			{
-			    _ndebug(-1, ("Closing %d\n", p.socket));
 			    close(p.socket);
 
 			    /* This used to be if(conf.debug>2 && pid>1) */
