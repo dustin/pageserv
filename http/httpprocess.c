@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpprocess.c,v 1.4 1997/04/14 07:12:28 dustin Exp $
+ * $Id: httpprocess.c,v 1.5 1997/04/15 15:41:18 dustin Exp $
  */
 
 #define IWANTDOCINFO 1
@@ -44,8 +44,8 @@ void http_senddoc(int s, struct http_request r)
     f=fopen(buf, "r");
     while(!feof(f))
     {
-    fgets(buf, 2048, f);
-    puttext(s, buf);
+        fgets(buf, 2048, f);
+        puttext(s, buf);
     }
     fclose(f);
 }
@@ -77,25 +77,25 @@ int http_verifydoc(int s, struct http_request *r)
 
     for(i=0; i<NDOCS; i++)
     {
-    if(strcmp(r->request, docnames[i])==0)
-    {
-        break;
-    }
+        if(strcmp(r->request, docnames[i])==0)
+        {
+            break;
+        }
     }
 
     if(i==NOTADOC)
     {
         strcpy(buf, conf.webroot);
         strcat(buf, r->request);
-    if(buf[strlen(buf)-1]=='/')
-    {
-        strcat(buf, "index.html");
-    }
+        if(buf[strlen(buf)-1]=='/')
+        {
+            strcat(buf, "index.html");
+        }
 
         if(access(buf, R_OK)==0)
         {
-        r->special=0;
-        return(0);
+            r->special=0;
+            return(0);
         }
 
     }
