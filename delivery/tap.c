@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  SPY Internetworking
  *
- * $Id: tap.c,v 2.22 1998/07/14 06:47:33 dustin Exp $
+ * $Id: tap.c,v 2.23 1998/07/14 19:26:17 dustin Exp $
  */
 
 #include <stdio.h>
@@ -67,12 +67,16 @@ int s_tap_init(int s, int flags)
 
             if( s_modem_waitfor(s, "ID=", TIME_2) < 0) {
 	      _ndebug(2, ("\t...timed out, sending another CR\n"));
+              del_log("Timed out waiting for ID, retry #%d", retry);
             } else {
 	      ok=1; break;
 	    }
 	}
 
-	if(!ok) return(-1);
+	if(!ok) {
+	    del_log("Too many init timeouts");
+            return(-1);
+        }
     }
 
     sprintf(buf, "%cPG1\r", C_ESC);
@@ -81,6 +85,7 @@ int s_tap_init(int s, int flags)
     sprintf(buf, "%c[p", C_ESC);
     if( s_modem_waitfor(s, buf, TIME_3) < 0) {
 	_ndebug(2,("Error:  s_modem_waitfor(%d, \"%s\", %d);\n",s,buf,TIME_3));
+        del_log("timed out waiting for TAP init reply");
 	return(-1);
     }
     return(0);
@@ -119,8 +124,10 @@ int s_tap_send(int s, char *id, char *message)
     _ndebug(0, ("Sending message to %s:\n%s\n", id, message));
 
     /* cheap bounds checking */
-    if(strlen(message)+strlen(id)>(BUFLEN-20))
+    if(strlen(message)+strlen(id)>(BUFLEN-20)) {
+        del_log("ACK, length of message+id is too long!");
 	return(-1);
+    }
 
     sprintf(buf, "%c%s%c%s%c%c", C_STX, id, C_CR, message, C_CR, C_ETX);
 
