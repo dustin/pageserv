@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.28 1997/06/19 08:24:45 dustin Exp $
+ * $Id: pageserv.h,v 1.29 1997/06/19 08:31:12 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -10,6 +10,7 @@
 /* for DBM type */
 #include <ndbm.h>
 #include <sys/types.h>
+#include <unistd.h>
 
 #include <config.h>
 #include <module.h>
@@ -202,12 +203,14 @@ char *fntoqid(char *fn);
 char *kw(char *in);
 char *newqfile(void);
 int _pageserv_socket(void);
+int any_openterm(struct terminal t);
 int bit_set(int bmap, int which);
 int check_time(int priority, char *whom);
 int f_exists(char *file);
 int getservsocket(int port);
 int gettext(int s, char *buf);
 int gettextcr(int s, char *buf);
+int p_openterm(struct terminal t);
 int parseterms(void);
 int parseusers(void);
 int q_islocked(struct queuent q);
