@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpprocess.c,v 1.2 1997/04/14 04:36:28 dustin Exp $
+ * $Id: httpprocess.c,v 1.3 1997/04/14 06:56:16 dustin Exp $
  */
 
 #define IWANTDOCINFO 1
@@ -16,19 +16,28 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/stat.h>
 
 extern struct config conf;
 
 void http_senddoc(int s, struct http_request r)
 {
     FILE *f;
-    char buf[2048];
+    char buf[2048], buf2[BUFLEN];
+    struct stat st;
 
     strcpy(buf, conf.webroot);
     strcat(buf, r.request);
     if(buf[strlen(buf)-1]=='/')
     {
         strcat(buf, "index.html");
+    }
+
+    if(r.version>0)
+    {
+        stat(buf, &st);
+        sprintf(buf2, "Content-Length: %d\n\n", (int)st.st_size);
+        puttext(s, buf2);
     }
 
     f=fopen(buf, "r");
@@ -42,11 +51,12 @@ void http_senddoc(int s, struct http_request r)
 
 void http_process_get(int s, struct http_request r)
 {
-    http_header_ok(s);
+    if(r.version>0)
+        http_header_ok(s);
 
     if(r.special==1)
     {
-        puttext(s, "<html><head><title>OK</title></head>");
+        puttext(s, "\n<html><head><title>OK</title></head>");
         puttext(s, "<body bgcolor=\"ffffff\">");
         puttext(s, "Your special request was ");
         puttext(s, r.request);

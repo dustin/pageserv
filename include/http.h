@@ -1,11 +1,14 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * "$Id: http.h,v 1.3 1997/04/14 06:48:08 dustin Exp $"
+ * "$Id: http.h,v 1.4 1997/04/14 06:56:22 dustin Exp $"
  */
 
 #ifndef HTTP_H
 #define HTTP_H 1
+
+/* for NULL */
+#include <stdio.h>
 
 /* macros */
 #define REQUESTSIZE 1024
@@ -27,7 +30,8 @@ static char *methodnames[]={
     "HEAD",
     "DELETE",
     "TRACE",
-    "OPTIONS"
+    "OPTIONS",
+    NULL
 };
 #endif
 

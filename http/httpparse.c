@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpparse.c,v 1.2 1997/04/14 04:36:26 dustin Exp $
+ * $Id: httpparse.c,v 1.3 1997/04/14 06:56:15 dustin Exp $
  */
 
 #define IWANTMETHODNAMES 1
@@ -31,7 +31,7 @@ struct http_request http_parserequest(int s)
 
     while(!finished)
     {
-        for(i=0; i<4; i++)
+        for(i=0; methodnames[i]!=NULL; i++)
         {
             if(strncmp(buf, methodnames[i], strlen(methodnames[i]))==0)
             {

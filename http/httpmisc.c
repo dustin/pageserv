@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpmisc.c,v 1.1 1997/04/14 03:51:28 dustin Exp $
+ * $Id: httpmisc.c,v 1.2 1997/04/14 06:56:13 dustin Exp $
  */
 
 #include <config.h>
@@ -17,7 +17,7 @@
 
 void http_error(int s,  struct http_request r)
 {
-    puttext(s, "HTTP/1.0 501 Unimplemented\n\n");
+    puttext(s, "HTTP/1.1 501 Unimplemented\n\n");
     puttext(s, "<h1>501 Not Implemented</h1>Sorry, but that's not here yet.\n");
     close(s);
     exit(0);
@@ -25,7 +25,12 @@ void http_error(int s,  struct http_request r)
 
 void http_header_ok(int s)
 {
-    puttext(s, "HTTP/1.0 200 OK\nContent-type: text/html\n\n");
+    char buf[2048];
+    strcpy(buf, "HTTP/1.1 200 OK\nContent-type: text/html\n");
+    strcat(buf, "Server: Dustin's Pager Server ");
+    strcat(buf, VERSION);
+    strcat(buf, "\n");
+    puttext(s, buf);
 }
 
 void http_header_notfound(int s, struct http_request r)
