@@ -1,0 +1,12 @@
+# Terminal number - protocol - terminal server - port - pre-dial
+# all delimited by tabs
+
+1.800.364.0816	1	liv-lex-1.ipa.net	6001	9,
+# 1.800.455.2698	1	liv0.lit.intellinet.com	6001
+1.800.455.2698	1	liv-lex-1.ipa.net	6001	9,
+1.800.658.9983	2	liv-lex-1.ipa.net	6001	9,
+# 219.1805	2	liv0.lit.intellinet.com	6001
+219.1805	2	liv-lex-1.ipa.net	6001	9,1.501
+7820483	1	liv-lex-1.ipa.net	6001	9,
+783.6426	2	liv-lex-1.ipa.net	6001	9,
+7840555	1	liv-lex-1.ipa.net	6001	9,
