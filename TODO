@@ -21,7 +21,6 @@ Clients:
     * Cleaner client stuff
     * Add more options to clients: remote host, options to parsemail,
       etc...
-    * Enhance web listener (password auth for logins)
     * .parsemail
 
 Technical:
@@ -33,4 +32,4 @@ Technical:
 
 ----------------------------------------
 Copyright (c) 1997  Dustin Sallings
-$Id: TODO,v 2.25 1997/07/03 06:09:12 dustin Exp $
+$Id: TODO,v 2.26 1997/07/08 07:16:14 dustin Exp $
