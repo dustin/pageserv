@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.16 1998/01/10 01:33:11 dustin Exp $
+ * $Id: userdb.c,v 1.17 1998/01/21 22:32:21 dustin Exp $
  */
 
 #include <stdio.h>
@@ -45,8 +45,9 @@ static char **dbm_listusers(char *term)
 
     if( (db=dbm_open(conf.userdb, O_RDONLY, 0644)) ==NULL)
     {
-        perror(conf.userdb);
-        exit(1);
+        if(conf.debug>2)
+	    perror(conf.userdb);
+        return(NULL);
     }
 
     for(d=dbm_firstkey(db); d.dptr!=NULL; d=dbm_nextkey(db))

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.43 1998/01/18 11:36:11 dustin Exp $
+ * $Id: main.c,v 1.44 1998/01/21 22:32:18 dustin Exp $
  */
 
 #include <config.h>
@@ -287,11 +287,42 @@ static void daemon_main(void)
     }
 }
 
+static char *getcachepw(char *name, char **names, char **passwords)
+{
+    int i;
+    char *p=NULL;
+
+    for(i=0; names[i]; i++)
+    {
+	if(strcmp(name, names[i])==0)
+	{
+	    p=passwords[i];
+	    break;
+	}
+    }
+    return(p);
+}
+
 static void rehash_main(void)
 {
     int i;
+    char **names, **names2, **passwords, *tmp;
+    struct user u;
 
     conf.udb.dbinit();
+
+    names=conf.udb.listusers("*");
+    if(names)
+    {
+        for(i=0; names[i]; i++);
+
+        passwords=(char **)malloc(i*sizeof(char *));
+        for(i=0; names[i]; i++)
+        {
+	    u=conf.udb.getuser(names[i]);
+	    passwords[i]=strdup(u.passwd);
+        }
+    }
 
     conf.udb.eraseuserdb();
     erasetermdb();
@@ -299,8 +330,34 @@ static void rehash_main(void)
     i=conf.udb.parseusers();
     printf("Parsed %d users.\n", i);
 
+    if(names)
+    {
+        names2=conf.udb.listusers("*");
+
+        for(i=0; names2[i]; i++)
+        {
+	    tmp=getcachepw(names2[i], names, passwords);
+	    if(tmp)
+	    {
+	        u=conf.udb.getuser(names2[i]);
+	        strcpy(u.passwd, tmp);
+	        conf.udb.storeuser(u);
+	    }
+        }
+    }
+
     i=parseterms();
     printf("Parsed %d terminal servers.\n", i);
+
+    if(names)
+    {
+        for(i=0; names[i]; i++)
+        {
+            free(passwords[i]);
+        }
+        free(passwords);
+        cleanuserlist(names);
+    }
 }
 
 static void killserver(void)
