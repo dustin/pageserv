@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: sockets.c,v 1.5 1997/08/09 06:35:49 dustin Exp $
+ * $Id: sockets.c,v 1.6 1997/08/09 06:48:36 dustin Exp $
  */
 
 #include <stdio.h>
@@ -31,7 +31,7 @@ char *getHostName(unsigned int addr)
     struct hostent *h;
     char *name;
 
-    h=gethostbyaddr(&addr, sizeof(unsigned int), AF_INET);
+    h=gethostbyaddr((void *)&addr, sizeof(unsigned int), AF_INET);
     if(h==NULL)
 	name=nmc_intToDQ(addr);
     else
@@ -42,9 +42,7 @@ char *getHostName(unsigned int addr)
 
 void logConnect(struct sockaddr_in fsin, module *m)
 {
-    struct hostent *h;
     char *ip_addr, *hostname;
-    int i;
 
     openlog("pageserv", LOG_PID|LOG_NDELAY, conf.log_que);
 

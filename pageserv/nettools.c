@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: nettools.c,v 1.1 1997/08/09 06:35:46 dustin Exp $
+ * $Id: nettools.c,v 1.2 1997/08/09 06:48:35 dustin Exp $
  */
 
 /*
@@ -9,7 +9,6 @@
  */
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 #include <netinet/in.h>
@@ -102,7 +101,7 @@ unsigned int nmc_dqToInt(char *dq)
 
 int nmc_addrsToBits(unsigned int addr)
 {
-    int i, n, ret;
+    int i, n;
 
     n=1;
     for(i=0; i<32; i++)
@@ -130,6 +129,7 @@ int nmc_bitsToAddrs(int bits)
 }
 
 #ifdef NEED_MAIN
+
 void main(int argc, char **argv)
 {
   unsigned int x;
