@@ -1,13 +1,14 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: sendpage.c,v 1.3 1997/08/07 07:22:33 dustin Exp $
+ * $Id: sendpage.c,v 1.4 1997/08/07 08:04:22 dustin Exp $
  */
 
 #include <pageserv.h>
 #include <http.h>
 
 #include <ctype.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 
