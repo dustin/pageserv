@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.25 1998/12/27 15:05:50 dustin Exp $
+ * $Id: userdb.c,v 1.26 1999/02/25 22:45:36 dustin Exp $
  */
 
 #include <stdio.h>
@@ -120,7 +120,7 @@ static void dbm_eraseuserdb(void)
     DBM *db;
     char *tmp;
 
-    if( (db=dbm_open(conf.userdb, O_RDWR, 0644)) ==NULL)
+    if( (db=dbm_open(conf.userdb, O_RDWR|O_CREAT, 0644)) ==NULL)
     {
         /* There isn't one, just return */
         _ndebug(2, ("No user database.\n"));
@@ -327,7 +327,7 @@ static void dbm_storeuser(struct user u)
 {
     DBM *db;
 
-    if( (db=dbm_open(conf.userdb, O_RDWR, 0644)) == NULL)
+    if( (db=dbm_open(conf.userdb, O_RDWR|O_CREAT, 0644)) == NULL)
     {
         perror(conf.userdb);
         exit(1);
