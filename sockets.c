@@ -1,12 +1,13 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: sockets.c,v 1.1 1997/03/09 22:56:37 dustin Exp $
+ * $Id: sockets.c,v 1.2 1997/03/10 07:34:38 dustin Exp $
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -20,8 +21,6 @@ int initialize(void)
 {
     int reuse=1, s;
     struct sockaddr_in sin;
-
-    printf("Starting up on port %d\n", PORT);
 
     signal(SIGPIPE, SIG_IGN);
 
