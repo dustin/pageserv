@@ -16,10 +16,12 @@ The following protocols exist in this version of pageserv:
 </ul>
 
 It logs via syslog and currently is configurable via the configuration
-section <code>log</code>.  Currently, the only configuration option
-supported in section <code>log</code> is <code>facility</code>.  This
-specifies the log facility in which the message will be sent to syslog.
-The default log facility is <code>local7</code>.
+section <code>log</code>.  Currently, the only configuration options
+supported in section <code>log</code> are <code>facility</code> and
+<code>hostnames</code>.  <code>facility</code> specifies the log facility
+in which the message will be sent to syslog.  The default log facility is
+<code>local7</code>.  <code>hostnames</code> toggles whether hostname
+lookups should be done when logging connections.
 
 <h3>Developer</h3>
 
