@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: checksum.c,v 1.4 1997/03/30 01:34:53 dustin Exp $
+ * $Id: checksum.c,v 2.0 1997/03/30 05:58:15 dustin Exp $
  */
 
 #include <stdio.h>

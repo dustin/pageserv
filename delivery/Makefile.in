@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 1.4 1997/03/30 01:40:08 dustin Exp $
+# $Id: Makefile.in,v 2.0 1997/03/30 05:58:14 dustin Exp $
 
 MAJOR=2
 MINOR=2
@@ -9,7 +9,8 @@ VERSION=$(MAJOR).$(MINOR).$(PATCH)
 SHELL=/bin/sh
 CC=@CC@
 YACC=@YACC@
-CFLAGS=-g -DVERSION=\"$(VERSION)\"
+INCLUDES=-I@top_srcdir@/include
+CFLAGS=-g $(INCLUDES) -DVERSION=\"$(VERSION)\"
 AR=@AR@ cr
 RANLIB=@RANLIB@
 
@@ -17,8 +18,8 @@ LIBS=@LIBS@
 
 LDFLAGS=-g $(LIBS)
 
-LDELIVER_OBJS=tap.o network.o checksum.o modem.o
-SOURCES=tap.c network.c checksum.c network.c modem.c
+LDELIVER_OBJS=tap.o network.o checksum.o modem.o getqueue.o
+SOURCES=tap.c network.c checksum.c network.c modem.c getqueue.c
 EXES=taptest
 STUFF=
 JUNK=$(EXES) *.o *.a *.core core
@@ -27,7 +28,7 @@ AUTOJUNK=
 all: $(EXES)
 
 taptest: taptest.o deliver.a
-	$(CC) -o taptest taptest.o deliver.a ../utility.o
+	$(CC) -o taptest taptest.o deliver.a @top_srcdir@/pageserv/utility.o
 
 deliver.a: $(LDELIVER_OBJS)
 	$(AR) $@ $(LDELIVER_OBJS)

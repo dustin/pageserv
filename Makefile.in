@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 1.14 1997/03/29 19:21:13 dustin Exp $
+# $Id: Makefile.in,v 2.0 1997/03/30 05:57:47 dustin Exp $
 
 MAJOR=2
 MINOR=2
@@ -15,32 +15,20 @@ LIBS=@LIBS@
 
 LDFLAGS=-g $(LIBS)
 
-SERV_OBJS=sockets.o main.o utility.o kids.o queue.o protocol.o userdb.o \
-	readconfig.o termdb.o parseusers.o parseterms.o
-SOURCES=sockets.c main.c utility.c kids.c queue.c protocol.c \
-	parseusers.c userdb.c readconfig.c termdb.c \
-	parseterms.c
-EXES=pageserv
-DIRS=clients delivery
+DIRS=pageserv clients delivery
 NAME=pageserv
 ARCHIVE=$(NAME)-$(VERSION)
 STUFF=$(SOURCES) pageserv.h configure configure.in Makefile.in \
 	README config.h.in sample.config $(DIRS)
 JUNK=$(EXES) *.o *.core core
 AUTOJUNK=config.status config.cache config.log Makefile clients/Makefile \
-	delivery/Makefile config.h
+	delivery/Makefile pageserv/Makefile config.h
 
-all: $(EXES)
+all:
 	for i in $(DIRS) ; do cd $$i && $(MAKE) all ; cd .. ; done
-
-pageserv: $(SERV_OBJS)
-	$(CC) -o $@ $(SERV_OBJS) $(LDFLAGS)
 
 depend:
 	for i in $(DIRS) ; do cd $$i && $(MAKE) depend ; cd .. ; done
-	echo "" >> Makefile
-	echo "# Automatically generated dependencies:" >> Makefile
-	$(CC) $(CFLAGS) -M $(SOURCES) >> Makefile
 
 tgz: $(ARCHIVE).tar.gz
 

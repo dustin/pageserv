@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parsemail.c,v 1.3 1997/03/14 17:05:29 dustin Exp $
+ * $Id: parsemail.c,v 2.0 1997/03/30 05:58:08 dustin Exp $
  */
 
 #include <stdio.h>

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: client.c,v 1.6 1997/03/26 23:39:53 dustin Exp $
+ * $Id: client.c,v 2.0 1997/03/30 05:58:07 dustin Exp $
  */
 
 /*
