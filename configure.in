@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 2.4 1997/04/11 19:00:01 dustin Exp $
+dnl $Id: configure.in,v 2.5 1997/04/11 20:35:16 dustin Exp $
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(pageserv)
 AC_CONFIG_HEADER(include/config.h)
@@ -16,20 +16,19 @@ dnl What we on, boys?
 echo "Checking out your OS..."
 OS=`$UNAMEPROG|$TRPROG '[[A-Z]]' '[[a-z]]'`
 VER=`$UNAMEPROG -r`
+if test "$OS" = "SunOS" && test "$VER" -ge 5
+then
+    OS="solaris"
+fi
 case "$OS" in
     'sunos')
-	if test $VER -lt 5
-	then
-	    echo "Woohoo!  SunOS 4.x, one of my favs"
-	else
-	    echo "Solaris?  Well, ok."
-	fi
+        echo "Woohoo!  SunOS 4.x, one of my favs"
 	;;
     'netbsd')
 	echo "NetBSD!  One of my favs"
 	;;
     'solaris')
-	echo "Solaris kind of sucks, but that's OK"
+	echo "Solaris?!?  Oh, alright..."
 	;;
     'irix')
 	echo "Irix, I did a lot of the development under Irix"
@@ -59,6 +58,6 @@ AC_C_BIGENDIAN
 
 dnl Checks for library functions.
 AC_TYPE_SIGNAL
-AC_CHECK_FUNCS(select socket herror getopt ypmatch)
+AC_CHECK_FUNCS(select socket herror getopt)
 
 AC_OUTPUT(Makefile pageserv/Makefile clients/Makefile delivery/Makefile)
