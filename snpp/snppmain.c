@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: snppmain.c,v 1.7 1997/07/09 07:26:30 dustin Exp $
+ * $Id: snppmain.c,v 1.8 1997/08/06 04:37:44 dustin Exp $
  */
 
 #include <config.h>
@@ -15,6 +15,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <signal.h>
+#include <sys/time.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 
@@ -33,6 +34,7 @@ char *snpp_pageid[SNPP_NID];
 char *snpp_message=NULL;
 int  snpp_nid=0;
 int  snpp_priority=PR_NORMAL;
+int  snpp_holdtime=0;
 
 void snpp_onalarm()
 {
@@ -67,6 +69,85 @@ void _snpp_init(void)
     else
     {
         mod_snppserv.listening=0;
+    }
+}
+
+void snpp_holduntil(int s, char *time)
+{
+    int i, offset=0;
+    int vals[6];
+    char tmp[3], buf[1024], tztmp[256];
+    struct tm tm, *tmptm;
+    time_t t;
+
+    memset(&tm, 0x00, sizeof(tm));
+
+    if(time==NULL)
+    {
+        puttext(s, "No time argument specified\n");
+        return;
+    }
+
+    if(strlen(time)<12)
+    {
+        puttext(s, "Invalid time (try help)\n");
+        return;
+    }
+
+    if(strlen(time)>12)
+    {
+        if(time[12]=='-' || time[12]=='+')
+	{
+	    offset=atoi(time+12);
+
+	    if(conf.debug>2)
+	        printf("User supplied offset is %d\n", offset);
+	}
+	else
+	{
+	    puttext(s, "Invalid time (try help)\n");
+	    return;
+	}
+    }
+
+    for(i=0; i<12; i+=2)
+    {
+        tmp[0]=time[i];
+	tmp[1]=time[i+1];
+	tmp[2]=0x00;
+
+	vals[i/2]=atoi(tmp);
+    }
+
+    tm.tm_year=vals[0];
+    tm.tm_mon=vals[1]-1;
+    tm.tm_mday=vals[2];
+    tm.tm_hour=vals[3];
+    tm.tm_min=vals[4];
+    tm.tm_sec=vals[5];
+
+    t=mktime(&tm);
+
+    if(conf.debug>2)
+        printf("Adding %d for GMT offset\n", 3600*conf.gmtoffset);
+
+    t+=(3600*conf.gmtoffset);
+    tmptm=localtime(&t);
+
+    if(tmptm->tm_isdst!=0)
+        t-=3600;
+
+    t-=(3600*offset);
+
+    if(t>0)
+    {
+        snpp_holdtime=t;
+	tmptm=gmtime(&t);
+	strcpy(buf, "Page will be held until ");
+	strcat(buf, asctime(tmptm));
+	buf[strlen(buf)-1]=0x00;
+	strcat(buf, " GMT\n");
+	puttext(s, buf);
     }
 }
 
@@ -135,6 +216,7 @@ void snpp_cleanstuff(void)
             free(snpp_pageid[i]);
     }
     snpp_nid=0;
+    snpp_holdtime=0;
 
     if(snpp_message)
     {
@@ -155,6 +237,7 @@ void snpp_send(int s)
     }
 
     q.priority=snpp_priority;
+    q.soonest=snpp_holdtime;
     for(i=0, j=0; i<snpp_nid; i++)
     {
         strcpy(q.to, snpp_pageid[i]);
@@ -226,6 +309,10 @@ void _snpp_main(modpass p)
             case SNPP_PRIORITY:
                 snpp_setpriority(s, snpp_arg(buf));
                 break;
+
+            case SNPP_HOLD:
+                snpp_holduntil(s, snpp_arg(buf));
+		break;
 
             case -1:
                 puttext(s, "500 Unknown command\n");

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: snppmisc.c,v 1.3 1997/04/29 05:42:36 dustin Exp $
+ * $Id: snppmisc.c,v 1.4 1997/08/06 04:37:44 dustin Exp $
  */
 
 #include <snpp.h>
@@ -34,6 +34,10 @@ void snpp_help(int s)
     "\tPage goes to named ID",
     "MESSage <message>",
     "\tThe message to send",
+    "PRIORITY",
+    "\tSet the priority of the message",
+    "HOLDuntil YYMMDDHHMMSS[+/-GMT]",
+    "\tDelay delivery until the given time",
     "SEND",
     "\tSend the queued message",
     "RESEt",
