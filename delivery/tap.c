@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  SPY Internetworking
  *
- * $Id: tap.c,v 2.12 1997/08/02 01:26:21 dustin Exp $
+ * $Id: tap.c,v 2.13 1997/08/03 02:35:42 dustin Exp $
  * $State: Exp $
  */
 
@@ -54,7 +54,6 @@ void chardump(char *s)
 int s_tap_init(int s)
 {
     char buf[BUFLEN];
-    int i;
 
     if(conf.debug>0)
         puts("Initializing TAP");
