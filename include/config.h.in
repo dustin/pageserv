@@ -44,6 +44,16 @@
 #undef HAVE_VSNPRINTF
 #undef HAVE_VSPRINTF
 
+#if !defined(HAVE_VSNPRINTF)
+# if defined(HAVE_VSPRINTF)
+#  define vsnprintf(a, b, c, d) vsprintf(a, c, d)
+# else
+#  error No vsnprintf *OR* vsprintf?  Call your vendor.
+# endif
+#endif
+
+#undef HAVE_STRERROR
+
 #if defined(HAVE_POSTGRES)
 # define HAVE_SQL
 #endif

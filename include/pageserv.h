@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.72 1998/07/14 16:53:35 dustin Exp $
+ * $Id: pageserv.h,v 1.73 1998/07/15 07:55:12 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -338,6 +338,7 @@ void logConnect(struct sockaddr_in fsin, module *m);
 void logqueue(struct queuent q, int type, char *reason);
 void p_getpasswd(int s, char *to);
 void p_login(int s);
+void page_log(char *format, ...);
 void printqueue(void);
 void printterm(struct terminal t);
 void printterms(void);
