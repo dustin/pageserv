@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.70 1998/06/03 08:38:32 dustin Exp $
+ * $Id: pageserv.h,v 1.71 1998/06/29 01:06:38 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -36,6 +36,8 @@
 
 #include <config.h>
 #include <module.h>
+
+#include <mymalloc.h>
 
 /* Remote host for clients */
 #define REMHOST "pager"
