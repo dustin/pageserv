@@ -1,0 +1,23 @@
+<html><head><title>Send a Page</title></head>
+<body bgcolor="fFfFfF">
+
+<form action="/sendpage" method="GET">
+
+<h2>Send Page</h2>
+
+<table>
+<tr><td>ID:</td><td><input name="id"></td></tr><br>
+<tr><td>Message:</td><td><input name="message"></td></tr><br>
+</table>
+
+<select name="priority">
+    <option selected value="normal">Normal
+    <option value="high">Urgent
+</select>
+<input type="submit" value="Send">
+<input type="reset" value="Reset">
+
+</form>
+
+</body>
+</html>
