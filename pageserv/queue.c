@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.38 1998/01/14 05:56:06 dustin Exp $
+ * $Id: queue.c,v 1.39 1998/01/15 23:35:04 dustin Exp $
  */
 
 #include <stdio.h>
@@ -596,6 +596,22 @@ int queuedepth(void)
     return(i);
 }
 
+int readyqueue(void)
+{
+    struct queuent *q;
+    int i, j=0;
+
+    conf.udb.dbinit();
+    q=listqueue("*");
+
+    for(i=0; q[i].to[0] != 0x00; i++)
+	if(readytodeliver(q[i]))
+	    j++;
+
+    cleanqueuelist(q);
+    return(j);
+}
+
 void displayq(struct queuent q)
 {
     struct tm *t;
@@ -627,9 +643,11 @@ void printqueue(void)
     for(j=0; q[j].to[0] != 0x00; j++);
 
     if(j==1)
-        printf("There is 1 item in the queue\n\n");
+        printf("There is 1 item in the queue, %d ready to deliver\n\n",
+		readyqueue());
     else
-        printf("There are %d items in the queue\n\n", j);
+        printf("There are %d items in the queue, %d ready to deliver\n\n",
+	       j, readyqueue());
 
     for(i=0; i<j; i++)
         displayq(q[i]);

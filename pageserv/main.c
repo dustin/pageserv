@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.40 1998/01/15 10:17:26 dustin Exp $
+ * $Id: main.c,v 1.41 1998/01/15 23:35:01 dustin Exp $
  */
 
 #include <config.h>
@@ -105,10 +105,13 @@ static void deliveryd_main(void)
 
     t=rcfg_lookupInt(conf.cf, "etc.deliverysleep");
 
+    if(t<1)
+        t=DEFAULT_DELSLEEP;
+
     for(;;)
     {
 	sleep(t);
-	if(queuedepth()>0)
+	if(readyqueue()>0)
 	{
 	    if(fork()==0)
 	    {

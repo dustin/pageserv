@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.57 1998/01/15 10:02:34 dustin Exp $
+ * $Id: pageserv.h,v 1.58 1998/01/15 23:34:58 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -104,6 +104,9 @@
 
 /* Default sleep between attempts */
 #define CONATTEMPTSSLEEP 5
+
+/* Default delivery scan sleep */
+#define DEFAULT_DELSLEEP 60
 
 /* The protocol */
 
@@ -282,6 +285,7 @@ int q_islocked(struct queuent q);
 int q_lock(struct queuent q);
 int q_unlock(struct queuent q);
 int queuedepth(void);
+int readyqueue(void);
 int readytodeliver(struct queuent q);
 int s_openterm(struct terminal t);
 int storequeue(int s, struct queuent q, int flags);
