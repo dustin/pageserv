@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: client.c,v 2.3 1998/01/10 01:32:19 dustin Exp $
+ * $Id: client.c,v 2.4 1998/03/03 05:00:59 dustin Exp $
  */
 
 /*
@@ -113,7 +113,10 @@ int pushqueue(char *to, char *message, int priority)
     ckw(message);
     strcat(message, "\n");
 
+    read(s, buf, BUFLEN);
+    read(s, buf, BUFLEN);
     send(s, "epage\n", strlen("epage\n"), 0);
+    read(s, buf, BUFLEN);
     send(s, to, strlen(to), 0);
 
     switch(priority)
@@ -123,7 +126,9 @@ int pushqueue(char *to, char *message, int priority)
         default:      strcpy(buf, "normal\n"); break;
     }
 
+    read(s, buf, BUFLEN);
     send(s, buf, strlen(buf), 0);
+    read(s, buf, BUFLEN);
     size=send(s, message, strlen(message), 0);
 
     if(size==strlen(message))
