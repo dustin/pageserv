@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: kids.c,v 1.8 1997/03/26 07:26:15 dustin Exp $
+ * $Id: kids.c,v 1.9 1997/03/29 08:12:18 dustin Exp $
  */
 
 #include <signal.h>
@@ -38,7 +38,7 @@ void reaper(void)
 
 /* Brilliant alarm handling by Dustin Sallings */
 
-void onalarm()
+void child_onalarm()
 {
     if(conf.debug>2)
     {
@@ -59,7 +59,7 @@ void childmain(int s)
 
     /* Child will only live a certain number of seconds */
     alarm(conf.childlifetime);
-    signal(SIGALRM, onalarm);
+    signal(SIGALRM, child_onalarm);
 
     puttext(s, PROMPT_CMD);
     gettextcr(s, buf);
