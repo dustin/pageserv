@@ -1,15 +1,13 @@
 Overall:
 
+    * LOGGING!!!
     * Make compliant with SNPP (RFC1861)
-    * Queue expiration
     * Queue postponing
     * A login method into the server to allow clients to modify stuff
       about their database entry.
-    * Write my own sort (or figure out qsort())
 
 Delivery:
 
-    * Internalize delivery and remove farkle protocol command
     * Local modem support
 
 Clients:
@@ -21,4 +19,4 @@ Clients:
 
 ----------------------------------------
 Copyright (c) 1997  Dustin Sallings
-$Id: TODO,v 2.3 1997/04/01 06:56:22 dustin Exp $
+$Id: TODO,v 2.4 1997/04/02 06:19:50 dustin Exp $
