@@ -3,18 +3,12 @@ Overall:
     * hosts.access
     * Management login to manage crap
     * SQL based databases
-    * support numeric pagers
-    * make it so that I can run the server as root to get secure ports, but
-      it actually serves as a pager user of some sort
+    * support numeric pagers (tone only)
 
 Delivery:
 
     * multiple modems on a port
     * need queue status flags
-
-Clients:
-
-    * .parsemail
 
 Technical:
     * Check the return value of all system calls.  Gotta be sure stuff got
@@ -24,4 +18,4 @@ Technical:
 
 ----------------------------------------
 Copyright (c) 1997  Dustin Sallings
-$Id: TODO,v 2.35 1998/07/14 05:48:03 dustin Exp $
+$Id: TODO,v 2.36 1998/08/03 22:10:26 dustin Exp $
