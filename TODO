@@ -14,7 +14,6 @@ Delivery:
 
     * check time at delivery time in case a message has been stuck
     * have timeouts actually time out
-    * Local modem support
     * clean stuff
 
 Clients:
@@ -26,4 +25,4 @@ Clients:
 
 ----------------------------------------
 Copyright (c) 1997  Dustin Sallings
-$Id: TODO,v 2.20 1997/04/29 17:53:37 dustin Exp $
+$Id: TODO,v 2.21 1997/06/19 08:24:12 dustin Exp $
