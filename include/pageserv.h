@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.6 1997/04/01 04:59:00 dustin Exp $
+ * $Id: pageserv.h,v 1.7 1997/04/01 05:41:44 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -51,6 +51,9 @@
 
 /* Default child lifetime */
 #define CHILD_LIFETIME 120
+
+/* Max queue time before deletion */
+#define MAX_QUEUETIME  180
 
 /* The protocol */
 
@@ -124,6 +127,7 @@ struct config {
     int mode;           /* execution mode */
     int debug;
     int childlifetime;
+    int maxqueuetime;
     char *servhost;
     char *userdb;
     char *termdb;
@@ -175,7 +179,10 @@ void process(int s, char *cmd);
 void quit(int s);
 void readconfig(char *file);
 void reaper(void);
+void resetservtraps(void);
 void runqueue(void);
+void serv_sighup();
+void serv_sigint();
 void showconfig(void);
 void showversion(void);
 void storeterm(DBM *db, struct terminal t);
