@@ -1,13 +1,14 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.2 1997/03/11 06:48:15 dustin Exp $
+ * $Id: queue.c,v 1.3 1997/03/11 19:36:35 dustin Exp $
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <dirent.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -53,7 +54,7 @@ char *newqfile(void)
    return(fn);
 }
 
-int storequeue(int s, char *whom, char *message)
+int storequeue(int s, int priority, char *whom, char *message)
 {
     char buf[BUFLEN], *fn;
     FILE *q;
@@ -62,7 +63,7 @@ int storequeue(int s, char *whom, char *message)
 
     q=fopen(fn, "w");
 
-    fprintf(q, "%s\n%s\n", whom, message);
+    fprintf(q, "%d\n%s\n%s\n", priority, whom, message);
 
     fclose(q);
 
@@ -70,4 +71,58 @@ int storequeue(int s, char *whom, char *message)
     puttext(s, buf);
 
     return(0);
+}
+
+int queuedepth(void)
+{
+    DIR *dir;
+    struct dirent *d;
+    int i=0;
+
+    chdir(QUEDIR);
+    dir=opendir(".");
+
+    while( (d=readdir(dir))!=NULL)
+    {
+	if(d->d_name[0]=='q')
+	    i++;
+    }
+    closedir(dir);
+    return(i);
+}
+
+void printqueue(void)
+{
+    DIR *dir;
+    FILE *f;
+    struct dirent *d;
+    char buf[BUFLEN];
+    struct queuent q;
+
+    chdir(QUEDIR);
+    dir=opendir(".");
+
+    printf("There are %d items in the queue.\n\n", queuedepth());
+
+    while( (d=readdir(dir))!=NULL)
+    {
+	if(d->d_name[0]=='q')
+	{
+	    f=fopen(d->d_name, "r");
+
+	    fgets(buf, BUFLEN, f);
+	    sscanf(buf, "%d", &q.priority);
+	    fgets(q.to, TOLEN, f);
+	    fgets(q.message, BUFLEN, f);
+	    kw(q.to);
+	    kw(q.message);
+	    strcpy(q.qid, d->d_name);
+
+	    fclose(f);
+
+	    printf("%s:\n\tTo %s   %d bytes\n\n", q.qid, q.to,
+		strlen(q.message));
+	}
+    }
+    closedir(dir);
 }

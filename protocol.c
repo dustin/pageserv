@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: protocol.c,v 1.1 1997/03/11 06:48:02 dustin Exp $
+ * $Id: protocol.c,v 1.2 1997/03/11 19:36:34 dustin Exp $
  */
 
 #include <stdio.h>
@@ -36,7 +36,7 @@ void queueup(int s)
     puttext(s, PROMPT_MESS);
     gettext(s, buf2);
 
-    storequeue(s, buf1, buf2);
+    storequeue(s, PR_NORMAL, buf1, buf2);
 }
 
 void process(int s, char *cmd)
