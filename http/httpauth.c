@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpauth.c,v 1.6 1997/07/14 06:17:35 dustin Exp $
+ * $Id: httpauth.c,v 1.7 1997/08/05 23:56:34 dustin Exp $
  */
 
 #include <config.h>
@@ -99,12 +99,19 @@ void _http_auth_require(int s, struct http_request r, char *authname)
 
     u=getuser(r.auth.name);
 
-    if(checkpass(u.passwd, r.auth.pass))
+    if(strlen(u.passwd)>0)
     {
-         return;
+         if(checkpass(u.passwd, r.auth.pass))
+	 {
+	     return;
+	 }
+	 else
+         {
+	     _http_header_needauth(s, authname, r);
+	 }
     }
     else
     {
-        _http_header_needauth(s, authname, r);
+         _http_header_needauth(s, authname, r);
     }
 }
