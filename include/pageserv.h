@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.68 1998/04/13 15:17:27 dustin Exp $
+ * $Id: pageserv.h,v 1.69 1998/04/15 17:14:17 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -289,6 +289,7 @@ int checkpidfile(char *filename);
 int dexpect(int s, char **what, int timeout);
 int execnamedfunc(char *name, struct namedfunc *f);
 int f_exists(char *file);
+int findGMTOffset(void);
 int getservsocket(int port);
 int gettext(int s, char *buf);
 int gettextcr(int s, char *buf);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: protocol.c,v 1.11 1998/01/10 01:33:03 dustin Exp $
+ * $Id: protocol.c,v 1.12 1998/04/15 17:14:21 dustin Exp $
  */
 
 #include <stdio.h>
@@ -20,6 +20,8 @@ static void p_epage(int s, modpass p)
 {
     char buf1[BUFLEN], buf2[BUFLEN], buf3[BUFLEN];
     struct queuent q;
+
+    memset(&q, 0x00, sizeof(q));
 
     _ndebug(1, ("Entering p_epage\n"));
 
