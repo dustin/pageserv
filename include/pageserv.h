@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.63 1998/02/27 07:47:03 dustin Exp $
+ * $Id: pageserv.h,v 1.64 1998/03/11 06:31:32 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -275,6 +275,7 @@ int bit_set(int bmap, int which);
 int checkIPAccess(struct sockaddr_in addr, module *m);
 int check_time(struct queuent q);
 int checkpidfile(char *filename);
+int dexpect(int s, char **what, int timeout);
 int execnamedfunc(char *name, struct namedfunc *f);
 int f_exists(char *file);
 int getservsocket(int port);

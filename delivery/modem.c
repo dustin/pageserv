@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: modem.c,v 2.15 1998/02/27 04:30:56 dustin Exp $
+ * $Id: modem.c,v 2.16 1998/03/11 06:31:29 dustin Exp $
  */
 
 #include <config.h>
@@ -137,6 +137,60 @@ int s_modem_waitfor(int s, char *what, int timeout)
     return(0);
 }
 
+int dexpect(int s, char **what, int timeout)
+{
+    int which, size, i[1024], found;
+    char c;
+
+    if(what==NULL || what[0]==NULL)
+        return(-1);
+
+    for(which=0; what[which]; which++) i[which]=0;
+
+    found=-1;
+
+    while(found<0)
+    {
+        timeout-=_waitondesc(s, timeout);
+        if(timeout<1)
+        {
+            _ndebug(2, ("dexpect timed out, returning -1\n"));
+            return(-1);
+        }
+        size=read(s, &c, 1);
+        if(size>0)
+        {
+            _ndebug(2, ("%c", c));
+
+            for(which=0; what[which]!=NULL; which++)
+            {
+                _ndebug(4, ("Checking %s\n", what[which]));
+                if(c==what[which][i[which]])
+                {
+                    _ndebug(4, ("dexpect found another character in %s (%d)\n",
+                                what[which], i[which]));
+                    i[which]++;
+
+                    if(i[which]==strlen(what[which]))
+                    {
+                        _ndebug(3, ("dexpect found %s\n", what[which]));
+                        found=which;
+                    }
+                }
+                else
+                {
+                    i[which]=0;
+                }
+            }
+        }
+        else
+        {
+            return(-1);
+        }
+    }
+    return(found);
+}
+
 /*
  * Dial and connect to ``number'' over file descriptor ``s''
  */
@@ -144,6 +198,12 @@ int s_modem_connect(int s, char *number)
 {
     char buf[BUFLEN];
     int i;
+    char *constr[]={
+	"CONNECT",
+	"BUSY",
+	"NO CARRIER",
+	NULL
+    };
 
     i=puttext(s, "atz\r\n");
     _ndebug(3, ("Wrote %d bytes\n", i));
@@ -163,10 +223,10 @@ int s_modem_connect(int s, char *number)
     i=puttext(s, buf);
     _ndebug(3, ("Wrote %d bytes\n", i));
 
-    i=s_modem_waitfor(s, "CONNECT", 30);
+    i=dexpect(s, constr, 30);
     if(i<0)
     {
-	_ndebug(2, ("connect failed\n"));
+	_ndebug(2, ("connect failed: %s\n", i>0?constr[i]:"timeout"));
 	return(-1);
     }
 
