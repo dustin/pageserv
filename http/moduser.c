@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: moduser.c,v 1.3 1997/07/08 07:12:39 dustin Exp $
+ * $Id: moduser.c,v 1.4 1997/07/09 07:26:03 dustin Exp $
  */
 
 #include <pageserv.h>
@@ -157,32 +157,7 @@ void _http_moduser_process(int s, struct http_request r)
     tmp=_http_getcgiinfo(r, "late");
     times[1]=atoi(tmp);
 
-    u.times=0;
-
-    if(times[0]==times[1])
-    {
-        puttext(s, "You will receive normal priority pages at any time<br>\n");
-        u.times=0xffffffff;
-    }
-    else
-    {
-        if(times[0]==0)
-            times[0]=23;
-
-        if(times[0]<times[1])
-        {
-            for(i=times[0]; i<times[1]; i++)
-                u.times=set_bit(u.times, i);
-        }
-        else
-        {
-            for(i=times[0]; i<24; i++)
-                u.times=set_bit(u.times, i);
-
-            for(i=0; i<times[1]; i++)
-                u.times=set_bit(u.times, i);
-        }
-    }
+    u.times=pack_timebits(times[0], times[1]);
 
     sprintf(buf, "Early:  %d<br>\nLate:  %d<br>\nMask:  %x<br>\n",
         times[0], times[1], u.times);

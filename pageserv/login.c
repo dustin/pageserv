@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: login.c,v 1.11 1997/07/08 04:25:21 dustin Exp $
+ * $Id: login.c,v 1.12 1997/07/09 07:26:22 dustin Exp $
  * $State: Exp $
  */
 
@@ -143,8 +143,8 @@ void login_usermain(int s, struct user u)
 
     if(flag==1)
     {
+
         /* zero it out */
-        u.times=0;
 
         puttext(s, "Earliest time to receive normal pages [0-23] (24 hour):  ");
         gettextcr(s, buf);
@@ -154,36 +154,8 @@ void login_usermain(int s, struct user u)
         gettextcr(s, buf);
         sscanf(buf, "%d", &times[1]);
 
-        if(times[0]==times[1])
-        {
-            puttext(s, "You will receive normal priority pages at any time\n");
-            u.times=0xFFFFFFFF;
-        }
-        else
-        {
-            if(times[0]==0)
-                times[0]=23;
+	u.times=pack_timebits(times[0], times[1]);
 
-            if(times[0]<times[1])
-            {
-                for(i=times[0]; i<times[1] ; i++)
-                {
-                    u.times=set_bit(u.times, i);
-                }
-            }
-            else
-            {
-                for(i=times[0]; i<24 ; i++)
-                {
-                    u.times=set_bit(u.times, i);
-                }
-
-                for(i=0; i<times[1] ; i++)
-                {
-                    u.times=set_bit(u.times, i);
-                }
-            } /* end of early >= late */
-        }     /* end of specific time setting stuff */
         changes++;
     }         /* setting times */
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: snppmain.c,v 1.6 1997/06/30 05:16:14 dustin Exp $
+ * $Id: snppmain.c,v 1.7 1997/07/09 07:26:30 dustin Exp $
  */
 
 #include <config.h>
@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <ctype.h>
 #include <signal.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -74,15 +75,15 @@ void snpp_setpageid(int s, char *id)
     if(u_exists(id))
     {
         if(snpp_nid>=SNPP_NID)
-	{
-	    puttext(s, "552 Maximum Entries exceeded.\n");
-	    return;
-	}
-	else
-	{
+        {
+            puttext(s, "552 Maximum Entries exceeded.\n");
+            return;
+        }
+        else
+        {
             snpp_pageid[snpp_nid++]=strdup(id);
             puttext(s, "250 Pager ID Accepted\n");
-	}
+        }
     }
     else
     {
@@ -108,6 +109,21 @@ void snpp_setmess(int s, char *mess)
     puttext(s, "250 Message OK\n");
 }
 
+void snpp_setpriority(int s, char *pri)
+{
+    if( (pri!=NULL) && (strlen(pri)>0) )
+    {
+        if( tolower(pri[0]) == 'h')
+	    snpp_priority=PR_HIGH;
+
+        puttext(s, "250 Priority OK\n");
+    }
+    else
+    {
+	puttext(s, "500 You forgot your argument.\n");
+    }
+}
+
 void snpp_cleanstuff(void)
 {
     /* These are set to NULL, because they're used by RESEt, too */
@@ -116,14 +132,14 @@ void snpp_cleanstuff(void)
     for(i=0; i<SNPP_NID; i++)
     {
         if(snpp_pageid[i])
-	    free(snpp_pageid[i]);
+            free(snpp_pageid[i]);
     }
     snpp_nid=0;
 
     if(snpp_message)
     {
         free(snpp_message);
-	snpp_message=NULL;
+        snpp_message=NULL;
     }
 }
 
@@ -145,7 +161,7 @@ void snpp_send(int s)
         strcpy(q.message, snpp_message);
 
         if(storequeue(s, q, STORE_QUIET)==0)
-	    j++;
+            j++;
     }
 
     if(j==snpp_nid)
@@ -154,7 +170,7 @@ void snpp_send(int s)
         puttext(s, "554 Message failed\n");
 
     if(conf.debug>2)
-	printf("j is %d, snpp_nid is %d\n", j, snpp_nid);
+        printf("j is %d, snpp_nid is %d\n", j, snpp_nid);
 
     return;
 }
@@ -202,9 +218,13 @@ void _snpp_main(modpass p)
 
             case SNPP_RESE:
                 snpp_cleanstuff();
-		alarm(conf.childlifetime);
-		puttext(s, "250 Reset OK\n");
+                alarm(conf.childlifetime);
+                puttext(s, "250 Reset OK\n");
                 tries++;
+                break;
+
+            case SNPP_PRIORITY:
+                snpp_setpriority(s, snpp_arg(buf));
                 break;
 
             case -1:
@@ -216,11 +236,11 @@ void _snpp_main(modpass p)
                 break;
         }
 
-	if(tries>SNPP_MAXTRIES)
-	{
-	    puttext(s, "421 Too many pages, call back later\n");
-	    going=0;
-	}
+        if(tries>SNPP_MAXTRIES)
+        {
+            puttext(s, "421 Too many pages, call back later\n");
+            going=0;
+        }
     }
     close(s);
     snpp_cleanstuff();

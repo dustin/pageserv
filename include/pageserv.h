@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.33 1997/07/07 08:48:01 dustin Exp $
+ * $Id: pageserv.h,v 1.34 1997/07/09 07:26:13 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -24,6 +24,7 @@
 #define SNPPPORT 1031
 
 /* Config file location */
+/* #define CONFIGFILE "/usr/local/etc/pageserv.conf" */
 #define CONFIGFILE "/tmp/pageserv.conf"
 
 #define BUFLEN 1000
@@ -214,6 +215,7 @@ int gettextcr(int s, char *buf);
 int p_lock(char *dev);
 int p_openterm(struct terminal t);
 int p_unlock(char *dev);
+int pack_timebits(int early, int late);
 int parseterms(void);
 int parseusers(void);
 int q_islocked(struct queuent q);

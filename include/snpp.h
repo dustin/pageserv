@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * "$Id: snpp.h,v 1.3 1997/06/30 05:16:09 dustin Exp $"
+ * "$Id: snpp.h,v 1.4 1997/07/09 07:26:13 dustin Exp $"
  */
 
 #ifndef SNPP_H
@@ -38,6 +38,7 @@
 #define SNPP_MCRE   20
 #define SNPP_MSTA   21
 #define SNPP_KTAG   22
+#define SNPP_PRIORITY 23
 
 #ifdef IWANTMETHODNAMES
 
@@ -65,6 +66,8 @@ static char *methodnames[]={
     "MCRE",
     "MSTA",
     "KTAG",
+/* The following are not standard SNPP commands */
+    "PRIORITY",
     NULL
 };
 

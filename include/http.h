@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * "$Id: http.h,v 1.12 1997/07/08 06:40:13 dustin Exp $"
+ * "$Id: http.h,v 1.13 1997/07/09 07:26:12 dustin Exp $"
  */
 
 #ifndef HTTP_H
@@ -83,6 +83,7 @@ struct http_request {
 char *_http_getcgiinfo(struct http_request r, char *what);
 int  _http_socket(void);
 struct http_request http_parserequest(int s);
+void _http_admin(int s, struct http_request r);
 void _http_auth_require(int s, struct http_request r, char *authname);
 void _http_error(int s, struct http_request r);
 void _http_footer(int s);
@@ -94,6 +95,7 @@ void _http_init(void);
 void _http_init_request(struct http_request *r);
 void _http_main(modpass p);
 void _http_moduser(int s, struct http_request r);
+void _http_moduser_timelist(int s, int def);
 void _http_parseargs(int s, struct http_request *r);
 void _http_process_get(int s, struct http_request r);
 void _http_sendpage(int s, struct http_request r);
@@ -104,15 +106,20 @@ void http_process(int s, struct http_request r);
 
 static char *docnames[]={
     "/moduser",
-    "/sendpage"
+    "/sendpage",
+    "/admin"
 };
 
 #define DOC_MODUSER 0
 #define DOC_SENDPAGE 1
+#define DOC_ADMIN 2
 
-#define NDOCS    2
+#define NDOCS    3
 #define NOTADOC  NDOCS
 
 #endif /* IWANTDOCINFO */
+
+#define DEFAULT_EARLY 7
+#define DEFAULT_LATE  22
 
 #endif /* HTTP_H */

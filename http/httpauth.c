@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpauth.c,v 1.2 1997/07/08 06:53:32 dustin Exp $
+ * $Id: httpauth.c,v 1.3 1997/07/09 07:26:01 dustin Exp $
  */
 
 #include <config.h>
@@ -78,6 +78,20 @@ void _http_auth_require(int s, struct http_request r, char *authname)
 
     if(!u_exists(r.auth.name))
         _http_header_needauth(s, authname, r);
+
+    if(r.auth.pass == NULL)
+        _http_header_needauth(s, authname, r);
+
+    if(strcmp(authname, "admin")==0)
+    {
+        if(strcmp(r.auth.name, "admin")!=0)
+            _http_header_needauth(s, authname, r);
+    }
+    else
+    {
+        if(strcmp(r.auth.name, "admin")==0)
+            _http_header_needauth(s, authname, r);
+    }
 
     u=getuser(r.auth.name);
 

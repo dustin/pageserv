@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parseusers.c,v 1.7 1997/04/16 19:44:22 dustin Exp $
+ * $Id: parseusers.c,v 1.8 1997/07/09 07:26:22 dustin Exp $
  * $State: Exp $
  */
 
@@ -30,32 +30,7 @@ struct user parseuser(char *line)
     sscanf(line, "%s %s %s %d %d", u.name, u.pageid, u.statid,
             &early, &late);
 
-    if(early>23 || early < 0 || late >23 || late < 0)
-    {
-        u.times=0xFFFFFFFF;
-    }
-    else
-    {
-        if(early < late)
-        {
-            for(i=early; i<late ; i++)
-            {
-                u.times=set_bit(u.times, i);
-            }
-        }
-        else
-        {
-            for(i=early; i<24 ; i++)
-            {
-                u.times=set_bit(u.times, i);
-            }
-
-            for(i=0; i<late ; i++)
-            {
-                u.times=set_bit(u.times, i);
-            }
-        }
-    }
+    u.times=pack_timebits(early, late);
 
     return(u);
 }

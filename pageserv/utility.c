@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: utility.c,v 1.8 1997/06/19 08:25:02 dustin Exp $
+ * $Id: utility.c,v 1.9 1997/07/09 07:26:23 dustin Exp $
  * $State: Exp $
  */
 
@@ -14,7 +14,41 @@
 
 extern struct config conf;
 
-/* kill whitey, eat all the whitespace on the end of a string */
+int pack_timebits(int early, int late)
+{
+    int t=0, i;
+    int times[2];
+
+    times[0]=early;
+    times[1]=late;
+
+    if( (times[0]==times[1])
+	|| (early>23 || early < 0 || late >23 || late < 0) )
+    {
+        t=0xffffffff;
+    }
+    else
+    {
+        if(times[0]==0)
+            times[0]=23;
+
+        if(times[0]<times[1])
+        {
+            for(i=times[0]; i<times[1]; i++)
+                t=set_bit(t, i);
+        }
+        else
+        {
+            for(i=times[0]; i<24; i++)
+                t=set_bit(t, i);
+
+            for(i=0; i<times[1]; i++)
+                t=set_bit(t, i);
+        }
+    }
+
+    return(t);
+}
 
 int gettext(int s, char *buf)
 {
@@ -60,13 +94,6 @@ int gettextcr(int s, char *buf)
 	}
     }
 
-    /*
-    {
-        if(buf[size-1]!='\r' && buf[size-1]!='\n')
-            break;
-    }
-    */
-
     if(len==0)
     {
 	if(conf.debug>0)
@@ -97,6 +124,7 @@ int gettextcr(int s, char *buf)
     return(size);
 }
 
+/* kill whitey, eat all the whitespace on the end of a string */
 
 char *kw(char *in)
 {
