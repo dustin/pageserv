@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.39 1998/01/15 10:06:46 dustin Exp $
+ * $Id: main.c,v 1.40 1998/01/15 10:17:26 dustin Exp $
  */
 
 #include <config.h>
@@ -108,13 +108,17 @@ static void deliveryd_main(void)
     for(;;)
     {
 	sleep(t);
-	if(fork()==0)
+	if(queuedepth()>0)
 	{
-	    runqueue();
-	}
-	else
-	{
-	    wait(&stat);
+	    if(fork()==0)
+	    {
+	        runqueue();
+		exit(0);
+	    }
+	    else
+	    {
+	        wait(&stat);
+	    }
 	}
 
 	/* Exit if we can't see the pidfile */

@@ -1,7 +1,6 @@
 Overall:
 
     * hosts.access
-    * Completely internal delivery stuff (no need for -bq all the time)
     * Management login to manage crap
     * SQL based databases
     * support numeric pagers
@@ -32,4 +31,4 @@ Technical:
 
 ----------------------------------------
 Copyright (c) 1997  Dustin Sallings
-$Id: TODO,v 2.30 1997/12/29 08:54:46 dustin Exp $
+$Id: TODO,v 2.31 1998/01/15 10:17:22 dustin Exp $
