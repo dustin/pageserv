@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: utility.c,v 1.3 1997/03/12 16:02:26 dustin Exp $
+ * $Id: utility.c,v 1.4 1997/03/12 16:44:05 dustin Exp $
  */
 
 #include <ctype.h>
@@ -34,7 +34,7 @@ int f_exists(char *file)
 
 int bit_set(int map, int bit)
 {
-    map<<=bit;
+    map>>=bit;
     map&=1;
 
     return(map);
@@ -47,7 +47,6 @@ int set_bit(int map, int bit)
     blah=1;
     blah<<=bit;
 
-    printf("%2d:  map is %x blah is %x ored is %x\n", bit, map, blah, map|blah);
     map|=blah;
 
     return(map);

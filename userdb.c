@@ -1,13 +1,15 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.5 1997/03/12 16:02:25 dustin Exp $
+ * $Id: userdb.c,v 1.6 1997/03/12 16:44:04 dustin Exp $
  */
 
 #include <stdio.h>
 #include <string.h>
 #include <ndbm.h>
 #include <fcntl.h>
+#include <time.h>
+#include <sys/types.h>
 
 #include "pageserv.h"
 
@@ -16,6 +18,20 @@ void printuser(struct user u)
     printf("ID:        %s\nPager ID:  %s\nStation:   %s\n", u.name,
          u.pageid, u.statid);
     printf("Times:     %x\n", u.times);
+}
+
+int check_time(int priority, char *whom)
+{
+    struct tm *t;
+    struct user u;
+    time_t clock;
+
+    time(&clock);
+    t=localtime(&clock);
+
+    u=getuser(whom);
+
+    return(bit_set(u.times, t->tm_hour));
 }
 
 void storeuser(DBM *db, struct user u)

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.4 1997/03/11 20:26:56 dustin Exp $
+ * $Id: queue.c,v 1.5 1997/03/12 16:44:03 dustin Exp $
  */
 
 #include <stdio.h>
@@ -59,15 +59,21 @@ int storequeue(int s, int priority, char *whom, char *message)
     char buf[BUFLEN], *fn;
     FILE *q;
 
-    fn=newqfile();
+    if(check_time(priority, whom))
+    {
+        fn=newqfile();
 
-    q=fopen(fn, "w");
+        q=fopen(fn, "w");
+        fprintf(q, "%d\n%s\n%s\n", priority, whom, message);
+        fclose(q);
 
-    fprintf(q, "%d\n%s\n%s\n", priority, whom, message);
+        sprintf(buf, "Queued to %s, thank you\n", fn);
+    }
+    else
+    {
+	strcpy(buf, MESG_BADTIME);
+    }
 
-    fclose(q);
-
-    sprintf(buf, "Queued to %s, thank you\n", fn);
     puttext(s, buf);
 
     return(0);
