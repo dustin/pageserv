@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: modem.c,v 2.7 1997/06/20 09:13:14 dustin Exp $
+ * $Id: modem.c,v 2.8 1997/06/20 13:46:21 dustin Exp $
  * $State: Exp $
  */
 
@@ -43,6 +43,8 @@ int s_modem_waitforchar(int s, char what, int timeout)
     do
     {
         read(s, &c, 1);
+	if(conf.debug>2)
+	    putchar(c);
     }
     while(c!=what);
 }
@@ -57,6 +59,8 @@ int s_modem_waitfor(int s, char *what, int timeout)
     while(i<strlen(what))
     {
 	read(s, &c, 1);
+	if(conf.debug>2)
+	    putchar(c);
 
 	if(c==what[i])
 	    i++;
