@@ -1,11 +1,12 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: modem.c,v 2.3 1997/04/01 22:29:51 dustin Exp $
+ * $Id: modem.c,v 2.4 1997/04/02 00:16:19 dustin Exp $
  */
 
 #include <stdio.h>
 #include <string.h>
+#include <sys/types.h>
 #include <sys/socket.h>
 
 #include <tap.h>
