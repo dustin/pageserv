@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: utility.c,v 1.26 1998/09/24 19:36:30 dustin Exp $
+ * $Id: utility.c,v 1.27 1999/06/08 07:26:11 dustin Exp $
  */
 
 #include <config.h>
@@ -22,9 +22,15 @@
 #include <sys/time.h>
 #endif
 
+#ifdef HAVE_SYS_ERRNO_H
+#include <sys/errno.h>
+#endif
+
 #include <pageserv.h>
 
 extern struct config conf;
+
+extern int errno;
 
 /* Static declarations */
 static int set_bit(int map, int bit);
@@ -36,12 +42,13 @@ static int set_bit(int map, int bit);
  * More that likely, it'll overrun buffers, because they
  * probably don't have vsnprintf either.
  */
-int snprintf(char *s, size_t n, const char *format, ...)
+int
+snprintf(char *s, size_t n, const char *format,...)
 {
-    va_list ap;
-    va_start(ap, format);
-    vsnprintf(s, n-1, format, ap);
-    va_end(ap);
+	va_list ap;
+	va_start(ap, format);
+	vsnprintf(s, n - 1, format, ap);
+	va_end(ap);
 }
 
 #endif
@@ -53,132 +60,134 @@ int snprintf(char *s, size_t n, const char *format, ...)
  * shutting the server down.
  */
 
-void page_log(char *format, ...)
+void
+page_log(char *format,...)
 {
-    va_list ap;
-    char buf[BUFLEN];
+	va_list ap;
+	char    buf[BUFLEN];
 
-    openlog("pageserv", LOG_PID|LOG_NDELAY, conf.log_que);
+	openlog("pageserv", LOG_PID | LOG_NDELAY, conf.log_que);
 
-    va_start(ap, format);
-    vsnprintf(buf, BUFLEN-1, format, ap);
-    va_end(ap);
+	va_start(ap, format);
+	vsnprintf(buf, BUFLEN - 1, format, ap);
+	va_end(ap);
 
-    syslog(conf.log_que|LOG_INFO, buf);
+	syslog(conf.log_que | LOG_INFO, buf);
 
-    closelog();
+	closelog();
 }
 
 /*
  * find the number of seconds off of GMT (including DST)
  */
-int findGMTOffset(void)
+int
+findGMTOffset(void)
 {
-    struct tm *tm;
-    int i;
-    time_t t, tmp;
+	struct tm *tm;
+	int     i;
+	time_t  t, tmp;
 
-    t=time(NULL);
-    tmp=t;
-    tm=gmtime(&t);
-    t=mktime(tm);
+	t = time(NULL);
+	tmp = t;
+	tm = gmtime(&t);
+	t = mktime(tm);
 
-    i=(int)tmp-(int)t;
+	i = (int) tmp - (int) t;
 
-    t=tmp;
-    tm=localtime(&t);
+	t = tmp;
+	tm = localtime(&t);
 
-    if(tm->tm_isdst>0)
-        i-=3600;
+	if (tm->tm_isdst > 0)
+		i -= 3600;
 
-    return(i);
+	return (i);
 }
 
-
-int checkpidfile(char *filename)
+int
+checkpidfile(char *filename)
 {
-    int pid, ret;
-    FILE *f;
+	int     pid, ret;
+	FILE   *f;
 
-    if( (f=fopen(filename, "r")) == NULL)
-    {
-        return(PID_NOFILE);
-    }
-    else
-    {
-	fscanf(f, "%d", &pid);
+	if ((f = fopen(filename, "r")) == NULL) {
+		return (PID_NOFILE);
+	} else {
+		fscanf(f, "%d", &pid);
 
-	_ndebug(2, ("Checking pid %d for life\n", pid));
+		_ndebug(2, ("Checking pid %d for life\n", pid));
 
-	if( kill(pid, 0) ==0)
-	{
-	    ret=PID_ACTIVE;
+		if (kill(pid, 0) == 0) {
+			ret = PID_ACTIVE;
+		} else {
+			if(errno==ESRCH)
+				ret = PID_STALE;
+			else
+				ret = PID_NOT_OWNER;
+		}
 	}
-	else
-	{
-	    ret=PID_STALE;
+
+	return (ret);
+}
+
+static void
+quicksort(char **a, int l, int r)
+{
+	int     i, j;
+	char   *v, *t;
+
+	if (r > l) {
+		v = a[r];
+		i = l - 1;
+		j = r;
+
+		do {
+			while ((strcmp(a[++i], v) < 0) && i < r);
+			while ((strcmp(a[--j], v) > 0) && j > 0);
+
+			t = a[i];
+			a[i] = a[j];
+			a[j] = t;
+		} while (j > i);
+
+		a[j] = a[i];
+		a[i] = a[r];
+		a[r] = t;
+
+		quicksort(a, l, i - 1);
+		quicksort(a, i + 1, r);
 	}
-    }
-
-    return(ret);
 }
 
-static void quicksort(char **a, int l, int r)
+void
+stringListSort(char **list)
 {
-    int i, j;
-    char *v, *t;
+	int     i;
 
-    if(r>l)
-    {
-        v=a[r]; i=l-1; j=r;
+	for (i = 0; list[i] != NULL; i++);
 
-        do{
-            while( (strcmp(a[++i], v)<0) && i<r );
-            while( (strcmp(a[--j], v)>0) && j>0 );
-
-            t=a[i]; a[i]=a[j]; a[j]=t;
-        } while(j>i);
-
-    a[j]=a[i]; a[i]=a[r]; a[r]=t;
-
-    quicksort(a, l, i-1);
-    quicksort(a, i+1, r);
-    }
+	if (i > 0) {
+		_ndebug(2, ("Calling quicksort(list, %d, %d)\n", 0, i - 1));
+		quicksort(list, 0, i - 1);
+	}
 }
 
-void stringListSort(char **list)
+int
+execnamedfunc(char *name, struct namedfunc *f)
 {
-    int i;
+	int     i;
 
-    for(i=0; list[i]!=NULL; i++);
+	for (i = 0; f[i].name != NULL; i++) {
+		if (strcmp(f[i].name, name) == 0)
+			break;
+	}
 
-    if(i>0)
-    {
-	_ndebug(2, ("Calling quicksort(list, %d, %d)\n", 0, i-1));
-	quicksort(list, 0, i-1);
-    }
-}
+	if (f[i].name == NULL) {
+		return (FUNC_UNKNOWN);
+	} else {
+		f[i].func();
+	}
 
-int execnamedfunc(char *name, struct namedfunc *f)
-{
-    int i;
-
-    for(i=0; f[i].name!=NULL; i++)
-    {
-	if(strcmp(f[i].name, name)==0)
-	    break;
-    }
-
-    if(f[i].name==NULL)
-    {
-	return(FUNC_UNKNOWN);
-    }
-    else
-    {
-	f[i].func();
-    }
-
-    return(0);
+	return (0);
 }
 
 /*
@@ -186,208 +195,197 @@ int execnamedfunc(char *name, struct namedfunc *f)
  * the destination (known) array pointer, and the thing you want to
  * append.  Returns the resulting string.
  */
-char *addtostr(int *size, char *dest, char *str)
+char   *
+addtostr(int *size, char *dest, char *str)
 {
-    int new=0;
+	int     new = 0;
 
-    _ndebug(5, ("addtostr(%d, %s, %s);\n", *size, dest, str));
+	_ndebug(5, ("addtostr(%d, %s, %s);\n", *size, dest, str));
 
-    if(*size==0)
-    {
-	_ndebug(5, ("Doing initial malloc\n"));
+	if (*size == 0) {
+		_ndebug(5, ("Doing initial malloc\n"));
 
-	*size=DEFAULT_STRLEN;
-	dest=(char *)malloc(*size*sizeof(char));
-	if(dest==NULL)
-	{
-	    perror("malloc");
-	    exit(1);
-        }
-	new=1;
-    }
-
-    if(strlen(dest)+strlen(str)>=(size_t)*size)
-    {
-	_ndebug(4, ("Realloc'in to %d bytes, need more than %d bytes\n",
-		    *size<<1, *size));
-
-	*size<<=1;
-	dest=realloc(dest, *size*sizeof(char));
-	if(dest==NULL)
-	{
-	    perror("realloc");
-	    exit(1);
+		*size = DEFAULT_STRLEN;
+		dest = (char *) malloc(*size * sizeof(char));
+		if (dest == NULL) {
+			perror("malloc");
+			exit(1);
+		}
+		new = 1;
 	}
-    }
+	if (strlen(dest) + strlen(str) >= (size_t) * size) {
+		_ndebug(4, ("Realloc'in to %d bytes, need more than %d bytes\n",
+			*size << 1, *size));
 
-    if(new)
-	strcpy(dest, str);
-    else
-        strcat(dest, str);
+		*size <<= 1;
+		dest = realloc(dest, *size * sizeof(char));
+		if (dest == NULL) {
+			perror("realloc");
+			exit(1);
+		}
+	}
+	if (new)
+		strcpy(dest, str);
+	else
+		strcat(dest, str);
 
-    return(dest);
+	return (dest);
 }
 
-int pack_timebits(int early, int late)
+int
+pack_timebits(int early, int late)
 {
-    int t=0, i;
-    int times[2];
+	int     t = 0, i;
+	int     times[2];
 
-    times[0]=early;
-    times[1]=late;
+	times[0] = early;
+	times[1] = late;
 
-    if( (times[0]==times[1])
-	|| (early>23 || early < 0 || late >23 || late < 0) )
-    {
-        t=0xffffffff;
-    }
-    else
-    {
-        if(times[0]==0)
-            times[0]=23;
+	if ((times[0] == times[1])
+	    || (early > 23 || early < 0 || late > 23 || late < 0)) {
+		t = 0xffffffff;
+	} else {
+		if (times[0] == 0)
+			times[0] = 23;
 
-        if(times[0]<times[1])
-        {
-            for(i=times[0]; i<times[1]; i++)
-                t=set_bit(t, i);
-        }
-        else
-        {
-            for(i=times[0]; i<24; i++)
-                t=set_bit(t, i);
+		if (times[0] < times[1]) {
+			for (i = times[0]; i < times[1]; i++)
+				t = set_bit(t, i);
+		} else {
+			for (i = times[0]; i < 24; i++)
+				t = set_bit(t, i);
 
-            for(i=0; i<times[1]; i++)
-                t=set_bit(t, i);
-        }
-    }
+			for (i = 0; i < times[1]; i++)
+				t = set_bit(t, i);
+		}
+	}
 
-    return(t);
+	return (t);
 }
 
 /* This is a function instead of a macro because as a macro it
  * forces all constant strings to be duplicated at compile time
  */
 
-int puttext(int s, char *txt)
+int
+puttext(int s, char *txt)
 {
-    return(write(s, txt, strlen(txt)));
+	return (write(s, txt, strlen(txt)));
 }
 
-int gettext(int s, char *buf)
+int
+gettext(int s, char *buf)
 {
-    int size;
-    if( (size=read(s, buf, BUFLEN-1)) >0)
-    {
-        buf[size]=0x00;
-        kw(buf);
-        return(size);
-    }
-    else
-    {
-        /* Pipe breaking bastard */
-        exit(0);
-    }
-
-    _ndebug(1, ("gettext() received:\n\t``%s''\n", buf));
-
-    return(size);
-}
-
-int gettextcr(int s, char *buf)
-{
-    int size=1, len=0, toobig=0;
-    char c=0;
-
-    /* eat any extra CR's and LF's */
-    while( (len=read(s, buf, 1)) >0) {
-	if(buf[size-1]=='\r') {
-	    size=0;
-	    break;
-	} else if(buf[size-1]=='\n') {
-	    size=0;
-            break;
+	int     size;
+	if ((size = read(s, buf, BUFLEN - 1)) > 0) {
+		buf[size] = 0x00;
+		kw(buf);
+		return (size);
 	} else {
-	    break;
+		/* Pipe breaking bastard */
+		exit(0);
 	}
-    }
 
-    if(len==0) {
-	_ndebug(0, ("Broken pipe?\n"));
-	exit(0);
-    }
+	_ndebug(1, ("gettext() received:\n\t``%s''\n", buf));
 
-    while( (len=read(s, &c, 1)) >0) {
-        if(len==0) {
-	    _ndebug(0, ("Broken pipe?\n"));
-	    exit(0);
-        }
+	return (size);
+}
 
-	size+=len;
+int
+gettextcr(int s, char *buf)
+{
+	int     size = 1, len = 0, toobig = 0;
+	char    c = 0;
 
-        if(!toobig) {
+	/* eat any extra CR's and LF's */
+	while ((len = read(s, buf, 1)) > 0) {
+		if (buf[size - 1] == '\r') {
+			size = 0;
+			break;
+		} else if (buf[size - 1] == '\n') {
+			size = 0;
+			break;
+		} else {
+			break;
+		}
+	}
 
-            if(size>=BUFLEN) {
-	        _ndebug(3, ("Truncating input, too long.\n"));
-	        buf[BUFLEN-1]=0x00;
-                toobig=1;
-            }
+	if (len == 0) {
+		_ndebug(0, ("Broken pipe?\n"));
+		exit(0);
+	}
+	while ((len = read(s, &c, 1)) > 0) {
+		if (len == 0) {
+			_ndebug(0, ("Broken pipe?\n"));
+			exit(0);
+		}
+		size += len;
 
-	    buf[size-1]=c;
-            buf[size]=0x00;
-        }
+		if (!toobig) {
 
-        if(c=='\r' || c=='\n')
-            break;
-    }
+			if (size >= BUFLEN) {
+				_ndebug(3, ("Truncating input, too long.\n"));
+				buf[BUFLEN - 1] = 0x00;
+				toobig = 1;
+			}
+			buf[size - 1] = c;
+			buf[size] = 0x00;
+		}
+		if (c == '\r' || c == '\n')
+			break;
+	}
 
-    kw(buf);
+	kw(buf);
 
-    _ndebug(1, ("gettextcr() received:\n\t``%s''\n", buf));
+	_ndebug(1, ("gettextcr() received:\n\t``%s''\n", buf));
 
-    return(size);
+	return (size);
 }
 
 /* kill whitey, eat all the whitespace on the end of a string */
 
-char *kw(char *in)
+char   *
+kw(char *in)
 {
-    /* bounds checking */
-    if(strlen(in)==0)
-        return(in);
+	/* bounds checking */
+	if (strlen(in) == 0)
+		return (in);
 
-    while(isspace(in[strlen(in)-1]))
-    {
-        /* bounds checking */
-        if(strlen(in)==0)
-            return(in);
+	while (isspace(in[strlen(in) - 1])) {
+		/* bounds checking */
+		if (strlen(in) == 0)
+			return (in);
 
-        in[strlen(in)-1]=0x00;
-    }
+		in[strlen(in) - 1] = 0x00;
+	}
 
-    return(in);
+	return (in);
 }
 
-int f_exists(char *file)
+int
+f_exists(char *file)
 {
-    return(access(file, F_OK)==0);
+	return (access(file, F_OK) == 0);
 }
 
-int bit_set(int map, int bit)
+int
+bit_set(int map, int bit)
 {
-    map>>=bit;
-    map&=1;
+	map >>= bit;
+	map &= 1;
 
-    return(map);
+	return (map);
 }
 
-static int set_bit(int map, int bit)
+static int
+set_bit(int map, int bit)
 {
-    int blah;
+	int     blah;
 
-    blah=1;
-    blah<<=bit;
+	blah = 1;
+	blah <<= bit;
 
-    map|=blah;
+	map |= blah;
 
-    return(map);
+	return (map);
 }
