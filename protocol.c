@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: protocol.c,v 1.16 1997/03/29 08:24:09 dustin Exp $
+ * $Id: protocol.c,v 1.17 1997/03/30 01:32:16 dustin Exp $
  */
 
 #include <stdio.h>
@@ -15,53 +15,6 @@
 #include "pageserv.h"
 
 extern struct config conf;
-
-int gettext(int s, char *buf)
-{
-    int size;
-    if( (size=recv(s, buf, BUFLEN-1, 0)) >0)
-    {
-        buf[size]=0x00;
-        kw(buf);
-        return(size);
-    }
-    else
-    {
-        /* Pipe breaking bastard */
-        exit(0);
-    }
-
-    if(conf.debug>1)
-	printf("gettext() received:\n\t``%s''\n", buf);
-
-    return(size);
-}
-
-int gettextcr(int s, char *buf)
-{
-    int size=1;
-
-    /* eat any extra CR's and LF's */
-    while( (recv(s, buf, 1, 0)) >0)
-    {
-        if(buf[size-1]!='\r' && buf[size-1]!='\n')
-            break;
-    }
-
-    while( (size+=recv(s, buf+size, 1, 0)) >0)
-    {
-        buf[size]=0x00;
-        if(buf[size-1]=='\r' || buf[size-1]=='\n')
-            break;
-    }
-
-    kw(buf);
-
-    if(conf.debug>1)
-	printf("gettextcr() received:\n\t``%s''\n", buf);
-
-    return(size);
-}
 
 /* This is broken, but pretty */
 
