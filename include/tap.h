@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * "$Id: tap.h,v 1.3 1997/06/19 08:24:47 dustin Exp $"
+ * "$Id: tap.h,v 1.4 1997/07/23 23:52:26 dustin Exp $"
  */
 
 #ifndef TAP_H
@@ -67,6 +67,13 @@
 #define RETRY_1 3
 #define RETRY_2 3
 #define RETRY_3 3
+
+/* misc */
+
+/* if there's a new rts/cts, let's use it */
+#ifdef CNEW_RTSCTS
+#define CRTSCTS CNEW_RTSCTS
+#endif
 
 /* functions */
 
