@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.20 1997/07/31 04:46:31 dustin Exp $
+ * $Id: main.c,v 1.21 1997/08/06 07:39:13 dustin Exp $
  * $State: Exp $
  */
 
@@ -268,7 +268,7 @@ void changepasswd(void)
 int main(int argc, char **argv)
 {
 
-    readconfig(CONFIGFILE);
+    rdconfig(CONFIGFILE);
     getoptions(argc, argv);
     if(conf.debug>0)
         showconfig();

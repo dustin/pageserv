@@ -1,9 +1,11 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.18 1997/08/06 04:37:10 dustin Exp $
+ * $Id: readconfig.c,v 1.19 1997/08/06 07:39:14 dustin Exp $
  * $State: Exp $
  */
+
+#include <readconfig.h>
 
 #include <stdio.h>
 #include <ctype.h>
@@ -17,112 +19,6 @@
 #include <pageserv.h>
 
 extern struct config conf;
-
-#define COMMANDS "DTPWS"
-
-int isin(char c, char *s)
-{
- char *p;
-
-    for(p=s; *p; p++)
-    {
-       if(*p==c)
-	return(1);
-    }
-
-    return(0);
-}
-
-char *getarg(char *line)
-{
-   char *b, *e;
-
-   b=line+2;
-
-   if(*b==0x00)
-   {
-      return(NULL);
-   }
-   e=line+(strlen(line)-1);
-
-   while(isspace(*b)) b++;
-   while(isspace(*e)) e--;
-
-   e++;
-   *e=0x00;
-
-   return(b);
-}
-
-void W_command(char s, char *arg)
-{
-    switch(s)
-    {
-	case 'D': conf.webroot=strdup(arg); break;
-	case 'r': conf.webserver=atoi(arg); break;
-	case 'p': conf.webport=atoi(arg); break;
-    }
-}
-
-void S_command(char s, char *arg)
-{
-    switch(s)
-    {
-	case 'r': conf.snppserver=atoi(arg); break;
-	case 'p': conf.snppport=atoi(arg); break;
-    }
-}
-
-void D_command(char s, char *arg)
-{
-    switch(s)
-    {
-	case 'H': conf.servhost=strdup(arg); break;
-	case 'u': conf.userdb=strdup(arg); break;
-	case 't': conf.termdb=strdup(arg); break;
-	case 'q': conf.qdir=strdup(arg); break;
-	case 'p': conf.pidfile=strdup(arg); break;
-	case 'd': conf.debug=atoi(arg); break;
-	case 'g': conf.gmtoffset=atoi(arg); break;
-    }
-}
-
-void T_command(char s, char *arg)
-{
-    switch(s)
-    {
-	case 'l': conf.childlifetime=atoi(arg); break;
-	case 'Q': conf.maxqueuetime=atoi(arg); break;
-	case 'c': conf.maxconattempts=atoi(arg); break;
-	case 's': conf.conattemptsleep=atoi(arg); break;
-    }
-}
-
-void P_command(char s, char *arg)
-{
-    switch(s)
-    {
-	case 'f': conf.farkle=atoi(arg); break;
-    }
-}
-
-void docommand(int l, char c, char s, char *arg)
-{
-    if(!*arg)
-    {
-	fprintf(stderr, "ERR:  No arg for %c%c command line %d\n", c, s, l);
-	exit(1);
-    }
-
-    switch(c)
-    {
-	case 'D': D_command(s, arg);  break;
-	case 'T': T_command(s, arg);  break;
-	case 'P': P_command(s, arg);  break;
-	case 'W': W_command(s, arg);  break;
-	case 'S': S_command(s, arg);  break;
-    }
-}
 
 void setdefaults(void)
 {
@@ -227,11 +123,10 @@ void getoptions(int argc, char **argv)
     }
 }
 
-void readconfig(char *file)
+void rdconfig(char *file)
 {
-    FILE *f;
-    char line[100];
-    int linenum=0;
+    char *tmp;
+    struct confType *cf;
 
     /* set int defaults */
     memset( (char *)&conf, 0x00, sizeof(conf));
@@ -248,27 +143,75 @@ void readconfig(char *file)
     conf.snppport=SNPPPORT;
     conf.snppserver=0;
 
-    f=fopen(file, "r");
-    if(f==NULL)
-    {
-	perror(file);
-	exit(1);
-    }
+    /* set stuff out of the config crap */
 
-    for(;;)
-    {
-	fgets(line, 100, f);
-	if(feof(f))
-	    break;
-	linenum++;
+    conf.cf=readconfig(file);
+    cf=conf.cf;
 
-        if( isin(line[0], COMMANDS))
-	{
-	    docommand(linenum, line[0], line[1], getarg(line));
-	}
-    }
+    tmp=lookupvar(cf, "etc.userdb");
+    if(tmp)
+	conf.userdb=tmp;
 
-    fclose(f);
+    tmp=lookupvar(cf, "etc.termdb");
+    if(tmp)
+	conf.termdb=tmp;
+
+    tmp=lookupvar(cf, "etc.pidfile");
+    if(tmp)
+	conf.pidfile=tmp;
+
+    tmp=lookupvar(cf, "etc.queuedir");
+    if(tmp)
+	conf.qdir=tmp;
+
+    tmp=lookupvar(cf, "etc.gmtOffset");
+    if(tmp)
+	conf.gmtoffset=atoi(tmp);
+
+    tmp=lookupvar(cf, "protocols.farkle");
+    if(tmp)
+	conf.farkle=atoi(tmp);
+
+    tmp=lookupvar(cf, "webserver.run");
+    if(tmp)
+	conf.webserver=atoi(tmp);
+
+    tmp=lookupvar(cf, "webserver.docroot");
+    if(tmp)
+	conf.webroot=tmp;
+
+    tmp=lookupvar(cf, "webserver.port");
+    if(tmp)
+	conf.webport=atoi(tmp);
+
+    tmp=lookupvar(cf, "snpp.run");
+    if(tmp)
+	conf.snppserver=atoi(tmp);
+
+    tmp=lookupvar(cf, "snpp.port");
+    if(tmp)
+	conf.snppport=atoi(tmp);
+
+    tmp=lookupvar(cf, "tuning.debug");
+    if(tmp)
+	conf.debug=atoi(tmp);
+
+    tmp=lookupvar(cf, "tuning.childLifetime");
+    if(tmp)
+	conf.childlifetime=atoi(tmp);
+
+    tmp=lookupvar(cf, "tuning.queueLifeTime");
+    if(tmp)
+	conf.maxqueuetime=atoi(tmp);
+
+    tmp=lookupvar(cf, "tuning.modemGrabAttempts");
+    if(tmp)
+	conf.maxconattempts=atoi(tmp);
+
+    tmp=lookupvar(cf, "tuning.modemGrabSleep");
+    if(tmp)
+	conf.conattemptsleep=atoi(tmp);
+
 
     setdefaults();
     initmodules();

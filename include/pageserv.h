@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.41 1997/08/06 04:36:52 dustin Exp $
+ * $Id: pageserv.h,v 1.42 1997/08/06 07:39:02 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -203,6 +203,8 @@ struct config {
     char *pidfile;         /* path to pid file */
     char *webroot;         /* path to webroot */
 
+    struct confType *cf;   /* The *real* config stuff */
+
     module *modules;       /* All of the loaded modules */
     int    nmodules;       /* number of modules */
 };
@@ -289,7 +291,7 @@ void printuser(struct user u);
 void printusers(void);
 void process(int s, char *cmd);
 void quit(int s);
-void readconfig(char *file);
+void rdconfig(char *file);
 void reaper(void);
 void resetdelivertraps(void);
 void resetservtraps(void);
@@ -307,13 +309,3 @@ int pushqueue(char *to, char *message, int priority);
 void cgettext(char *message, int size);
 
 #endif /* PAGESERV_H */
-
-
-
-
-
-
-
-
-
-

@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 2.34 1997/08/06 04:55:55 dustin Exp $
+# $Id: Makefile.in,v 2.35 1997/08/06 07:38:53 dustin Exp $
 
 MAJOR=2
 MINOR=8
@@ -16,7 +16,7 @@ LIBS=@LIBS@
 
 LDFLAGS=@LDFLAGS@ $(LIBS)
 
-DIRS=http snpp delivery pageserv clients
+DIRS=http snpp delivery readconfig pageserv clients
 NAME=pageserv
 ARCHIVE=$(NAME)-$(VERSION)
 STUFF=configure configure.in Makefile.in README TODO sample include \
@@ -24,7 +24,7 @@ STUFF=configure configure.in Makefile.in README TODO sample include \
 JUNK=$(EXES) *.o *.core core
 AUTOJUNK=config.status config.cache config.log Makefile clients/Makefile \
 	delivery/Makefile pageserv/Makefile http/Makefile include/config.h \
-	snpp/Makefile
+	snpp/Makefile readconfig/Makefile
 
 all:
 	rm -f pageserv/pageserv

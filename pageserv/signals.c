@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: signals.c,v 1.6 1997/06/19 08:24:59 dustin Exp $
+ * $Id: signals.c,v 1.7 1997/08/06 07:39:15 dustin Exp $
  * $State: Exp $
  */
 
@@ -28,7 +28,7 @@ RETSIGTYPE serv_sigint(int sig)
 RETSIGTYPE serv_sighup(int sig)
 {
     cleanconfig();
-    readconfig(CONFIGFILE);
+    rdconfig(CONFIGFILE);
 
     if(conf.debug>0)
     {

@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 1.11 1997/07/09 07:26:21 dustin Exp $
+# $Id: Makefile.in,v 1.12 1997/08/06 07:39:12 dustin Exp $
 
 SHELL=/bin/sh
 CC=@CC@
@@ -16,6 +16,7 @@ LDELIVER=@top_srcdir@/delivery/deliver.a
 LHTTP=@top_srcdir@/http/http.a
 LSNPP=@top_srcdir@/snpp/snpp.a
 MODS=$(LHTTP) $(LSNPP)
+RCFG=@top_srcdir@/readconfig/readconfig.a
 
 SERV_OBJS=sockets.o main.o utility.o kids.o queue.o protocol.o userdb.o \
 	readconfig.o termdb.o parseusers.o parseterms.o signals.o \
@@ -32,7 +33,7 @@ AUTOJUNK=Makefile
 all: $(EXES)
 
 pageserv: $(SERV_OBJS)
-	$(CC) -o $@ $(SERV_OBJS) $(LDFLAGS) $(LDELIVER) $(MODS)
+	$(CC) -o $@ $(SERV_OBJS) $(LDFLAGS) $(LDELIVER) $(MODS) $(RCFG)
 
 depend:
 	echo "" >> Makefile
