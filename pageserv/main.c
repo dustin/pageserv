@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.47 1998/01/25 11:12:18 dustin Exp $
+ * $Id: main.c,v 1.48 1998/01/28 08:34:32 dustin Exp $
  */
 
 #include <config.h>
@@ -18,6 +18,10 @@
 #include <syslog.h>
 #include <fcntl.h>
 #include <sys/wait.h>
+
+#ifdef HAVE_DLFCN_H
+#include <dlfcn.h>
+#endif
 
 #ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
@@ -145,7 +149,7 @@ static int deliveryd_main(void)
     openlog("pageserv", LOG_PID|LOG_NDELAY, conf.log_que);
     syslog(conf.log_que|LOG_INFO, "deliveryd started");
 
-    resetdelivertraps();
+    /* resetdelivertraps(); */
 
     t=rcfg_lookupInt(conf.cf, "etc.deliverysleep");
 
@@ -179,7 +183,7 @@ static int deliveryd_main(void)
 	    if( (pid=fork())==0)
 	    {
 		closelog();
-	        runqueue();
+	        runqueue_main();
 		exit(0);
 	    }
 	    else
@@ -478,6 +482,39 @@ static void changepasswd(void)
     puts("Password set.");
 }
 
+void runqueue_main(void)
+{
+#if (DYNLIBS)
+    void *lib;
+    void (*runqueue)(void);
+    char *libname;
+
+    libname=rcfg_lookup(conf.cf, "libs.delivery");
+
+    if(libname==NULL)
+    {
+	_ndebug(2, ("libs.delivery isn't in the config file.\n"));
+	return;
+    }
+
+    lib=dlopen(libname, RTLD_LAZY);
+    if(lib==NULL)
+    {
+        _ndebug(2, ("%s\n", dlerror()));
+	return;
+    }
+
+    runqueue=dlsym(lib, "runqueue");
+    if(runqueue==NULL)
+    {
+	_ndebug(2, ("%s\n", dlerror()));
+	return;
+    }
+#endif
+
+    runqueue();
+}
+
 int main(int argc, char **argv)
 {
 
@@ -503,7 +540,7 @@ int main(int argc, char **argv)
 	    showversion(); break;
 
         case MODE_RUNQ:
-	    runqueue(); break;
+	    runqueue_main(); break;
 
         case MODE_KILL:
 	    killserver(); break;

@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.60 1998/01/23 09:25:48 dustin Exp $
+ * $Id: pageserv.h,v 1.61 1998/01/28 08:34:29 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -331,6 +331,7 @@ void reaper(void);
 void resetdelivertraps(void);
 void resetservtraps(void);
 void runqueue(void);
+void runqueue_main(void);
 void showconfig(void);
 void showversion(void);
 void sql_userdbInit(void);

@@ -64,10 +64,14 @@
 
 /* Check out dynamic loading abilities */
 
+#undef HAVE_DLFCN_H
 #undef HAVE_DLSYM
 #undef HAVE_DLOPEN
 #undef HAVE_DLCLOSE
 #undef HAVE_DLERROR
+
+#undef DYNLIBS
+#undef NEEDUNDERSCORE
 
 /* Define if you have the <dirent.h> header file.  */
 #undef HAVE_DIRENT_H

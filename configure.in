@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 2.25 1998/01/10 01:32:15 dustin Exp $
+dnl $Id: configure.in,v 2.26 1998/01/28 08:34:22 dustin Exp $
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(pageserv)
 AC_CONFIG_HEADER(include/config.h)
@@ -14,6 +14,11 @@ AC_PROGRAM_CHECK(UNAMEPROG, uname, uname, )
 AC_PROGRAM_CHECK(TRPROG, tr, tr, )
 AC_PROGRAM_CHECK(SEDPROG, sed, sed, )
 AC_PROGRAM_CHECK(CUTPROG, cut, cut, )
+
+dnl Do we do dynamically loading libs on this OS?
+DYNLIBS=0
+NEEDUNDERSCORE=0
+MAKESO=:
 
 dnl What we on, boys?
 echo "Checking out your OS..."
@@ -53,9 +58,21 @@ case "$OS" in
 	else
 	    echo "Using the native IDO, let's set some CFLAGS"
 	    CFLAGS="$CFLAGS -fullwarn"
+	    DYNLIBS=1
+	    NEEDUNDERSCORE=0
+	    MAKESO="ld -shared"
 	fi
 	;;
 esac
+
+AC_DEFINE_UNQUOTED(DYNLIBS, $DYNLIBS)
+AC_SUBST(DYNLIBS)
+
+AC_DEFINE_UNQUOTED(NEEDUNDERSCORE, $NEEDUNDERSCORE)
+AC_SUBST(NEEDUNDERSCORE)
+
+AC_DEFINE_UNQUOTED(MAKESO, $MAKESO)
+AC_SUBST(MAKESO)
 
 dnl Checks for libraries.
 if test "$OS" != "irix"

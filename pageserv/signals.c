@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: signals.c,v 1.10 1998/01/27 01:32:38 dustin Exp $
+ * $Id: signals.c,v 1.11 1998/01/28 08:34:34 dustin Exp $
  */
 
 #include <stdio.h>
@@ -51,21 +51,4 @@ void resetservtraps(void)
     signal(SIGTERM, serv_sigint);
     signal(SIGHUP, serv_sighup);
     signal(SIGCHLD, serv_sigchld);
-}
-
-static RETSIGTYPE del_sigint(int sig)
-{
-    cleanmylocks();
-    exit(1);
-}
-
-void resetdelivertraps(void)
-{
-    _ndebug(0, ("Setting signals...\n"));
-
-    signal(SIGINT, del_sigint);
-    signal(SIGQUIT, del_sigint);
-    signal(SIGTERM, del_sigint);
-    signal(SIGHUP, del_sigint);
-    signal(SIGALRM, del_sigint);
 }

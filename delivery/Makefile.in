@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 2.11 1998/01/18 11:35:21 dustin Exp $
+# $Id: Makefile.in,v 2.12 1998/01/28 08:34:24 dustin Exp $
 
 SHELL=/bin/sh
 CC=@CC@
@@ -9,13 +9,14 @@ INCLUDES=-I@top_srcdir@/include
 CFLAGS=$(INCLUDES) -DVERSION=\"$(VERSION)\" @CFLAGS@
 AR=@AR@ cr
 RANLIB=@RANLIB@
+MAKESO=@MAKESO@
 
 LIBS=@LIBS@
 
 LDFLAGS=@LDFLAGS@ $(LIBS)
 
-LDELIVER_OBJS=tap.o network.o modem.o serial.o
-SOURCES=tap.c network.c network.c modem.c serial.c
+LDELIVER_OBJS=tap.o network.o modem.o serial.o misc.o
+SOURCES=tap.c network.c network.c modem.c serial.c misc.c
 EXES=taptest
 STUFF=
 
@@ -24,14 +25,18 @@ LINT=@LINT@
 LINTFLAGS=$(INCLUDES) -DVERSION=\"$(VERSION)\" -v -x -u
 LINTS=tap.ln network.ln modem.ln serial.ln
 
-JUNK=$(EXES) *.o *.a *.ln *.core core
+JUNK=$(EXES) *.o *.a *.so so_* *.ln *.core core
 
 .SUFFIXES: .c .o .l .a .ln
 
-all: deliver.a
+all: deliver.so deliver.a
 
 taptest: taptest.o deliver.a
 	$(CC) -o taptest taptest.o deliver.a @top_srcdir@/pageserv/utility.o
+
+deliver.so: $(LDELIVER_OBJS)
+	rm -f $@
+	$(MAKESO) -o $@ $(LDELIVER_OBJS)
 
 deliver.a: $(LDELIVER_OBJS)
 	rm -f $@
