@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parsemail.c,v 2.4 1998/01/14 05:48:34 dustin Exp $
+ * $Id: parsemail.c,v 2.5 1998/03/18 16:31:59 dustin Exp $
  */
 
 #include <stdio.h>
@@ -10,13 +10,25 @@
 #include <string.h>
 #include <ctype.h>
 
+/* local debug stuff */
+#if (PDEBUG>0)
+# ifndef _ndebug
+#  define _ndebug(a, b) if(PDEBUG > a ) printf b;
+# endif
+#endif
+
+/* In case it didn't make it */
+#ifndef _ndebug
+#define _ndebug(a, b)
+#endif
+
 #include <pageserv.h>
 
 #define LINELEN 2048
 
 static void usage(char *name)
 {
-    fprintf(stderr, "Usage:\n%s [-p priority] <to>\n", name);
+    fprintf(stderr, "Usage:\n%s [-p priority] [-t tag] <to>\n", name);
 }
 
 static char *getdata(int l, char *line)
@@ -34,18 +46,20 @@ int main(int argc, char **argv)
 {
     char line[LINELEN];
     int priority, c, r;
-    char *subject="(no subject)", *from=NULL, *to=NULL;
+    char *subject="(no subject)", *from=NULL, *to=NULL, *tag="Mail";
     extern int optind;
 
     priority=PR_NORMAL;
 
-    while( (c=getopt(argc, argv, "p:")) != -1)
+    while( (c=getopt(argc, argv, "p:t:")) != -1)
     {
 	switch(c)
 	{
 	    case 'p':
-		if(tolower(argv[2][0])=='h')
+		if(tolower(optarg[0])=='h')
 		    priority=PR_HIGH; break;
+            case 't':
+                tag=optarg; break;
 	    case '?':
 		usage(argv[0]); exit(1); break;
 	}
@@ -75,7 +89,9 @@ int main(int argc, char **argv)
 	}
     }
 
-    sprintf(line, "Mail: %s -- %s", from, subject);
+    sprintf(line, "%s: %s -- %s", tag, from, subject);
+
+    _ndebug(2, ("Page to send:  %s\n", line));
 
     if( pushqueue(to, line, priority) == 0)
 	r=0;
