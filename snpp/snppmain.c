@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: snppmain.c,v 1.11 1997/08/09 06:36:02 dustin Exp $
+ * $Id: snppmain.c,v 1.12 1997/08/09 07:18:57 dustin Exp $
  */
 
 #include <config.h>
@@ -236,6 +236,8 @@ void snpp_send(int s, struct sockaddr_in fsin)
         puttext(s, "503 Error, pager ID or message incomplete\n");
         return;
     }
+
+    memset(&q, 0x00, sizeof(q));
 
     q.rem_addr=ntohl(fsin.sin_addr.s_addr);
 
