@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: snppmain.c,v 1.5 1997/04/29 17:53:47 dustin Exp $
+ * $Id: snppmain.c,v 1.6 1997/06/30 05:16:14 dustin Exp $
  */
 
 #include <config.h>
@@ -28,8 +28,9 @@ module mod_snppserv={
     0
 };
 
-char *snpp_pageid=NULL;
+char *snpp_pageid[SNPP_NID];
 char *snpp_message=NULL;
+int  snpp_nid=0;
 int  snpp_priority=PR_NORMAL;
 
 void snpp_onalarm()
@@ -72,14 +73,14 @@ void snpp_setpageid(int s, char *id)
 {
     if(u_exists(id))
     {
-        if(snpp_pageid!=NULL)
+        if(snpp_nid>=SNPP_NID)
 	{
-	    puttext(s, "552 Maximum Entries exceeded, one page at a time.\n");
+	    puttext(s, "552 Maximum Entries exceeded.\n");
 	    return;
 	}
 	else
 	{
-            snpp_pageid=strdup(id);
+            snpp_pageid[snpp_nid++]=strdup(id);
             puttext(s, "250 Pager ID Accepted\n");
 	}
     }
@@ -110,12 +111,14 @@ void snpp_setmess(int s, char *mess)
 void snpp_cleanstuff(void)
 {
     /* These are set to NULL, because they're used by RESEt, too */
+    int i;
 
-    if(snpp_pageid)
+    for(i=0; i<SNPP_NID; i++)
     {
-        free(snpp_pageid);
-	snpp_pageid=NULL;
+        if(snpp_pageid[i])
+	    free(snpp_pageid[i]);
     }
+    snpp_nid=0;
 
     if(snpp_message)
     {
@@ -127,26 +130,33 @@ void snpp_cleanstuff(void)
 void snpp_send(int s)
 {
     struct queuent q;
+    int i, j;
 
-    if(snpp_pageid==NULL || snpp_message==NULL)
+    if(snpp_nid==0 || snpp_message==NULL)
     {
         puttext(s, "503 Error, pager ID or message incomplete\n");
         return;
     }
 
     q.priority=snpp_priority;
-    strcpy(q.to, snpp_pageid);
-    strcpy(q.message, snpp_message);
+    for(i=0, j=0; i<snpp_nid; i++)
+    {
+        strcpy(q.to, snpp_pageid[i]);
+        strcpy(q.message, snpp_message);
 
-    if(storequeue(s, q, STORE_QUIET)>0)
-    {
-        puttext(s, "554 Message failed\n");
-        return;
+        if(storequeue(s, q, STORE_QUIET)==0)
+	    j++;
     }
-    else
-    {
+
+    if(j==snpp_nid)
         puttext(s, "250 Message queued successfully\n");
-    }
+    else
+        puttext(s, "554 Message failed\n");
+
+    if(conf.debug>2)
+	printf("j is %d, snpp_nid is %d\n", j, snpp_nid);
+
+    return;
 }
 
 void _snpp_main(modpass p)
