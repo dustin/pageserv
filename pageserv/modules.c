@@ -1,12 +1,13 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: modules.c,v 1.1 1997/04/16 06:10:52 dustin Exp $
+ * $Id: modules.c,v 1.2 1997/04/16 06:15:14 dustin Exp $
  */
 
 #include <pageserv.h>
 #include <module.h>
 
+#include <stdio.h>
 #include <stdlib.h>
 
 extern struct config conf;
