@@ -2,7 +2,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: lexer.l,v 1.8 1997/08/11 04:28:38 dustin Exp $
+ * $Id: lexer.l,v 1.9 1997/08/21 07:17:51 dustin Exp $
  */
 
 #include <config.h>
@@ -30,6 +30,10 @@ FUNC    &[_A-Za-z][_A-Za-z0-9]*
 %%
 {THING} { _http_lex_showthing(yytext); }
 {FUNC}  { _http_lex_dofunc(yytext); }
+
+[^\$&\n]* {
+        _parse_sendstr=addtostr(&_parse_strlen, _parse_sendstr,  yytext); }
+
 .|\n    { _parse_sendstr=addtostr(&_parse_strlen, _parse_sendstr,  yytext); }
 
 %%
@@ -72,6 +76,8 @@ void _parse_listTerms(void)
     char buf[1024];
     int i;
 
+    _http_auth_require(_parse_sock, _parse_r, "admin");
+
     terms=listterms();
     stringListSort(terms);
 
@@ -101,6 +107,8 @@ void _parse_tableUserList(void)
     char buf[1024];
     struct user u;
     int i, j;
+
+    _http_auth_require(_parse_sock, _parse_r, "admin");
 
     terms=listterms();
     stringListSort(terms);
