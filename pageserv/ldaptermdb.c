@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: ldaptermdb.c,v 1.3 1998/12/29 03:24:51 dustin Exp $
+ * $Id: ldaptermdb.c,v 1.4 1998/12/29 09:31:56 dustin Exp $
  */
 
 #include <config.h>
@@ -147,7 +147,7 @@ ldap_listterms(void)
 	LDAPMessage *res, *e;
 	char **values, **ret;
 	char *base;
-	int index;
+	int index, sizelimit;
 	char *att[]={
 		"pageNumber",
 		0
@@ -156,6 +156,14 @@ ldap_listterms(void)
 	ld=ldap_getld();
 	if(ld==NULL)
 		return(NULL);
+
+	sizelimit=rcfg_lookupInt(conf.cf, "databases.ldap.sizelimit");
+
+#ifdef LDAP_OPT_SIZELIMIT
+	ldap_set_option(ld, LDAP_OPT_SIZELIMIT, &sizelimit);
+#else
+	ld->ld_sizelimit = sizelimit;
+#endif
 
 	base=rcfg_lookup(conf.cf, "databases.ldap.base");
 

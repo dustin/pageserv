@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: ldapuserdb.c,v 1.9 1998/12/29 03:24:52 dustin Exp $
+ * $Id: ldapuserdb.c,v 1.10 1998/12/29 09:31:58 dustin Exp $
  */
 
 #include <config.h>
@@ -150,7 +150,7 @@ ldap_listusers(char *term)
 	LDAPMessage *res, *e;
 	char **values, **ret;
 	char  *base;
-	int index;
+	int index, sizelimit;
 	char *att[] = {
 		"uid",
 		0
@@ -166,6 +166,14 @@ ldap_listusers(char *term)
 	ld=ldap_getld();
 	if(ld==NULL)
 		return(NULL);
+
+	sizelimit=rcfg_lookupInt(conf.cf, "databases.ldap.sizelimit");
+
+#ifdef LDAP_OPT_SIZELIMIT
+	ldap_set_option(ld, LDAP_OPT_SIZELIMIT, &sizelimit);
+#else
+	ld->ld_sizelimit = sizelimit;
+#endif
 
 	_ndebug(2, ("Doing ldap search on base ``%s'' for ``%s''\n",
 		base, filter));
