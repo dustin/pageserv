@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpmisc.c,v 1.2 1997/04/14 06:56:13 dustin Exp $
+ * $Id: httpmisc.c,v 1.3 1997/04/14 07:12:26 dustin Exp $
  */
 
 #include <config.h>
@@ -48,7 +48,5 @@ void http_header_notfound(int s, struct http_request r)
 
 void http_footer(int s)
 {
-    puttext(s, "<p><hr align=\"left\" width=\"50%\">");
-    puttext(s, "<font size=\"-2\"> Copyright &copy;  1997 Dustin Sallings");
-    puttext(s, "</font></body></html>");
+    puttext(s, HTTP_FOOTER);
 }

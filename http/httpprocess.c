@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpprocess.c,v 1.3 1997/04/14 06:56:16 dustin Exp $
+ * $Id: httpprocess.c,v 1.4 1997/04/14 07:12:28 dustin Exp $
  */
 
 #define IWANTDOCINFO 1
@@ -36,7 +36,8 @@ void http_senddoc(int s, struct http_request r)
     if(r.version>0)
     {
         stat(buf, &st);
-        sprintf(buf2, "Content-Length: %d\n\n", (int)st.st_size);
+        sprintf(buf2, "Content-Length: %d\n\n",
+	    (int)st.st_size+strlen(HTTP_FOOTER)+1);
         puttext(s, buf2);
     }
 
