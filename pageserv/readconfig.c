@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.17 1997/07/10 06:47:44 dustin Exp $
+ * $Id: readconfig.c,v 1.18 1997/08/06 04:37:10 dustin Exp $
  * $State: Exp $
  */
 
@@ -83,6 +83,7 @@ void D_command(char s, char *arg)
 	case 'q': conf.qdir=strdup(arg); break;
 	case 'p': conf.pidfile=strdup(arg); break;
 	case 'd': conf.debug=atoi(arg); break;
+	case 'g': conf.gmtoffset=atoi(arg); break;
     }
 }
 
@@ -241,6 +242,7 @@ void readconfig(char *file)
     conf.log_que=LOG_LOCAL7|LOG_INFO;
     conf.maxconattempts=MAX_CONATTEMPTS;
     conf.conattemptsleep=CONATTEMPTSSLEEP;
+    conf.gmtoffset=0;
     conf.webport=WEBPORT;
     conf.webserver=0;
     conf.snppport=SNPPPORT;
@@ -295,6 +297,7 @@ void showconfig(void)
     printf("\tTerm db:      %s\n", conf.termdb);
     printf("\tQueue dir:    %s\n", conf.qdir);
     printf("\tPID file:     %s\n", conf.pidfile);
+    printf("\tGMT offset:   %d\n", conf.gmtoffset);
     printf("\tWebRoot:      %s\n", conf.webroot);
     printf("\tWebserver:    %d\n", conf.webserver);
     printf("\tWeb port:     %d\n", conf.webport);

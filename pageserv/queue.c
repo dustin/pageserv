@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.27 1997/07/07 08:54:55 dustin Exp $
+ * $Id: queue.c,v 1.28 1997/08/06 04:37:09 dustin Exp $
  * $State: Exp $
  */
 
@@ -325,10 +325,6 @@ void queuesort(struct queuent *q, int l, int r)
 
         do
         {
-            /*
-            do{ i++; } while(q[i].submitted<v.submitted);
-            do{ j--; } while(q[j].submitted>v.submitted);
-            */
             do{ i++; } while(queuecompare(q[i], v));
             do{ j--; } while(!queuecompare(q[j], v));
             t=q[i]; q[i]=q[j]; q[j]=t;
@@ -418,17 +414,32 @@ struct queuent readqueuefile(char *fn)
         exit(1);
     }
 
+    /* priority */
     fgets(buf, BUFLEN, f);
     sscanf(buf, "%d", &q.priority);
+
+    /* Whom it's to */
     fgets(q.to, TOLEN, f);
     kw(q.to);
-    fgets(q.message, BUFLEN, f);
-    kw(q.message);
 
+    /* The date it was submitted */
     fgets(buf, BUFLEN, f);
     q.submitted=atoi(buf);
+
+    /* The qid */
     strcpy(q.qid, fntoqid(fn));
 
+    /* Soonest it can be delivered */
+    fgets(buf, BUFLEN, f);
+    q.soonest=atoi(buf);
+
+    /* Latest it can be delivered */
+    fgets(buf, BUFLEN, f);
+    q.latest=atoi(buf);
+
+    /* The actual message data */
+    fgets(q.message, BUFLEN, f);
+    kw(q.message);
 
     fclose(f);
     return(q);
@@ -456,15 +467,22 @@ char *newtmp(void)
     return tmp;
 }
 
-/* This is a dummy until I decide to do something with it. */
-
 int readytodeliver(struct queuent q)
 {
     int fuz, ret=1;
-    time_t t;
+    time_t t, lt;
+
+    if(q.submitted>q.soonest)
+    {
+        lt=q.submitted;
+    }
+    else
+    {
+        lt=q.soonest;
+    }
 
     time(&t);
-    fuz=(t-q.submitted)/60;
+    fuz=(t-lt)/60;
 
     if(conf.debug>2)
         printf("fuz is %d\n", fuz);
@@ -476,6 +494,11 @@ int readytodeliver(struct queuent q)
 
         logqueue(q, EXP_LOG, NULL);
         dequeue(q.qid);
+        ret=0;
+    }
+
+    if(fuz<0)
+    {
         ret=0;
     }
 
@@ -535,8 +558,13 @@ int storequeue(int s, struct queuent q, int flags)
         time(&q.submitted); /* store the time */
 
         qf=fopen(fn, "w");
-        fprintf(qf, "%d\n%s\n%s\n%d\n", q.priority, q.to, q.message,
-            (int)q.submitted);
+        fprintf(qf, "%d\n%s\n%d\n%d\n%d\n%s\n",
+		q.priority,
+		q.to,
+                (int)q.submitted,
+		(int)q.soonest,
+		(int)q.latest,
+		q.message);
         fclose(qf);
 
         strcpy(q.qid, fntoqid(fn));
@@ -586,9 +614,19 @@ int queuedepth(void)
 
 void displayq(struct queuent q)
 {
-    printf("%s:\t%s\t\tPriority:  %d\tTo %s   %d bytes\n\n",
+    struct tm *t;
+
+    printf("%s:\t%s\t\tPriority:  %d\tTo %s   %d bytes\n",
         q.qid, ctime(&q.submitted), q.priority, q.to,
         strlen(q.message));
+
+    if(q.soonest>0)
+    {
+        t=localtime(&q.soonest);
+        printf("\t\tScheduled no sooner than %s", asctime(t));
+    }
+
+    puts("");
 }
 
 void printqueue(void)
