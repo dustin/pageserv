@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: utility.c,v 1.1 1997/03/09 22:56:02 dustin Exp $
+ * $Id: utility.c,v 1.2 1997/03/11 06:01:48 dustin Exp $
  */
 
 #include <ctype.h>
+#include <unistd.h>
 
 /* kill whitey, eat all the whitespace on the end of a string */
 
@@ -24,4 +25,9 @@ char *kw(char *in)
     }
 
     return(in);
+}
+
+int f_exists(char *file)
+{
+    return(access(file, F_OK)==0);
 }
