@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.9 1997/04/01 21:46:58 dustin Exp $
+ * $Id: queue.c,v 1.10 1997/04/01 22:30:00 dustin Exp $
  */
 
 #include <stdio.h>
@@ -15,6 +15,7 @@
 #include <sys/socket.h>
 
 #include <pageserv.h>
+#include <tap.h>
 
 extern struct config conf;
 
@@ -120,9 +121,7 @@ void queuesort(struct queuent *q, int l, int r)
 struct queuent *listqueue(char *number)
 {
     DIR *dir;
-    FILE *f;
     struct dirent *d;
-    char buf[BUFLEN];
     struct queuent q;
     int index=0, size=4;
     struct queuent *list;
@@ -273,7 +272,7 @@ int storequeue(int s, struct queuent q, int flags)
 
         qf=fopen(fn, "w");
         fprintf(qf, "%d\n%s\n%s\n%d\n", q.priority, q.to, q.message,
-	    q.submitted);
+	    (int)q.submitted);
         fclose(qf);
 
         sprintf(buf, "Queued to %s, thank you\n", fn);
@@ -340,9 +339,7 @@ void printqueue(void)
 struct queuent dofarkle()
 {
     DIR *dir;
-    FILE *f;
     struct dirent *d;
-    char buf[BUFLEN];
     struct queuent q;
 
     chdir(conf.qdir);

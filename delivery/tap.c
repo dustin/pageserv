@@ -1,10 +1,14 @@
 /*
  * Copyright (c) 1997  SPY Internetworking
  *
- * $Id: tap.c,v 2.4 1997/04/01 21:46:51 dustin Exp $
+ * $Id: tap.c,v 2.5 1997/04/01 22:29:53 dustin Exp $
  */
 
 #include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/socket.h>
 
 #include <pageserv.h>
 #include <tap.h>
@@ -50,7 +54,6 @@ int s_tap_init(int s)
 {
     char buf[BUFLEN];
     int i;
-    char c;
 
     if(conf.debug>0)
         puts("Initializing TAP");
@@ -63,18 +66,19 @@ int s_tap_init(int s)
 
     sprintf(buf, "%c[p", C_ESC);
     s_modem_waitfor(s, buf, 10);
+    return(0);
 }
 
 int s_tap_end(int s)
 {
     char buf[BUFLEN];
-    char c;
 
     if(conf.debug>0)
         puts("ending TAP session");
 
     sprintf(buf, "%c\r", C_EOT);
     puttext(s, buf);
+    return(0);
 }
 
 int charfound(char *string, char *chars)

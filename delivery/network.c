@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: network.c,v 2.1 1997/04/01 20:15:56 dustin Exp $
+ * $Id: network.c,v 2.2 1997/04/01 22:29:52 dustin Exp $
  */
 
 /*
@@ -17,6 +17,7 @@
 #include <netdb.h>
 
 #include <pageserv.h>
+#include <tap.h>
 
 int s_openterm(struct terminal t)
 {
@@ -25,7 +26,7 @@ int s_openterm(struct terminal t)
 
     strcpy(buf, t.predial);
     strcat(buf, t.number);
-    s=openhost(t.ts, t.port);
+    s=s_openhost(t.ts, t.port);
     s_modem_connect(s, buf);
     return(s);
 }
@@ -36,7 +37,7 @@ void net_timeout(void)
     exit(1);
 }
 
-int openhost(char *host, int port)
+int s_openhost(char *host, int port)
 {
 struct hostent *hp;
 register int s;

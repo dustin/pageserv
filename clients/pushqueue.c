@@ -1,4 +1,13 @@
+/*
+ * Copyright (c) 1997  Dustin Sallings
+ *
+ * $Id: pushqueue.c,v 2.2 1997/04/01 22:29:48 dustin Exp $
+ */
+
 #include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+#include <ctype.h>
 
 #include <pageserv.h>
 
@@ -16,8 +25,7 @@ void usage(char *command)
 void main(int argc, char **argv)
 {
 struct queuent q;
-int s, c, ack, size;
-char buf[BUFLEN];
+int c;
 
     memset( (char *)&q, 0x00, sizeof(q));
 

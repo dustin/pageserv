@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: client.c,v 2.0 1997/03/30 05:58:07 dustin Exp $
+ * $Id: client.c,v 2.1 1997/04/01 22:29:44 dustin Exp $
  */
 
 /*
@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include <ctype.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>

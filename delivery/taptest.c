@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: taptest.c,v 2.3 1997/04/01 20:16:01 dustin Exp $
+ * $Id: taptest.c,v 2.4 1997/04/01 22:29:55 dustin Exp $
  */
 
 #include <stdio.h>
@@ -18,7 +18,7 @@ void main(void)
     conf.debug=3;
 
 /*
-    s=openhost("liv-lex-1.ipa.net.", 6001);
+    s=s_openhost("liv-lex-1.ipa.net.", 6001);
     s_modem_connect(s, "9,783.6426");
     puts("I got connected.  :)");
     s_tap_init(s);
@@ -40,7 +40,7 @@ void main(void)
 
     sleep(5);
 
-    s=openhost("liv-lex-1.ipa.net.", 6001);
+    s=s_openhost("liv-lex-1.ipa.net.", 6001);
     s_modem_connect(s, "9,1,501.219.1805");
     puts("I got connected.  :)");
     s_tap_init(s);

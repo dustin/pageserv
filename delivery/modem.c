@@ -1,10 +1,12 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: modem.c,v 2.2 1997/04/01 20:15:53 dustin Exp $
+ * $Id: modem.c,v 2.3 1997/04/01 22:29:51 dustin Exp $
  */
 
 #include <stdio.h>
+#include <string.h>
+#include <sys/socket.h>
 
 #include <tap.h>
 #include <pageserv.h>
@@ -45,4 +47,5 @@ int s_modem_connect(int s, char *number)
     i=puttext(s, buf);
 
     i=s_modem_waitfor(s, "CONNECT", 10);
+    return(0);
 }

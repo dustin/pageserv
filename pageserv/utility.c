@@ -1,11 +1,13 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: utility.c,v 1.2 1997/03/30 05:59:58 dustin Exp $
+ * $Id: utility.c,v 1.3 1997/04/01 22:30:01 dustin Exp $
  */
 
+#include <stdio.h>
 #include <ctype.h>
 #include <unistd.h>
+#include <sys/socket.h>
 
 #include <pageserv.h>
 
