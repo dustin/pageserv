@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: snppmain.c,v 1.3 1997/04/29 05:29:41 dustin Exp $
+ * $Id: snppmain.c,v 1.4 1997/04/29 15:11:01 dustin Exp $
  */
 
 #include <config.h>
@@ -76,7 +76,7 @@ void snpp_setpageid(int s, char *id)
             free(snpp_pageid);
 
         snpp_pageid=strdup(id);
-        puttext(s, "250 Accepted\n");
+        puttext(s, "250 Pager ID Accepted\n");
     }
     else
     {
@@ -146,7 +146,7 @@ void snpp_send(int s)
 
 void _snpp_main(modpass p)
 {
-    int s, going=1, c;
+    int s, going=1, c, tries=0;
     char buf[BUFLEN];
 
     s=p.socket;
@@ -181,12 +181,14 @@ void _snpp_main(modpass p)
 
             case SNPP_SEND:
                 snpp_send(s);
+                tries++;
                 break;
 
             case SNPP_RESE:
                 snpp_cleanstuff();
 		alarm(conf.childlifetime);
 		puttext(s, "250 Reset OK\n");
+                tries++;
                 break;
 
             case -1:
@@ -197,6 +199,12 @@ void _snpp_main(modpass p)
                 puttext(s, "500 Command not implemented\n");
                 break;
         }
+
+	if(tries>SNPP_MAXTRIES)
+	{
+	    puttext(s, "421 Too many pages, call back later\n");
+	    going=0;
+	}
     }
     close(s);
     snpp_cleanstuff();
