@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.5 1997/03/29 00:48:54 dustin Exp $
+ * $Id: readconfig.c,v 1.6 1997/03/29 01:22:02 dustin Exp $
  */
 
 #include <stdio.h>
@@ -60,6 +60,7 @@ void d_command(char s, char *arg)
 	case 'u': conf.userdb=strdup(arg); break;
 	case 't': conf.termdb=strdup(arg); break;
 	case 'q': conf.qdir=strdup(arg); break;
+	case 'p': conf.pidfile=strdup(arg); break;
 	case 'd': conf.debug=atoi(arg); break;
 	case 'l': conf.childlifetime=atoi(arg); break;
     }
@@ -92,24 +93,41 @@ void setdefaults(void)
 
     if(conf.qdir == NULL)
 	conf.qdir= QUEDIR;
+
+    if(conf.pidfile == NULL)
+	conf.pidfile= PIDFILE;
 }
 
 #ifndef HAVE_GETOPT
 #error No getopt()!!!
 #endif /* HAVE_GETOPT */
 
+void showversion(void)
+{
+    printf("Pageserv by Dustin Sallings\nVersion %s\n", VERSION);
+}
+
 void showusage(char *cmd)
 {
-    printf("Usage:  %s [-b{d|r}] |\n", cmd);
-    printf("        %s [-p{l|q}]\n\n", cmd);
+    showversion();
 
-    puts("-b is run modes, can be one of the following:");
+    printf("Usage:  %s -b{d|r} [-dx] or\n", cmd);
+    printf("        %s -p{l|q} [-dx] or\n", cmd);
+    printf("        %s -v [-dx]\n", cmd);
+
+    puts("\n-b is run modes, can be one of the following:");
     puts("\td: starts a pager server");
-    puts("\tr: rehashes databases (doesn't start a server)");
+    puts("\tr: rehashes databases");
 
-    puts("-p is print modes");
+    puts("\n-p is print modes");
     puts("\tl: lists databases");
     puts("\tq: prints queue");
+
+    puts("\n-d sets the debugging level to x");
+
+    puts("\n-v shows version information");
+
+    puts("\nWith no arguments, a server is started as if -bd were used");
 }
 
 void getoptions(int argc, char **argv)
@@ -118,7 +136,7 @@ void getoptions(int argc, char **argv)
     extern char *optarg;
     extern int optind;
 
-    while( (c=getopt(argc, argv, "b:p:")) != -1)
+    while( (c=getopt(argc, argv, "vb:p:d:")) != -1)
     {
 	switch(c)
 	{
@@ -144,6 +162,10 @@ void getoptions(int argc, char **argv)
 			printf("Unknown print mode %c\n", optarg[0]);
 			exit(1); break;
 		} break;
+	    case 'd':
+		conf.debug=atoi(optarg); break;
+	    case 'v':
+		conf.mode=MODE_VERS; break;
 	    case '?':
 		showusage(argv[0]); exit(1); break;
 	}
@@ -192,6 +214,7 @@ void cleanconfig(void)
     if(conf.userdb) free(conf.userdb);
     if(conf.termdb) free(conf.termdb);
     if(conf.qdir) free(conf.qdir);
+    if(conf.pidfile) free(conf.pidfile);
 }
 
 void showconfig(void)
@@ -202,6 +225,7 @@ void showconfig(void)
     printf("\tUser db:      %s\n", conf.userdb);
     printf("\tTerm db:      %s\n", conf.termdb);
     printf("\tQueue dir:    %s\n", conf.qdir);
+    printf("\tPID file:     %s\n", conf.pidfile);
     printf("\tChild life:   %d\n", conf.childlifetime);
     printf("\tDebug:        %d\n", conf.debug);
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.9 1997/03/29 00:48:51 dustin Exp $
+ * $Id: main.c,v 1.10 1997/03/29 01:22:00 dustin Exp $
  */
 
 #include <stdio.h>
@@ -16,6 +16,21 @@
 
 struct config conf;
 
+void writepid(int pid)
+{
+    FILE *f;
+
+    if(NULL ==(f=fopen(conf.pidfile, "w")) )
+    {
+	perror(conf.pidfile);
+	return;
+    }
+
+    fprintf(f, "%d\n", pid);
+
+    fclose(f);
+}
+
 void detach(void)
 {
    int pid;
@@ -25,6 +40,7 @@ void detach(void)
    if(pid>0)
    {
        printf("Running on PID %d\n", pid);
+       writepid(pid);
        exit(0);
    }
 }
@@ -96,11 +112,6 @@ void ldb_main(void)
     printterms();
 }
 
-void pq_main(void)
-{
-    printqueue();
-}
-
 void main(int argc, char **argv)
 {
 
@@ -120,7 +131,10 @@ void main(int argc, char **argv)
 	    ldb_main(); break;
 
 	case MODE_PQ:
-	    pq_main(); break;
+            printqueue(); break;
+
+	case MODE_VERS:
+	    showversion(); break;
 
     }
     cleanconfig();

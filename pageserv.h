@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.25 1997/03/29 00:48:51 dustin Exp $
+ * $Id: pageserv.h,v 1.26 1997/03/29 01:22:01 dustin Exp $
  */
 
 /* for DBM type */
@@ -43,6 +43,7 @@
 #define QUEDIR "/tmp"
 #define USERDB "/tmp/userdb"
 #define TERMDB "/tmp/termdb"
+#define PIDFILE "/tmp/pageserv.pid"
 
 /* Default child lifetime */
 #define CHILD_LIFETIME 120
@@ -70,13 +71,15 @@
 #define MODE_REHASH 1    /* rehash databases */
 #define MODE_LDB    2    /* list databases */
 #define MODE_PQ     3    /* print queue */
+#define MODE_VERS   4    /* print version info */
 
 #ifdef IWANT_MODENAMES
 static char *modenames[]={
     "daemon",
     "rehashing",
     "listing database",
-    "print queue"
+    "print queue",
+    "printing version info"
 };
 #endif
 
@@ -116,6 +119,7 @@ struct config {
     char *userdb;
     char *termdb;
     char *qdir;
+    char *pidfile;
 };
 
 /* macros */
@@ -157,6 +161,7 @@ void quit(int s);
 void readconfig(char *file);
 void reaper(void);
 void showconfig(void);
+void showversion(void);
 void storeterm(DBM *db, struct terminal t);
 void storeuser(DBM *db, struct user u);
 
