@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile,v 1.1 1997/03/12 22:57:27 dustin Exp $
+# $Id: Makefile,v 1.2 1997/03/13 00:31:45 dustin Exp $
 
 MAJOR=2
 MINOR=0
@@ -17,7 +17,7 @@ LIBS=
 
 LDFLAGS=-g $(LIBS)
 
-PUSH_OBJS=pushqueue.o
+PUSH_OBJS=pushqueue.o client.o
 SOURCES=pushqueue.c
 EXES=pushqueue
 NAME=clients
