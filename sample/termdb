@@ -1,13 +1,39 @@
 # Terminal number - flags - terminal server - port - pre-dial
 # all delimited by ws
 
-1.800.364.0816	1	liv-lex-1.ipa.net       6001    9,
-1.800.455.2698	1	/dev/ttyb               6001
-1.800.455.2698	1	liv-lex-1.ipa.net	6001    9,
-1.800.658.9983	1	liv-lex-1.ipa.net	6001	9,
-# 219.1805	1	liv0.lit.intellinet.com	6001
-219.1805	1	liv-lex-1.ipa.net	6001	9,1.501
-7820483	1	liv-lex-1.ipa.net	6001	9,
-783.6426	1	liv-lex-1.ipa.net	6001	9,
-7840555	1	liv-lex-1.ipa.net	6001	9,
+# terminal number is the key for the database, and is the number the
+# modem will dial to deliver pages.
+#
+# flags are generally useless, but are sometimes useful for tweaking
+# against terminals that don't properly comply to protocol standards.
+#
+# 1 causes an initial CR to be sent upon connection.  This isn't really
+# required (the spec says it should be there, but it can exist without
+# it), but it causes around a couple seconds of delay on init if it's not
+# here.  I've had terminals get really confused with its presence,
+# though.  Generally, I'd recommend this flag unless it causes problems.
+# If 1 is used, then 2 can be used to attempt an ititial delay before
+# trying an init CR.
+#
+# The third field is for the terminal server or device to communicate
+# with.
+#
+# The port number is required for terminal server devices, and ignored
+# for UNIX devices.
+#
+# predial is in case you need to dial 9 to get out or something.  You can
+# see here that I've got entries that use different terminal servers
+# and devices that I've used in the past, once I had to start delivering
+# pages in Little Rock, AR out of Fort Smith, AR because of a broken
+# terminal server
+
+1.800.364.0816	1	ts.fs.dom.com	6001    9,
+1.800.455.2698	1	/dev/ttyb	6001
+1.800.455.2698	1	ts.fs.dom.com	6001    9,
+1.800.658.9983	1	ts.fs.dom.com	6001	9,
+# 219.1805	1	ts.lr.dom.com	6001
+219.1805	1	ts.fs.dom.com	6001	9,1.501
+7820483		1	ts.fs.dom.com	6001	9,
+783.6426	1	ts.fs.dom.com-lex-1.ipa.net	6001	9,
+7840555		1	ts.fs.dom.com-lex-1.ipa.net	6001	9,
 1.510.801.9999	1	/dev/ttyb	0	,

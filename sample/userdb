@@ -1,6 +1,34 @@
 # Sample Users database
 # ws delimted
-# id      pager-id   station-id    early     late
+# id      pager-id   station-id    early     late    notify-address flags
+
+# only the id, pager-id and station-id are *required*, everything else is
+# optional, but must come in the correct order (i.e. no notify-address
+# without doing early and late).
+
+# Id is the id of the pager, which is used for all SNPP (and other)
+# transactions.  It is essentially the user ID.
+#
+# pager-id is the ID the TAP server will want, generally this is your
+# pager number, but not always.
+#
+# station-id lets us know which station (i.e. modem number) this pager
+# should be associated with.  It must be *exactly* the same as it exists
+# in the terminal database.
+#
+# early and late should always exist together, and they define the times
+# the individual pager will take normal priority pages.  This is very
+# useful for mail systems that you don't want to get paged for 24/7
+#
+# notify-address is kind of experimental (though I use it on my
+# production system.  It allows you to be notified when a page succeeds
+# and/or fails.  The flags are required to determine *when* to do
+# notifies.
+#
+# flags currently are only useful for notify addresses.  It's a bitmask
+# where 1 means notify on success, and 2 means notify on failure.  3 of
+# course means notify no matter what happens.  The notification will only
+# be sent out when the page is dequeued.
 
 dustin    253.4645   1.510.801.9999 7        23
 scott     253.9118   1.510.801.9999 7        23
