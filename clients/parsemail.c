@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parsemail.c,v 2.6 1998/03/31 03:32:05 dustin Exp $
+ * $Id: parsemail.c,v 2.7 1998/06/03 08:38:22 dustin Exp $
  */
 
 #include <stdio.h>
@@ -25,7 +25,7 @@
 extern char *optarg;
 extern int optind, opterr;
 
-#include <pageserv.h>
+#include <snppclient.h>
 
 #define LINELEN 2048
 
@@ -40,27 +40,32 @@ static char *getdata(int l, char *line)
 
     ret=(char *)malloc(strlen(line));
     strcpy(ret, line+l);
-    ckw(ret);
-    return(ret);
+    return(_killwhitey(ret));
 }
 
 
 int main(int argc, char **argv)
 {
     char line[LINELEN];
-    int priority, c, r;
-    char *subject="(no subject)", *from=NULL, *to=NULL, *tag="Mail";
+    int c, r, port=1031;
+    char *subject=NULL, *from=NULL, *to=NULL, *tag="Mail";
+    char *priority=NULL, *hostname="pager";
     extern int optind;
+    struct snpp_client *snpp;
 
-    priority=PR_NORMAL;
-
-    while( (c=getopt(argc, argv, "p:t:")) != -1)
+    while( (c=getopt(argc, argv, "H:P:p:t:")) != -1)
     {
 	switch(c)
 	{
+	    case 'P':
+		port=atoi(optarg);
+		break;
+	    case 'H':
+		hostname=optarg;
+		break;
 	    case 'p':
-		if(tolower(optarg[0])=='h')
-		    priority=PR_HIGH; break;
+		priority=optarg;
+		break;
             case 't':
                 tag=optarg; break;
 	    case '?':
@@ -72,7 +77,13 @@ int main(int argc, char **argv)
     {
 	fputs("Error, too few arguments\n", stderr);
 	usage(argv[0]);
-	exit(1);
+	exit(75);
+    }
+
+    snpp=snpp_connect(hostname, port);
+    if(snpp==NULL) {
+	fputs("Error connecting to pager server\n", stderr);
+	return(75);
     }
 
     to=argv[optind++];
@@ -84,11 +95,13 @@ int main(int argc, char **argv)
 
 	if(strncmp(line, "From: ", 6) == 0)
 	{
-	    from=getdata(6, line);
+	    if(from==NULL)
+	        from=getdata(6, line);
 	}
 	else if(strncmp(line, "Subject: ", 9) == 0)
 	{
-	    subject=getdata(9, line);
+	    if(subject==NULL)
+	        subject=getdata(9, line);
 	}
     }
 
@@ -96,7 +109,10 @@ int main(int argc, char **argv)
 
     _ndebug(2, ("Page to send:  %s\n", line));
 
-    if( pushqueue(to, line, priority) == 0)
+    if(priority)
+	snpp->rawsend2(snpp, "priority", priority);
+
+    if( snpp->sendAPage(snpp, to, line) == 0)
 	r=0;
     else
 	r=75;
