@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.19 1997/07/31 03:28:48 dustin Exp $
+ * $Id: main.c,v 1.20 1997/07/31 04:46:31 dustin Exp $
  * $State: Exp $
  */
 
@@ -45,6 +45,7 @@ void writepid(int pid)
             break;
         case PID_ACTIVE:
             puts("Active PID file found, exiting...");
+            kill(pid, SIGTERM);
             exit(1);
     }
 
@@ -300,3 +301,5 @@ int main(int argc, char **argv)
     cleanconfig();
     exit(0);
 }
+
+
