@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.23 1997/03/28 03:19:21 dustin Exp $
+ * $Id: pageserv.h,v 1.24 1997/03/28 23:13:49 dustin Exp $
  */
 
 /* for DBM type */
@@ -130,6 +130,7 @@ struct user open_getuser(DBM *db, char *key);
 void childmain(int s);
 void cleanconfig(void);
 void getnormtimes(int times, int *ret);
+void getoptions(int argc, char **argv);
 void printqueue(void);
 void printterm(struct terminal t);
 void printuser(struct user u);

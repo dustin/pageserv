@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.3 1997/03/28 02:05:38 dustin Exp $
+ * $Id: readconfig.c,v 1.4 1997/03/28 23:13:50 dustin Exp $
  */
 
 #include <stdio.h>
@@ -89,6 +89,10 @@ void setdefaults(void)
     if(conf.qdir == NULL)
 	conf.qdir= QUEDIR;
 }
+
+#ifndef HAVE_GETOPT
+#error No getopt()!!!
+#endif /* HAVE_GETOPT */
 
 void readconfig(char *file)
 {
