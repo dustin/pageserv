@@ -1,13 +1,14 @@
 /*
  * Copyright (c)  1996-1998  Dustin Sallings
  *
- * $Id: snpplogin.c,v 1.3 1998/01/23 08:59:02 dustin Exp $
+ * $Id: snpplogin.c,v 1.4 1998/01/23 09:27:36 dustin Exp $
  */
 
 #include <config.h>
 #include <pageserv.h>
 #include <snpp.h>
 #include <nettools.h>
+#include <readconfig.h>
 
 #ifdef HAVE_CRYPT_H
 #include <crypt.h>
@@ -141,6 +142,12 @@ void snpp_showUserQ(int s, char *user, char *arg)
     struct queuent *q;
     int i;
 
+    if(rcfg_lookupInt(conf.cf, "modules.snpp.showq")==0)
+    {
+	puttext(s, "500 Sorry, can't do that (see administrator)\n");
+	return;
+    }
+
     if(user==NULL)
     {
 	puttext(s, "550 Must LOGIn first\n");
@@ -166,4 +173,43 @@ void snpp_showUserQ(int s, char *user, char *arg)
     }
 
     puttext(s, "250 End of queue\n");
+}
+
+void snpp_delUserQ(int s, char *user, char *arg)
+{
+    struct queuent q;
+    int i;
+
+    if(rcfg_lookupInt(conf.cf, "modules.snpp.dequeue")==0)
+    {
+	puttext(s, "500 Sorry, can't do that (see administrator)\n");
+	return;
+    }
+
+    if(user==NULL)
+    {
+	puttext(s, "550 Must LOGIn first\n");
+	return;
+    }
+
+    if(arg==NULL)
+    {
+	puttext(s, "550 No queue entry specified.\n");
+	return;
+    }
+
+    _ndebug(2, ("Removing queue for ``%s''\n", user));
+
+    q=readqueuefile(arg);
+
+    if(strcmp(q.to, user)!=0)
+    {
+	puttext(s, "550 Invalid queue file.\n");
+	return;
+    }
+
+    logqueue(q, DEQUE_LOG, "user request");
+    dequeue(q.qid);
+
+    puttext(s, "250 Message dequeued.\n");
 }

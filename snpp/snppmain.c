@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: snppmain.c,v 1.21 1998/01/20 04:29:46 dustin Exp $
+ * $Id: snppmain.c,v 1.22 1998/01/23 09:27:37 dustin Exp $
  */
 
 #include <config.h>
@@ -413,6 +413,10 @@ static void _snpp_main(modpass p)
 
 	    case SNPP_SHOWQ:
 		snpp_showUserQ(s, snpp_logname, snpp_arg(buf));
+		break;
+
+	    case SNPP_DEQUE:
+		snpp_delUserQ(s, snpp_logname, snpp_arg(buf));
 		break;
 
             case -1:
