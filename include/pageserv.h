@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.15 1997/04/02 23:24:08 dustin Exp $
+ * $Id: pageserv.h,v 1.16 1997/04/04 21:27:23 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -123,6 +123,8 @@ struct queuent {
     char message[BUFLEN];
     char qid[FNSIZE];
     time_t submitted;
+    time_t soonest;
+    time_t latest;
     struct user u;
 };
 

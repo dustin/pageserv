@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.13 1997/04/02 23:24:10 dustin Exp $
+ * $Id: queue.c,v 1.14 1997/04/04 21:27:26 dustin Exp $
  */
 
 #include <stdio.h>
@@ -150,6 +150,18 @@ void cleanqueuelist(struct queuent *list)
 
 /* quicksort to sort the queuelist */
 
+int queuecompare(struct queuent q1, struct queuent q2)
+{
+    /* check priorities */
+
+    if(q1.priority != q2.priority)
+    {
+	return(q1.priority < q2.priority);
+    }
+
+    return(q1.submitted < q2.submitted);
+}
+
 void queuesort(struct queuent *q, int l, int r)
 {
     int i, j;
@@ -161,8 +173,12 @@ void queuesort(struct queuent *q, int l, int r)
 
 	do
 	{
+	    /*
 	    do{ i++; } while(q[i].submitted<v.submitted);
 	    do{ j--; } while(q[j].submitted>v.submitted);
+	    */
+	    do{ i++; } while(queuecompare(q[i], v));
+	    do{ j--; } while(!queuecompare(q[j], v));
 	    t=q[i]; q[i]=q[j]; q[j]=t;
 	} while(j>i);
 

@@ -5,7 +5,6 @@ Overall:
     * hosts.access
     * Completely internal delivery stuff (no need for -bq all the time)
     * Make compliant with SNPP (RFC1861)
-    * Queue postponing
     * A login method into the server to allow clients to modify stuff
       about their database entry.
     * NIS based databases
@@ -13,6 +12,7 @@ Overall:
 
 Delivery:
 
+    * have timeouts actually time out
     * Local modem support
     * Make it know what connection refused means.
     * clean stuff
@@ -26,4 +26,4 @@ Clients:
 
 ----------------------------------------
 Copyright (c) 1997  Dustin Sallings
-$Id: TODO,v 2.8 1997/04/03 05:51:45 dustin Exp $
+$Id: TODO,v 2.9 1997/04/04 21:27:17 dustin Exp $
