@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: admin.c,v 1.2 1997/07/10 06:46:51 dustin Exp $
+ * $Id: admin.c,v 1.3 1997/07/10 07:00:31 dustin Exp $
  */
 
 #include <pageserv.h>
@@ -36,7 +36,6 @@ void _http_admin_process(int s, struct http_request r)
     int times[2];
     char *tmp, *passwd1, *passwd2;
     char buf[BUFLEN];
-    int i;
 
     if(u_exists(r.auth.name))
     {
