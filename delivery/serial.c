@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: serial.c,v 2.12 1998/02/27 04:30:59 dustin Exp $
+ * $Id: serial.c,v 2.13 1998/03/11 03:54:35 dustin Exp $
  */
 
 /*
@@ -33,6 +33,8 @@
 #endif
 
 extern struct config conf;
+
+extern int errno;
 
 static int p_lock(char *dev);
 static int p_openport(char *port);
@@ -166,7 +168,14 @@ static int p_openport(char *port)
 
 	return(-1);
     }
+
     s=open(port, O_RDWR|O_NOCTTY, 0);
+
+    if(s<0)
+    {
+	_ndebug(2, ("Error opening device:  errno: %d\n", errno));
+	return(-1);
+    }
 
     _ndebug(2, ("Serial port attached for ``%s'', fd %d\n", port, s));
 
