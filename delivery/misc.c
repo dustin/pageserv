@@ -1,12 +1,13 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: misc.c,v 2.3 1998/07/11 06:16:04 dustin Exp $
+ * $Id: misc.c,v 2.4 1998/07/14 16:53:31 dustin Exp $
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <stdarg.h>
 #include <string.h>
 #include <dirent.h>
 #include <time.h>
@@ -50,6 +51,35 @@ void cleanmylocks()
     closedir(dir);
 
     checklocks(); /* this is for serial locks */
+}
+
+#ifndef HAVE_VSNPRINTF
+
+#ifndef HAVE_VSPRINTF
+# error No vsnprintf(), no vsprintf(), what is this?
+#endif
+
+/* *NASTY* workaround for a missing vsnprintf, call your vendor */
+int vsnprintf(char *s, size_t n, const char *format, va_list ap)
+{
+    return(vsprintf(s, format, ap));
+}
+#endif
+
+void del_log(char *format, ...)
+{
+    va_list ap;
+    char buf[BUFLEN];
+
+    openlog("pageserv", LOG_PID|LOG_NDELAY, conf.log_que);
+
+    va_start(ap, format);
+    vsnprintf(buf, BUFLEN-1, format, ap);
+    va_end(ap);
+
+    syslog(conf.log_que|LOG_INFO, buf);
+
+    closelog();
 }
 
 void runqueue(void)

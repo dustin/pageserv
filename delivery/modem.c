@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: modem.c,v 2.20 1998/07/11 06:16:06 dustin Exp $
+ * $Id: modem.c,v 2.21 1998/07/14 16:53:32 dustin Exp $
  */
 
 #include <config.h>
@@ -218,6 +218,7 @@ int s_modem_connect(int s, char *number)
     i=dexpect(s, constr, dialtimeout);
     if(i!=0) {
 	_ndebug(2, ("connect failed: %s\n", i>0?constr[i]:"timeout"));
+        del_log("Connect failed:  %s", i>0?constr[i]:"timeout");
 	return(-1);
     }
 

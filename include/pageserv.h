@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.71 1998/06/29 01:06:38 dustin Exp $
+ * $Id: pageserv.h,v 1.72 1998/07/14 16:53:35 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -324,6 +324,7 @@ void cleanqueuelist(struct queuent *list);
 void cleantermlist(char **list);
 void cleanuserlist(char **list);
 void dbm_userdbInit(void);
+void del_log(char *format, ...);
 void dequeue(char *qid);
 void displayq(struct queuent q);
 void dq_notify(struct queuent q, char *message, int flags);

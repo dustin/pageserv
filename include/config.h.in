@@ -39,6 +39,11 @@
 #define HAVE_NIS
 #endif
 
+/* See how we're going to handle vsnprintf */
+
+#undef HAVE_VSNPRINTF
+#undef HAVE_VSPRINTF
+
 #if defined(HAVE_POSTGRES)
 # define HAVE_SQL
 #endif
