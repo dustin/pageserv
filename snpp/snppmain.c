@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: snppmain.c,v 1.2 1997/04/29 05:23:48 dustin Exp $
+ * $Id: snppmain.c,v 1.3 1997/04/29 05:29:41 dustin Exp $
  */
 
 #include <config.h>
@@ -185,6 +185,7 @@ void _snpp_main(modpass p)
 
             case SNPP_RESE:
                 snpp_cleanstuff();
+		alarm(conf.childlifetime);
 		puttext(s, "250 Reset OK\n");
                 break;
 
