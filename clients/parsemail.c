@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parsemail.c,v 1.2 1997/03/14 05:59:12 dustin Exp $
+ * $Id: parsemail.c,v 1.3 1997/03/14 17:05:29 dustin Exp $
  */
 
 #include <stdio.h>
@@ -27,7 +27,7 @@ void main(int argc, char **argv)
 {
     char line[LINELEN];
     int priority;
-    char *subject=NULL, *from=NULL, *to=NULL;
+    char *subject="(no subject)", *from=NULL, *to=NULL;
 
     if(argc<2)
     {
