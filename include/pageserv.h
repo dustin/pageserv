@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.29 1997/06/19 08:31:12 dustin Exp $
+ * $Id: pageserv.h,v 1.30 1997/06/20 09:13:35 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -16,7 +16,7 @@
 #include <module.h>
 
 /* Remote host for clients */
-#define REMHOST "molly.ipa.net"
+#define REMHOST "pager"
 
 /* Port number to run on/connect to */
 #define PORT 1029
