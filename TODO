@@ -12,10 +12,9 @@ Overall:
 
 Delivery:
 
-    * check time at delivery time in case a message has been stuck
     * have timeouts actually time out
     * clean stuff
-    * Rescan list for delivery before hanging up
+    * Device locking
 
 Clients:
 
@@ -25,6 +24,13 @@ Clients:
     * Enhance web listener (password auth for logins)
     * .parsemail
 
+Technical:
+    * Check the return value of all system calls.  Gotta be sure stuff got
+      There.
+    * Automate module adding.
+    * Automate command adding.
+    * Documentation
+
 ----------------------------------------
 Copyright (c) 1997  Dustin Sallings
-$Id: TODO,v 2.22 1997/06/19 08:31:00 dustin Exp $
+$Id: TODO,v 2.23 1997/06/20 09:11:55 dustin Exp $
