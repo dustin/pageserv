@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.8 1997/04/16 18:23:08 dustin Exp $
+ * $Id: userdb.c,v 1.9 1997/07/14 00:20:27 dustin Exp $
  * $State: Exp $
  */
 
@@ -70,6 +70,26 @@ void eraseuserdb(void)
     }
 
     dbm_close(db);
+}
+
+int deleteuser(char *name)
+{
+    datum d;
+    DBM *db;
+
+    if( (db=dbm_open(conf.userdb, O_RDWR, 0644)) == NULL)
+    {
+	return(-1);
+    }
+
+    d.dptr=name;
+    d.dsize=strlen(name);
+
+    dbm_delete(db, d);
+    dbm_close(db);
+
+    /* do a lookup and return the result */
+    return(!u_exists(name));
 }
 
 void printuser(struct user u)

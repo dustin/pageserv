@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: utility.c,v 1.11 1997/07/10 06:55:51 dustin Exp $
+ * $Id: utility.c,v 1.12 1997/07/14 00:20:28 dustin Exp $
  * $State: Exp $
  */
 
@@ -15,6 +15,65 @@
 #include <pageserv.h>
 
 extern struct config conf;
+
+void quicksort(char **a, int l, int r)
+{
+    int i, j;
+    char *v, *t;
+
+    if(r>l)
+    {
+        v=a[r]; i=l-1; j=r;
+
+        do{
+            while( (strcmp(a[++i], v)<0) && i<r );
+            while( (strcmp(a[--j], v)>0) && j>0 );
+
+            t=a[i]; a[i]=a[j]; a[j]=t;
+        } while(j>i);
+
+    a[j]=a[i]; a[i]=a[r]; a[r]=t;
+
+    quicksort(a, l, i-1);
+    quicksort(a, i+1, r);
+    }
+}
+
+void stringListSort(char **list)
+{
+    int i;
+
+    for(i=0; list[i]!=NULL; i++);
+
+    if(i>0)
+    {
+	if(conf.debug>2)
+	    printf("Calling quicksort(list, %d, %d)\n", 0, i-1);
+	quicksort(list, 0, i-1);
+    }
+}
+
+int execnamedfunc(char *name, struct namedfunc *f)
+{
+    int i;
+
+    for(i=0; f[i].name!=NULL; i++)
+    {
+	if(strcmp(f[i].name, name)==0)
+	    break;
+    }
+
+    if(f[i].name==NULL)
+    {
+	return(FUNC_UNKNOWN);
+    }
+    else
+    {
+	f[i].func();
+    }
+
+    return(0);
+}
 
 int addtostr(int size, char *dest, char *str)
 {

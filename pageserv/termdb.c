@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: termdb.c,v 1.7 1997/06/19 08:25:01 dustin Exp $
+ * $Id: termdb.c,v 1.8 1997/07/14 00:20:26 dustin Exp $
  * $State: Exp $
  */
 
@@ -91,6 +91,10 @@ char **listterms(void)
 void cleantermlist(char **list)
 {
     int i;
+
+    if(conf.debug>2)
+	puts("Freeing terminal list.");
+
     for(i=0; list[i]!=NULL; i++)
     {
 	free(list[i]);
