@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.38 1997/07/31 02:37:40 dustin Exp $
+ * $Id: pageserv.h,v 1.39 1997/08/03 02:25:40 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -24,8 +24,10 @@
 #define SNPPPORT 1031
 
 /* Config file location */
-/* #define CONFIGFILE "/usr/local/etc/pageserv.conf" */
-#define CONFIGFILE "/tmp/pageserv.conf"
+
+#ifndef CONFIGFILE
+#define CONFIGFILE "/usr/local/etc/pageserv.conf"
+#endif /* CONFIGFILE */
 
 #define BUFLEN 1024
 #define TOLEN 40
