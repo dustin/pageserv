@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: kids.c,v 1.3 1997/03/11 06:31:31 dustin Exp $
+ * $Id: kids.c,v 1.4 1997/03/11 06:47:23 dustin Exp $
  */
 
 #include <signal.h>
@@ -24,7 +24,7 @@ void reaper(void)
 
 void quit(int s)
 {
-    send(s, MESG_QUIT, strlen(MESG_QUIT), 0);
+    puttext(s, MESG_QUIT);
     exit(0);
 }
 
@@ -38,12 +38,13 @@ void childmain(int s)
     char buf[BUFLEN];
 
     sprintf(buf, "Welcome to Dustin's pager server version %s.\n", VERSION);
-    send(s, buf, strlen(buf), 0);
+    puttext(s, buf);
 
     /* lifetime of 120 seconds */
     alarm(CHILD_LIFETIME);
     signal(SIGALRM, onalarm);
 
+    puttext(s, PROMPT_CMD);
     gettext(s, buf);
     process(s, buf);
 
