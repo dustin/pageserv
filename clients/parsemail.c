@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parsemail.c,v 2.10 1998/06/03 16:42:59 dustin Exp $
+ * $Id: parsemail.c,v 2.11 1998/07/10 18:57:47 dustin Exp $
  */
 
 #include <stdio.h>
@@ -106,6 +106,12 @@ int main(int argc, char **argv)
 	        subject=getdata(9, line);
 	}
     }
+
+    if(subject==NULL)
+        subject="(no subject)";
+
+    if(from==NULL)
+        from="(unknown sender)";
 
     sprintf(line, "%s: %s -- %s", tag, from, subject);
 
