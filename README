@@ -2,17 +2,23 @@ Pageserv by Dustin Sallings
 
 Tested on the following platforms:
 
-BSDi 2.1
-DEC Digital Unix 3.2
-FreeBSD 2.1.5
-HP-UX B.10.20
-MkLinux 2.0.28-osfmach3
-PC NetBSD 1.2
-RedHat Linux 4.1
-SGI Irix 6.2
-Sun Solaris 2.5.1
-Sun SunOS 4.1.3_u1
+    BSDi 2.1
+    DEC Digital Unix 3.2
+    FreeBSD 2.1.5
+    HP-UX B.10.20
+    MkLinux 2.0.28-osfmach3
+    PC NetBSD 1.2
+    RedHat Linux 4.1
+    SGI Irix 6.2
+    Sun Solaris 2.5.1
+    Sun SunOS 4.1.3_u1
 
-	All of my documentation ends in .c
+Would like it to work on:
 
-$Id: README,v 1.3 1997/03/14 17:05:27 dustin Exp $
+    Unixware  (just because it's weird and doesn't currently).
+
+Documentation:
+
+    All of my documentation ends in .c
+
+$Id: README,v 1.4 1997/03/24 16:14:22 dustin Exp $
