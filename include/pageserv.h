@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.10 1997/04/01 20:16:06 dustin Exp $
+ * $Id: pageserv.h,v 1.11 1997/04/01 21:46:56 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -20,7 +20,7 @@
 #define PORT 1029
 
 /* Config file location */
-#define CONFIGFILE "/tmp/sample.config"
+#define CONFIGFILE "/tmp/pageserv.conf"
 
 #define BUFLEN 1000
 #define TOLEN 40

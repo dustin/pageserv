@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.8 1997/04/01 20:16:09 dustin Exp $
+ * $Id: queue.c,v 1.9 1997/04/01 21:46:58 dustin Exp $
  */
 
 #include <stdio.h>
@@ -29,7 +29,8 @@ void runqueue(void)
 
     for(t=0; termlist[t]!=NULL; t++)
     {
-	printf("Queue for %s:\n", termlist[t]);
+	if(conf.debug>0)
+	    printf("Queue for %s:\n", termlist[t]);
         q=listqueue(termlist[t]);
 
         for(i=0; q[i].to[0] != NULL; i++);
@@ -55,7 +56,8 @@ void runqueue(void)
 		    if(conf.debug>0)
 			printf("Delivery of %s unsuccessful\n", q[i].qid);
 		}
-                printf("\t%d to %s  ``%s''\n", i, q[i].to, q[i].message);
+		if(conf.debug>2)
+                    printf("\t%d to %s  ``%s''\n", i, q[i].to, q[i].message);
             }
 	    s_tap_end(s);
 	    sleep(1); /* sleep it off */

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  SPY Internetworking
  *
- * $Id: tap.c,v 2.3 1997/04/01 20:15:58 dustin Exp $
+ * $Id: tap.c,v 2.4 1997/04/01 21:46:51 dustin Exp $
  */
 
 #include <stdio.h>
@@ -52,7 +52,8 @@ int s_tap_init(int s)
     int i;
     char c;
 
-    puts("Initializing TAP");
+    if(conf.debug>0)
+        puts("Initializing TAP");
 
     i=puttext(s, "\r");
     s_modem_waitfor(s, "ID=", 2);
@@ -69,7 +70,8 @@ int s_tap_end(int s)
     char buf[BUFLEN];
     char c;
 
-    puts("ending TAP session");
+    if(conf.debug>0)
+        puts("ending TAP session");
 
     sprintf(buf, "%c\r", C_EOT);
     puttext(s, buf);
@@ -96,7 +98,8 @@ int s_tap_send(int s, char *id, char *message)
     char c;
     int i;
 
-    printf("Sending message to %s:\n%s\n", id, message);
+    if(conf.debug>0)
+        printf("Sending message to %s:\n%s\n", id, message);
 
     sprintf(buf, "%c%s%c%s%c%c", C_STX, id, C_CR, message, C_CR, C_ETX);
 
