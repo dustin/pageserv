@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.7 1997/03/12 17:49:49 dustin Exp $
+ * $Id: userdb.c,v 1.8 1997/03/13 19:37:37 dustin Exp $
  */
 
 #include <stdio.h>
@@ -13,11 +13,47 @@
 
 #include "pageserv.h"
 
+/* bounds checker for hour loop things */
+#define BC (i<24)
+
+void getnormtimes(int times, int *ret)
+{
+    int i;
+
+    if(bit_set(times, 0))
+    {
+	/* handle full-timers */
+	if( (times & 0xFFFFFFFF) == 0xFFFFFFFF)
+	{
+	    ret[0]=ret[1]=0;
+	}
+	else
+	{
+            for(i=0; bit_set(times, i) && BC; i++);
+	    ret[1]=i;
+
+            for(; bit_set(times, i)==0 && BC; i++);
+	    ret[0]=i;
+	}
+    }
+    else
+    {
+        for(i=0; bit_set(times, i)==0 && BC; i++);
+        ret[0]=i;
+
+        for(; bit_set(times, i) && BC; i++);
+	ret[1]=i;
+    }
+}
+
 void printuser(struct user u)
 {
+    int times[2];
     printf("ID:        %s\nPager ID:  %s\nStation:   %s\n", u.name,
          u.pageid, u.statid);
-    printf("Times:     %x\n", u.times);
+
+    getnormtimes(u.times, times);
+    printf("Normal:    %d to %d\n", times[0], times[1]);
 }
 
 int check_time(int priority, char *whom)

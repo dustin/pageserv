@@ -6,10 +6,11 @@ BSDi 2.1
 DEC Digital Unix 3.2
 FreeBSD 2.1.5
 HP-UX B.10.20
+MkLinux 2.0.28-osfmach3
 PC NetBSD 1.2
 RedHat Linux 4.1
 SGI Irix 6.2
 Sun Solaris 2.5.1
 Sun SunOS 4.1.3_u1
 
-$Id: README,v 1.1 1997/03/13 05:28:59 dustin Exp $
+$Id: README,v 1.2 1997/03/13 19:37:33 dustin Exp $
