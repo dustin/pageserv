@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: ypuserdb.c,v 1.1 1997/08/11 07:01:18 dustin Exp $
+ * $Id: ypuserdb.c,v 1.2 1997/08/11 07:23:25 dustin Exp $
  */
 
 #include <config.h>
@@ -106,6 +106,21 @@ char **nis_listusers(char *term)
     return(ret);
 }
 
+int nis_deleteuser(char *name)
+{
+    return(0);
+}
+
+void nis_storeuser(struct user u)
+{
+    return;
+}
+
+void nis_eraseuserdb(void)
+{
+    return;
+}
+
 void nis_userdbInit(void)
 {
     domainname=rcfg_lookup(conf.cf, "etc.nisdomain");
@@ -119,6 +134,9 @@ void nis_userdbInit(void)
     conf.udb.u_exists=nis_u_exists;
     conf.udb.getuser=nis_getuser;
     conf.udb.listusers=nis_listusers;
+    conf.udb.storeuser=nis_storeuser;
+    conf.udb.deleteuser=nis_deleteuser;
+    conf.udb.eraseuserdb=nis_eraseuserdb;
 }
 
 #endif
