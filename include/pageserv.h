@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.5 1997/04/01 02:22:19 dustin Exp $
+ * $Id: pageserv.h,v 1.6 1997/04/01 04:59:00 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -9,6 +9,7 @@
 
 /* for DBM type */
 #include <ndbm.h>
+#include <sys/types.h>
 
 #include "config.h"
 
