@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.20 1997/08/07 07:23:07 dustin Exp $
+ * $Id: readconfig.c,v 1.21 1997/08/07 07:57:01 dustin Exp $
  */
 
 #include <readconfig.h>
@@ -126,7 +126,6 @@ int getlogFacility(char *facility)
 {
     int i;
     static struct { char *name; int value; } fcs[]={
-      "audit",        LOG_AUDIT,
       "auth",         LOG_AUTH,
       "cron",         LOG_CRON,
       "daemon",       LOG_DAEMON,
@@ -134,7 +133,6 @@ int getlogFacility(char *facility)
       "lpr",          LOG_LPR,
       "mail",         LOG_MAIL,
       "news",         LOG_NEWS,
-      "sat",          LOG_AUDIT,
       "security",     LOG_AUTH,
       "syslog",       LOG_SYSLOG,
       "user",         LOG_USER,
