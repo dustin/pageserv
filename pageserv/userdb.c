@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.10 1997/07/14 06:03:08 dustin Exp $
+ * $Id: userdb.c,v 1.11 1997/08/07 13:49:26 dustin Exp $
  * $State: Exp $
  */
 
@@ -190,22 +190,23 @@ void printusers(void)
     dbm_close(db);
 }
 
-int check_time(int priority, char *whom)
+int check_time(struct queuent q)
 {
     struct tm *t;
     struct user u;
     time_t clock;
     int ret;
 
-    if(priority==PR_HIGH)
+    if(q.priority==PR_HIGH)
     {
         ret=1;
     }
     else
     {
         time(&clock);
+	clock=(clock>q.soonest ? clock : q.soonest);
         t=localtime(&clock);
-        u=getuser(whom);
+        u=getuser(q.to);
 
         ret=bit_set(u.times, t->tm_hour);
     }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.29 1997/08/07 07:23:06 dustin Exp $
+ * $Id: queue.c,v 1.30 1997/08/07 13:49:25 dustin Exp $
  * $State: Exp $
  */
 
@@ -552,7 +552,7 @@ int storequeue(int s, struct queuent q, int flags)
     if(conf.debug>3)
         puts("Running storequeue()");
 
-    if(check_time(q.priority, q.to))
+    if(check_time(q))
     {
         fn=newqfile();
         time(&q.submitted); /* store the time */
