@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.6 1997/03/12 22:54:12 dustin Exp $
+ * $Id: queue.c,v 1.7 1997/03/13 00:31:17 dustin Exp $
  */
 
 #include <stdio.h>
@@ -127,8 +127,8 @@ void printqueue(void)
 
 	    fclose(f);
 
-	    printf("%s:\n\tTo %s   %d bytes\n\n", q.qid, q.to,
-		strlen(q.message));
+	    printf("%s:\n\tPriority:  %d\tTo %s   %d bytes\n\n",
+	        q.qid, q.priority, q.to, strlen(q.message));
 	}
     }
     closedir(dir);

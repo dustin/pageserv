@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parseusers.c,v 1.4 1997/03/12 23:07:11 dustin Exp $
+ * $Id: parseusers.c,v 1.5 1997/03/13 00:31:16 dustin Exp $
  */
 
 #include <stdio.h>
@@ -31,19 +31,19 @@ struct user parseuser(char *line)
     {
 	if(early < late)
 	{
-	    for(i=early; i<=late ; i++)
+	    for(i=early; i<late ; i++)
 	    {
 		u.times=set_bit(u.times, i);
 	    }
 	}
 	else
 	{
-	    for(i=early; i<=24 ; i++)
+	    for(i=early; i<24 ; i++)
 	    {
 		u.times=set_bit(u.times, i);
 	    }
 
-	    for(i=0; i<=late ; i++)
+	    for(i=0; i<late ; i++)
 	    {
 		u.times=set_bit(u.times, i);
 	    }
