@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: signals.c,v 1.12 1998/02/27 07:47:29 dustin Exp $
+ * $Id: signals.c,v 1.13 1998/03/03 16:46:54 dustin Exp $
  */
 
 #include <stdio.h>
@@ -51,6 +51,7 @@ void resetservtraps(void)
     signal(SIGTERM, serv_sigint);
     signal(SIGHUP, serv_sighup);
     signal(SIGCHLD, serv_sigchld);
+    signal(SIGALRM, SIG_IGN);
 }
 
 void resethappytraps(void)
