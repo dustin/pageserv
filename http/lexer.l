@@ -1,10 +1,10 @@
+%{
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: lexer.l,v 1.3 1997/07/10 06:55:44 dustin Exp $
+ * $Id: lexer.l,v 1.4 1997/07/10 07:02:20 dustin Exp $
  */
 
-%{
 #include <config.h>
 #include <pageserv.h>
 #include <http.h>
