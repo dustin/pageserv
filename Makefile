@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile,v 1.5 1997/03/11 21:07:11 dustin Exp $
+# $Id: Makefile,v 1.6 1997/03/11 21:47:30 dustin Exp $
 
 MAJOR=2
 MINOR=0
@@ -9,10 +9,10 @@ VERSION=$(MAJOR).$(MINOR).$(PATCH)
 CC=cc
 CFLAGS=-O2 -g -Wall -DVERSION=\"$(VERSION)\"
 
-LIBS=
+# LIBS=
 
 # For Solaris
-# LIBS=-lnsl -lsocket
+LIBS=-lnsl -lsocket
 
 LDFLAGS=-g $(LIBS)
 
@@ -23,7 +23,7 @@ EXES=pageserv pqueue
 NAME=pageserv
 ARCHIVE=$(NAME)-$(VERSION)
 STUFF=$(SOURCES) pageserv.h Makefile
-JUNK=$(EXES) *.o *.core
+JUNK=$(EXES) *.o *.core core
 
 all: pageserv pqueue
 
