@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: admin.c,v 1.4 1997/07/14 00:18:59 dustin Exp $
+ * $Id: admin.c,v 1.5 1997/07/14 06:10:53 dustin Exp $
  */
 
 #include <pageserv.h>
@@ -101,7 +101,6 @@ void _http_doadduser(int s, struct http_request r)
 
 void _http_dodeluser(int s, struct http_request r)
 {
-     struct user u;
      char *user;
 
      user=_http_getcgiinfo(r, "username");

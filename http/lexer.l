@@ -2,7 +2,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: lexer.l,v 1.6 1997/07/14 06:02:50 dustin Exp $
+ * $Id: lexer.l,v 1.7 1997/07/14 06:10:54 dustin Exp $
  */
 
 #include <config.h>
@@ -134,7 +134,6 @@ void _parse_tableUserList(void)
 
 void _http_lex_dofunc(char *func)
 {
-    int i;
     struct namedfunc f[]={
         { "&selectTimeE", _parse_selectTimeE },
         { "&selectTimeL", _parse_selectTimeL },
