@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: modem.c,v 2.6 1997/06/19 08:24:33 dustin Exp $
+ * $Id: modem.c,v 2.7 1997/06/20 09:13:14 dustin Exp $
  * $State: Exp $
  */
 
@@ -47,32 +47,23 @@ int s_modem_waitforchar(int s, char what, int timeout)
     while(c!=what);
 }
 
-/*
- * This should be replaced, I want something that just keeps reading from
- * the buffer, one byte at a time until it sees something looking like what
- * it's looking for, then start pulling stuff in until it finds the string,
- * or runs out of time.
- */
-
 int s_modem_waitfor(int s, char *what, int timeout)
 {
-    char buf[BUFLEN];
+    int i;
+    char c;
 
-    /* printf("Waiting for ``%s'' (%d bytes)\n", what, strlen(what)); */
+    i=0;
 
-    for(;;)
+    while(i<strlen(what))
     {
-        gettext(s, buf);
+	read(s, &c, 1);
 
-	if(conf.debug>2)
-	    puts(buf);
-
-        if( (strstr(what, buf)!=NULL))
-        {
-	    /* printf("Got %s\n", what); */
-            return(0);
-        }
+	if(c==what[i])
+	    i++;
+	else
+	    i=0;
     }
+    return(0);
 }
 
 int s_modem_connect(int s, char *number)
@@ -84,7 +75,7 @@ int s_modem_connect(int s, char *number)
     if(conf.debug>3)
         printf("Wrote %d bytes\n", i);
 
-    i=s_modem_waitforchar(s, 'K', 10);
+    i=s_modem_waitfor(s, "OK", 10);
     if(conf.debug>3)
         printf("Wrote %d bytes\n", i);
 
@@ -93,7 +84,7 @@ int s_modem_connect(int s, char *number)
     if(conf.debug>3)
         printf("Wrote %d bytes\n", i);
 
-    i=s_modem_waitforchar(s, 'T', 10);
+    i=s_modem_waitfor(s, "CONNECT", 10);
     if(conf.debug>3)
         printf("Wrote %d bytes\n", i);
 
