@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: network.c,v 1.1 1997/03/29 20:36:12 dustin Exp $
+ * $Id: network.c,v 1.2 1997/03/30 01:34:55 dustin Exp $
  */
 
 /*
@@ -24,13 +24,12 @@ void net_timeout(void)
     exit(1);
 }
 
-FILE *openhost(char *host, int port)
+int openhost(char *host, int port)
 {
 struct hostent *hp;
 register int s;
 struct linger l;
 struct sockaddr_in sin;
-FILE *f;
 
     if((hp=gethostbyname(host)) == NULL)
     {
@@ -62,7 +61,5 @@ FILE *f;
         exit(1);
     }
 
-    f=fdopen(s, "rw");
-
-    return(f);
+    return(s);
 }

@@ -1,11 +1,18 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * "$Id: tap.h,v 1.2 1997/03/29 20:36:13 dustin Exp $"
+ * "$Id: tap.h,v 1.3 1997/03/30 01:34:56 dustin Exp $"
  */
 
 #ifndef TAP_H
 #define TAP_H 1
+
+#include <stdio.h>
+
+/* macros */
+
+/* because I don't want to make a function to do this */
+#define do_checksum(a) tap_sent_checksum(tap_checksum(a))
 
 /* char defs */
 
@@ -14,7 +21,10 @@
 #define C_EOT 0x04
 #define C_ACK 0x06
 #define C_CR  0x0d
+#define C_NAK 0x15
 #define C_ESC 0x1b
+#define C_RS  0x1e
+#define C_US  0x1f
 
 /* Response codes */
 
@@ -61,5 +71,12 @@
 /* functions */
 
 char *tap_sent_checksum(int sum);
+int openhost(char *host, int port);
+int s_modem_connect(int s, char *number);
+int s_modem_wait(int s, char *what, int timeout);
+int s_tap_end(int s);
+int s_tap_init(int s);
+int s_tap_send(int s, char *id, char *message);
+int tap_checksum(char *string);
 
 #endif /* TAP_H */
