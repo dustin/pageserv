@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.18 1997/04/29 17:53:44 dustin Exp $
+ * $Id: queue.c,v 1.19 1997/04/29 17:57:57 dustin Exp $
  * $State: Exp $
  */
 
@@ -225,7 +225,7 @@ int q_lock(struct queuent q)
     fprintf(f, "%d\n", getpid());
 
     fclose(f);
-
+    return(0);
 }
 
 int q_unlock(struct queuent q)
@@ -239,10 +239,10 @@ int q_unlock(struct queuent q)
     tmp[0]='l';
     strcat(buf, tmp);
 
-    unlink(buf);
-
     if(conf.debug>0)
-	printf("Unlocked %s with %s\n", q.qid, buf);
+	printf("Unlocking %s with %s\n", q.qid, buf);
+
+    return(unlink(buf));
 }
 
 int q_islocked(struct queuent q)
