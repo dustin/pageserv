@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: kids.c,v 1.2 1997/03/11 05:58:13 dustin Exp $
+ * $Id: kids.c,v 1.3 1997/03/11 06:31:31 dustin Exp $
  */
 
 #include <signal.h>
@@ -22,6 +22,12 @@ void reaper(void)
     }
 }
 
+void quit(int s)
+{
+    send(s, MESG_QUIT, strlen(MESG_QUIT), 0);
+    exit(0);
+}
+
 void onalarm()
 {
     exit(0);
@@ -30,7 +36,6 @@ void onalarm()
 void childmain(int s)
 {
     char buf[BUFLEN];
-    int size;
 
     sprintf(buf, "Welcome to Dustin's pager server version %s.\n", VERSION);
     send(s, buf, strlen(buf), 0);
@@ -39,15 +44,8 @@ void childmain(int s)
     alarm(CHILD_LIFETIME);
     signal(SIGALRM, onalarm);
 
-    if( (size=recv(s, buf, BUFLEN-1, 0)) >0 )
-    {
-         buf[size]=0x00;
-         kw(buf);
-	 process(s, buf);
-    }
-    else
-    {
-         /* If this isn't a pipe, I don't know what the hell... */
-         exit(0);
-    }
+    gettext(s, buf);
+    process(s, buf);
+
+    exit(0);
 }
