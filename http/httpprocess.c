@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpprocess.c,v 1.9 1997/04/18 20:40:10 dustin Exp $
+ * $Id: httpprocess.c,v 1.10 1997/04/18 21:16:42 dustin Exp $
  */
 
 #define IWANTDOCINFO 1
@@ -114,7 +114,7 @@ void http_process(int s, struct http_request r)
         _http_header_notfound(s, r);
     }
 
-    if(conf.debug)
+    if(conf.debug>2)
     {
         puts("Request was good");
         if(r.special==1)

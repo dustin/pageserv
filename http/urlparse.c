@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: urlparse.c,v 1.3 1997/04/18 20:40:13 dustin Exp $
+ * $Id: urlparse.c,v 1.4 1997/04/18 21:16:45 dustin Exp $
  */
 
 #include <pageserv.h>
@@ -11,8 +11,6 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
-
-extern struct config conf;
 
 char _http_X2c(char *u)
 {
