@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpparse.c,v 1.4 1997/04/16 19:26:35 dustin Exp $
+ * $Id: httpparse.c,v 1.5 1997/04/17 20:31:14 dustin Exp $
  */
 
 #define IWANTMETHODNAMES 1
@@ -52,10 +52,10 @@ struct http_request http_parserequest(int s)
                         buf[j]=0x00;
                         break;
                     } else if(buf[j]=='?')
-		    {
-			buf2=buf+j+1;
-			buf[j]=0x00;
-		    }
+                    {
+                        buf2=buf+j+1;
+                        buf[j]=0x00;
+                    }
                 }
                 if(j==tmp)
                 {
@@ -68,14 +68,30 @@ struct http_request http_parserequest(int s)
                 }
                 strcpy(r.request, buf+start);
 
-		if(buf2!=NULL)
-		    strcpy(r.args, buf2);
-		else
+                if(buf2!=NULL)
+                    strcpy(r.args, buf2);
+                else
                     r.args[0]=NULL;
 
                 break;
             }
         }
+
+        for(i=0; miscnames[i]!=NULL; i++)
+        {
+            if(strncmp(buf, miscnames[i], strlen(miscnames[i]))==0)
+            {
+                switch(i)
+                {
+                    case HTTP_CONTENTLENGTH:
+                        r.length=atoi(buf+(strlen(miscnames[i])));
+			if(conf.debug>2)
+			    printf("Found length:  %d\n", r.length);
+                        break;
+                }
+            }
+        }
+
         if(!finished)
         {
             gettextcr(s, buf);

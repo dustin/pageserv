@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * "$Id: http.h,v 1.8 1997/04/16 19:26:39 dustin Exp $"
+ * "$Id: http.h,v 1.9 1997/04/17 20:31:18 dustin Exp $"
  */
 
 #ifndef HTTP_H
@@ -37,7 +37,15 @@ static char *methodnames[]={
     "OPTIONS",
     NULL
 };
+
+static char *miscnames[]={
+    "Content-Length: ",
+    NULL
+};
+
 #endif
+
+#define HTTP_CONTENTLENGTH 0
 
 #ifdef IWANTDOCINFO
 
@@ -54,9 +62,17 @@ static char *docnames[]={
 
 #endif /* IWANTDOCINFO */
 
+struct http_list {
+    char *name;
+    char *value;
+    struct http_list *next;
+};
+
 struct http_request {
     char request[REQUESTSIZE];
     char args[REQUESTSIZE];
+    struct http_list *largs;
+    int length;
     int version;
     int docnum;
     int special;
