@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: ldapuserdb.c,v 1.3 1998/12/27 15:05:49 dustin Exp $
+ * $Id: ldapuserdb.c,v 1.4 1998/12/27 15:12:17 dustin Exp $
  */
 
 #include <config.h>
@@ -45,19 +45,6 @@ ldap_getld(void)
 		return (NULL);
 	}
 	return (ld);
-}
-
-static int
-ldap_u_exists(char *name)
-{
-	LDAP           *ld;
-
-	ld = ldap_getld();
-	if (ld == NULL)
-		return (0);
-
-	ldap_unbind(ld);
-	return (1);
 }
 
 static struct user
@@ -126,6 +113,20 @@ ldap_getuser(char *name)
 	ldap_value_free(values);
 	ldap_unbind(ld);
 	return (u);
+}
+
+static int
+ldap_u_exists(char *name)
+{
+	struct user u;
+	int ret;
+
+	u=ldap_getuser(name);
+	if(u.pageid[0])
+		ret=1;
+	else
+		ret=0;
+	return(ret);
 }
 
 static char   **
