@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: network.c,v 2.12 1998/07/11 06:16:07 dustin Exp $
+ * $Id: network.c,v 2.13 1998/07/14 05:48:08 dustin Exp $
  */
 
 /*
@@ -40,12 +40,6 @@ int s_openterm(struct terminal t)
     }
 
     return(s);
-}
-
-void net_timeout(void)
-{
-    fputs("Connection timed out.\n", stderr);
-    return(-1);
 }
 
 static int s_openhost(char *host, int port)

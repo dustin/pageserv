@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  SPY Internetworking
  *
- * $Id: tap.c,v 2.20 1998/07/13 23:41:39 dustin Exp $
+ * $Id: tap.c,v 2.21 1998/07/14 05:48:09 dustin Exp $
  */
 
 #include <stdio.h>
@@ -42,7 +42,7 @@ static char *tap_sent_checksum(int sum)
     return(charsum);
 }
 
-void chardump(char *s)
+static void chardump(char *s)
 {
     int i;
 
@@ -54,10 +54,9 @@ void chardump(char *s)
 int s_tap_init(int s, int flags)
 {
     char buf[BUFLEN];
+    int retry, ok;
 
     _ndebug(0, ("Initializing TAP\n"));
-
-    /* If configured to do so, pimp slap it with a CR right away */
 
     if(flags & TAP_INITDELAY) {
 	_ndebug(3, ("flag TAP_INITDELAY is set, sleeping\n"));
@@ -65,24 +64,32 @@ int s_tap_init(int s, int flags)
 	sleep(1);
     }
 
+    /* we won't do any of this if flag TAP_INITCR isn't set */
     if(flags & TAP_INITCR) {
-	_ndebug(3, ("flag TAP_INITCR is set, sending a CR\n"));
 
-	usleep(500000);
-	puttext(s, "\r");
-    }
+	_ndebug(3, ("flag TAP_INITCR is set, doing CR dance\n"));
+        usleep(500000); /* Just to make sure everything's ready */
 
-    if( s_modem_waitfor(s, "ID=", 2) < 0) {
-	_ndebug(2, ("Error:  s_modem_waitfor(%d, \"ID=\", 2);\n", s));
-	return(-1);
+	ok=0;
+	for(retry=0; retry<RETRY_1; retry++) {
+	    puttext(s, "\r");
+
+            if( s_modem_waitfor(s, "ID=", TIME_2) < 0) {
+	      _ndebug(2, ("\t...timed out, sending another CR\n"));
+            } else {
+	      ok=1; break;
+	    }
+	}
+
+	if(!ok) return(-1);
     }
 
     sprintf(buf, "%cPG1\r", C_ESC);
     puttext(s, buf);
 
     sprintf(buf, "%c[p", C_ESC);
-    if( s_modem_waitfor(s, buf, 10) < 0) {
-	_ndebug(2, ("Error:  s_modem_waitfor(%d, \"%s\", 2);\n", s, buf));
+    if( s_modem_waitfor(s, buf, TIME_3) < 0) {
+	_ndebug(2,("Error:  s_modem_waitfor(%d, \"%s\", %d);\n",s,buf,TIME_3));
 	return(-1);
     }
     return(0);
@@ -114,11 +121,15 @@ static int charfound(char *string, char *chars)
 int s_tap_send(int s, char *id, char *message)
 {
     char buf[BUFLEN];
-    char search[]={C_ACK, C_ESC, C_NAK, 0x00};
+    char search[]={C_ACK, C_ESC, C_NAK, C_RS, 0x00};
     char c;
     int i;
 
     _ndebug(0, ("Sending message to %s:\n%s\n", id, message));
+
+    /* cheap bounds checking */
+    if(strlen(message)+strlen(id)>(BUFLEN-20))
+	return(-1);
 
     sprintf(buf, "%c%s%c%s%c%c", C_STX, id, C_CR, message, C_CR, C_ETX);
 
@@ -126,11 +137,13 @@ int s_tap_send(int s, char *id, char *message)
     strcat(buf, do_checksum(buf));
     strcat(buf, "\r");
 
+    /* It compiles, ship it. */
     puttext(s, buf);
 
     /* Lets see if we won. */
 
     c=0;
+    strcpy(buf, ""); /* clean out buf */
     while( (c=charfound(buf, search)) ==0 ) {
 	i=read(s, buf, BUFLEN);
 	if(i>0) {
@@ -139,8 +152,15 @@ int s_tap_send(int s, char *id, char *message)
 	}
     }
 
+    /* Another random sleepy thing, just to get the timing right */
     usleep(1700);
 
+    /*
+     * Note: I *probably* shouldn't do this for ESC here since I don't
+     * know for sure that it went, but I ran into a problem where I was
+     * sending duplicate pages because *SOME* server decided ESC was good
+     * enough.
+     */
     if(c==C_ACK || c==C_ESC) {
 	return(0);
     } else {

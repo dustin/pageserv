@@ -10,7 +10,6 @@ Overall:
 Delivery:
 
     * multiple modems on a port
-    * clean stuff
     * need queue status flags
 
 Clients:
@@ -25,4 +24,4 @@ Technical:
 
 ----------------------------------------
 Copyright (c) 1997  Dustin Sallings
-$Id: TODO,v 2.34 1998/06/03 08:38:10 dustin Exp $
+$Id: TODO,v 2.35 1998/07/14 05:48:03 dustin Exp $
