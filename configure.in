@@ -1,4 +1,4 @@
-dnl $Id: configure.in,v 1.7 1997/03/28 23:13:48 dustin Exp $
+dnl $Id: configure.in,v 1.8 1997/03/29 19:21:15 dustin Exp $
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(main.c)
 AC_CONFIG_HEADER(config.h)
@@ -27,4 +27,4 @@ AC_CHECK_LIB(nsl, main)
 AC_CHECK_LIB(socket, main)
 AC_CHECK_LIB(ndbm, main)
 
-AC_OUTPUT(Makefile clients/Makefile)
+AC_OUTPUT(Makefile clients/Makefile delivery/Makefile)

@@ -1,8 +1,11 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.27 1997/03/29 08:24:07 dustin Exp $
+ * $Id: pageserv.h,v 1.28 1997/03/29 19:21:16 dustin Exp $
  */
+
+#ifndef PAGESERV_H   /* We don't want this to be */
+#define PAGESERV_H 1 /* included more than once. */
 
 /* for DBM type */
 #include <ndbm.h>
@@ -171,3 +174,5 @@ void storeuser(DBM *db, struct user u);
 char *ckw(char *in);
 int pushqueue(char *to, char *message, int priority);
 void cgettext(char *message, int size);
+
+#endif /* PAGESERV_H */
