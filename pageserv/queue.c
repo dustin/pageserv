@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.39 1998/01/15 23:35:04 dustin Exp $
+ * $Id: queue.c,v 1.40 1998/01/16 10:23:47 dustin Exp $
  */
 
 #include <stdio.h>
@@ -437,24 +437,44 @@ struct queuent readqueuefile(char *fn)
 
 char *newtmp(void)
 {
-    static char tmp[3];
+    static char *tmp;
+    static int size=0;
+    int i;
 
-    if(tmp[0]==0)
+    if(size==0)
     {
-        strncpy(tmp, "AA" , 2);
+        size=4;
+        tmp=(char *)malloc(sizeof(char *)*size);
+        tmp[0]='A';
+        tmp[1]=0x00;
     }
     else
     {
-        tmp[1]++;
-
-        if(tmp[1]>'Z')
+        tmp[0]++;
+        for(i=0; tmp[i]; i++)
         {
-            tmp[0]++;
-            tmp[1]='A';
+            if(tmp[i]>'Z')
+            {
+                if(i==size-1)
+                {
+                    size<<=1;
+                    _ndebug(4, ("newtmp() Reallocating to %d bytes\n", size));
+                    tmp=(char *)realloc(tmp, size);
+                }
+                tmp[i]='A';
+                if(tmp[i+1])
+                {
+                    tmp[i+1]++;
+                }
+                else
+                {
+                    tmp[i+1]='A';
+                    tmp[i+2]=0x00;
+                }
+            }
         }
     }
-
-    return tmp;
+    return(tmp);
 }
 
 int readytodeliver(struct queuent q)
@@ -505,11 +525,11 @@ char *newqfile(void)
 
    pid=getpid();
 
-   sprintf(fn, "%s/q%s%d", conf.qdir, newtmp(), pid);
+   sprintf(fn, "%s/q%d%s", conf.qdir, pid, newtmp());
 
    while(f_exists(fn))
    {
-       sprintf(fn, "%s/q%s%d", conf.qdir, newtmp(), pid);
+       sprintf(fn, "%s/q%d%s", conf.qdir, pid, newtmp());
    }
 
    return(fn);
