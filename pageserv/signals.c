@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: signals.c,v 1.3 1997/04/01 06:57:08 dustin Stab $
+ * $Id: signals.c,v 1.4 1997/04/04 22:21:11 dustin Stab $
+ * $State: Stab $
  */
 
 #include <stdio.h>

@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: kids.c,v 1.2 1997/03/30 05:59:48 dustin Exp $
+ * $Id: kids.c,v 1.3 1997/04/04 22:21:01 dustin Stab $
+ * $State: Stab $
  */
 
 #include <signal.h>

@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: utility.c,v 1.3 1997/04/01 22:30:01 dustin Exp $
+ * $Id: utility.c,v 1.4 1997/04/04 22:21:17 dustin Exp $
+ * $State: Exp $
  */
 
 #include <stdio.h>

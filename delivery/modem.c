@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: modem.c,v 2.4 1997/04/02 00:16:19 dustin Exp $
+ * $Id: modem.c,v 2.5 1997/04/04 22:20:55 dustin Exp $
+ * $State: Exp $
  */
 
 #include <stdio.h>

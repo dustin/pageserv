@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parseterms.c,v 1.2 1997/03/30 05:59:50 dustin Exp $
+ * $Id: parseterms.c,v 1.3 1997/04/04 22:21:04 dustin Exp $
+ * $State: Exp $
  */
 
 #include <stdio.h>

@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: protocol.c,v 1.3 1997/04/02 06:20:29 dustin Exp $
+ * $Id: protocol.c,v 1.4 1997/04/04 22:21:07 dustin Exp $
+ * $State: Exp $
  */
 
 #include <stdio.h>

@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.5 1997/04/02 04:26:21 dustin Stab $
+ * $Id: main.c,v 1.6 1997/04/04 22:21:03 dustin Stab $
+ * $State: Stab $
  */
 
 #include <stdio.h>

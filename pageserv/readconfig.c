@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.6 1997/04/02 16:54:17 dustin Exp $
+ * $Id: readconfig.c,v 1.7 1997/04/04 22:21:10 dustin Exp $
+ * $State: Exp $
  */
 
 #include <stdio.h>

@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: termdb.c,v 1.4 1997/04/02 04:26:22 dustin Exp $
+ * $Id: termdb.c,v 1.5 1997/04/04 22:21:14 dustin Exp $
+ * $State: Exp $
  */
 
 #include <stdio.h>

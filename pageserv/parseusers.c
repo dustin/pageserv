@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parseusers.c,v 1.2 1997/03/30 05:59:51 dustin Exp $
+ * $Id: parseusers.c,v 1.3 1997/04/04 22:21:05 dustin Exp $
+ * $State: Exp $
  */
 
 #include <stdio.h>

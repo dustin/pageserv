@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 1997  SPY Internetworking
  *
- * $Id: tap.c,v 2.6 1997/04/04 21:27:20 dustin Exp $
+ * $Id: tap.c,v 2.7 1997/04/04 22:20:58 dustin Exp $
+ * $State: Exp $
  */
 
 #include <stdio.h>

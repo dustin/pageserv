@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: queue.c,v 1.14 1997/04/04 21:27:26 dustin Exp $
+ * $Id: queue.c,v 1.15 1997/04/04 22:21:08 dustin Exp $
+ * $State: Exp $
  */
 
 #include <stdio.h>

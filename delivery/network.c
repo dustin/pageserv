@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: network.c,v 2.2 1997/04/01 22:29:52 dustin Exp $
+ * $Id: network.c,v 2.3 1997/04/04 22:20:57 dustin Exp $
+ * $State: Exp $
  */
 
 /*

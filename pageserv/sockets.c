@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 1997 Dustin Sallings
  *
- * $Id: sockets.c,v 1.2 1997/03/30 05:59:55 dustin Stab $
+ * $Id: sockets.c,v 1.3 1997/04/04 22:21:13 dustin Stab $
+ * $State: Stab $
  */
 
 #include <stdio.h>
