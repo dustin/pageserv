@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.31 1998/01/01 08:41:11 dustin Exp $
+ * $Id: main.c,v 1.32 1998/01/01 08:43:21 dustin Exp $
  */
 
 #include <config.h>
@@ -84,13 +84,6 @@ void detach(void)
    {
         close(i);
    }
-
-/*
-   open("/dev/null", O_RDWR);
-   open("/dev/null", O_RDWR);
-   open("/dev/null", O_RDWR);
-   open("/dev/null", O_RDWR);
-*/
 
    tmp=rcfg_lookup(conf.cf, "etc.working_directory");
    if(tmp==NULL)
