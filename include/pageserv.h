@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.32 1997/06/22 07:52:25 dustin Exp $
+ * $Id: pageserv.h,v 1.33 1997/07/07 08:48:01 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -251,6 +251,7 @@ void getqueueinfo( struct queuent *q );
 void initmodules(void);
 void logqueue(struct queuent q, int type, char *reason);
 void open_storeuser(DBM *db, struct user u);
+void p_getpasswd(int s, char *to);
 void p_login(int s);
 void printqueue(void);
 void printterm(struct terminal t);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpmain.c,v 1.3 1997/04/16 19:44:17 dustin Exp $
+ * $Id: httpmain.c,v 1.4 1997/07/07 08:47:49 dustin Exp $
  */
 
 #include <config.h>
@@ -74,9 +74,12 @@ void _http_main(modpass p)
     alarm(conf.childlifetime);
     signal(SIGALRM, http_onalarm);
 
+    _http_init_request(&r);
     r=http_parserequest(s);
 
     http_process(s, r);
+
+    _http_free_request(r);
 
     close(s);
     exit(0);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: httpparse.c,v 1.8 1997/04/18 21:19:56 dustin Exp $
+ * $Id: httpparse.c,v 1.9 1997/07/07 08:47:50 dustin Exp $
  */
 
 #define IWANTMETHODNAMES 1
@@ -18,6 +18,66 @@
 #include <sys/socket.h>
 
 extern struct config conf;
+
+int _http_authdecode_match(char c)
+{
+    int i;
+    static char *map=
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+
+    for(i=0; i<65; i++)
+    {
+        if(map[i]==c)
+            break;
+    }
+
+    return(i);
+}
+
+void _http_authdecode(struct http_request *r)
+{
+    char *string;
+    char *dest;
+    int i;
+
+    string=r->auth.string;
+
+    if(conf.debug>2)
+        printf("Decoding:  ``%s''\n", string);
+
+    /* This is overkill, but I don't care */
+    dest=(char *)malloc(strlen(string));
+
+    i=0;
+    for(; *string; string+=4)
+    {
+        string[0]=_http_authdecode_match(string[0]);
+        string[1]=_http_authdecode_match(string[1]);
+        string[2]=_http_authdecode_match(string[2]);
+        string[3]=_http_authdecode_match(string[3]);
+
+        dest[i]=string[0]<<2;
+        dest[i++]|= (string[1] & 0x30) >>4;
+
+        dest[i]=(string[1]&0x0f) << 4;
+        dest[i++]|= (string[2]&0x3c) >> 2;
+
+        dest[i]= (string[2]&0x03) << 6;
+        dest[i++]|= string[3];
+    }
+
+    for(i=0; dest[i]!=':'; i++);
+    dest[i]=0x00;
+
+    r->auth.name=strdup(dest);
+    r->auth.pass=strdup(dest+i+1);
+
+    if(conf.debug>2)
+        printf("User:  ``%s'', Pass:  ``%s''\n", r->auth.name,
+	    r->auth.pass);
+
+    free(dest);
+}
 
 struct http_request http_parserequest(int s)
 {
@@ -69,9 +129,7 @@ struct http_request http_parserequest(int s)
                 strcpy(r.request, buf+start);
 
                 if(buf2!=NULL)
-		    r.args=strdup(buf2);
-                else
-                    r.args=NULL;
+                    r.args=strdup(buf2);
 
                 break;
             }
@@ -84,9 +142,16 @@ struct http_request http_parserequest(int s)
                 switch(i)
                 {
                     case HTTP_CONTENTLENGTH:
+                    case HTTP_CONTENTLENGTH2:
                         r.length=atoi(buf+(strlen(miscnames[i])));
-			if(conf.debug>2)
-			    printf("Found length:  %d\n", r.length);
+                        if(conf.debug>2)
+                            printf("Found length:  %d\n", r.length);
+                        break;
+                    case HTTP_AUTHBASIC:
+                        r.auth.string=strdup(buf+strlen(miscnames[i]));
+                        if(conf.debug>2)
+                            printf("Found authbasic:  %s\n", r.auth.string);
+                        _http_authdecode(&r);
                         break;
                 }
             }
@@ -96,9 +161,16 @@ struct http_request http_parserequest(int s)
         {
             gettextcr(s, buf);
             if(strlen(buf)==0)
+            {
+                /* eat the last character */
+                recv(s, &tmp, 1, 0);
                 finished=1;
+            }
         }
     }
-    r.largs=NULL;
+
+    /* now grab the args if any */
+    _http_parseargs(s, &r);
+
     return(r);
 }

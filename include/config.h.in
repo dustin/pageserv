@@ -18,6 +18,9 @@
 /* Define if your <sys/time.h> declares struct tm.  */
 #undef TM_IN_SYS_TIME
 
+/* Define for <termio.h> */
+#undef HAVE_TERMIO_H
+
 /* Define if you have the <rpcsvc/yp_prot.h> header file.  */
 #undef HAVE_RPCSVC_YP_PROT_H
 

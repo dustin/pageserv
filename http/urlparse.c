@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: urlparse.c,v 1.4 1997/04/18 21:16:45 dustin Exp $
+ * $Id: urlparse.c,v 1.5 1997/07/07 08:47:52 dustin Exp $
  */
 
 #include <pageserv.h>
@@ -11,6 +11,8 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+
+extern struct config conf;
 
 char _http_X2c(char *u)
 {
@@ -26,11 +28,11 @@ void _http_unescape(char *u)
 
     for(i=0, j=0; u[j]; i++, j++)
     {
-	if( (u[i]=u[j]) == '%')
-	{
-	   u[i]=_http_X2c(&u[++j]);
-	   j++;
-	}
+        if( (u[i]=u[j]) == '%')
+        {
+           u[i]=_http_X2c(&u[++j]);
+           j++;
+        }
     }
     u[i]=0x00;
 }
@@ -65,66 +67,73 @@ char *_http_getcgiinfo(struct http_request r, char *what)
 
     while(tmp!=NULL)
     {
-	if(strcmp(tmp->name, what)==0)
-	    break;
-	tmp=tmp->next;
+        if(strcmp(tmp->name, what)==0)
+            break;
+        tmp=tmp->next;
     }
 
     if(tmp==NULL)
-	return(NULL);
+        return(NULL);
     else
-	return(tmp->value);
+        return(tmp->value);
 }
 
 void _http_parseargs(int s, struct http_request *r)
 {
-    int i=0, count;
+    int i, count;
     char *buf, *pair, *v, *st;
     char **list;
 
     if(r->method == HTTP_POST)
     {
-	r->args=(char *)malloc(sizeof(char)*r->length+1);
-	while(i<r->length)
-	    i+=recv(s, r->args, r->length, 0);
+        r->args=(char *)malloc(sizeof(char)*r->length+1);
+        r->args[r->length]=0x00;
+
+        i=0;
+        while(i<r->length)
+            i+=recv(s, r->args+i, r->length-i, 0);
+
+        if(conf.debug>2)
+            printf("Got POST data:  ``%s'' (%d/%d bytes)\n", r->args,
+                i, r->length);
     }
 
     buf=r->args;
 
     if(buf==NULL)
-	return;
+        return;
 
     for(i=0; buf[i]; i++)
-	if(buf[i]=='+')
-	    buf[i]=' ';
+        if(buf[i]=='+')
+            buf[i]=' ';
 
     list=(char **)malloc(256*sizeof(char **));
     count=0;
     pair=strtok(buf, "&");
     while(pair)
     {
-	list[count++]=strdup(pair);
-	if( (count%256) == 0)
-	    list=(char **)realloc(list, (count+256)*sizeof(char **));
+        list[count++]=strdup(pair);
+        if( (count%256) == 0)
+            list=(char **)realloc(list, (count+256)*sizeof(char **));
 
-	pair=strtok(NULL, "&");
+        pair=strtok(NULL, "&");
     }
     list[count]=NULL;
 
     for(i=0; i<count; i++)
     {
-	if( (st=strchr(list[i], '=')) )
-	{
-	    *st=0x00;
-	    _http_unescape(v=st+1);
-	}
-	else
-	{
-	    _http_unescape(v="");
-	}
+        if( (st=strchr(list[i], '=')) )
+        {
+            *st=0x00;
+            _http_unescape(v=st+1);
+        }
+        else
+        {
+            _http_unescape(v="");
+        }
 
-	_http_addtolist(r, list[i], v);
-	free(list[count]);
+        _http_addtolist(r, list[i], v);
+        free(list[count]);
     }
     free(list);
 }

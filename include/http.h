@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * "$Id: http.h,v 1.10 1997/04/18 20:27:38 dustin Exp $"
+ * "$Id: http.h,v 1.11 1997/07/07 08:48:00 dustin Exp $"
  */
 
 #ifndef HTTP_H
@@ -41,12 +41,16 @@ static char *methodnames[]={
 
 static char *miscnames[]={
     "Content-Length: ",
+    "Content-length: ",
+    "Authorization: Basic ",
     NULL
 };
 
 #endif
 
-#define HTTP_CONTENTLENGTH 0
+#define HTTP_CONTENTLENGTH  0
+#define HTTP_CONTENTLENGTH2 1
+#define HTTP_AUTHBASIC      2
 
 struct http_list {
     char *name;
@@ -54,8 +58,16 @@ struct http_list {
     struct http_list *next;
 };
 
+struct http_authinfo {
+    char *name;
+    char *pass;
+    char *string;
+    int  authtype;
+};
+
 struct http_request {
     char request[REQUESTSIZE];
+    struct http_authinfo auth;
     char *args;
     struct http_list *largs;
     int length;
@@ -70,15 +82,18 @@ struct http_request {
 char *_http_getcgiinfo(struct http_request r, char *what);
 int  _http_socket(void);
 struct http_request http_parserequest(int s);
+void _http_error(int s, struct http_request r);
+void _http_footer(int s);
+void _http_free_request(struct http_request r);
+void _http_header_needauth(int s, char *authname, struct http_request r);
+void _http_header_notfound(int s, struct http_request r);
+void _http_header_ok(int s, int size);
 void _http_init(void);
+void _http_init_request(struct http_request *r);
 void _http_main(modpass p);
 void _http_parseargs(int s, struct http_request *r);
 void _http_sendpage(int s, struct http_request r);
 void _http_usermod(int s, struct http_request r);
-void _http_error(int s, struct http_request r);
-void _http_footer(int s);
-void _http_header_notfound(int s, struct http_request r);
-void _http_header_ok(int s, int size);
 void http_process(int s, struct http_request r);
 void http_process_get(int s, struct http_request r);
 
