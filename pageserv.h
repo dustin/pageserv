@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.19 1997/03/24 18:47:19 dustin Exp $
+ * $Id: pageserv.h,v 1.20 1997/03/26 00:24:42 dustin Exp $
  */
 
 /* for DBM type */
@@ -14,6 +14,9 @@
 
 /* Port number to run on/connect to */
 #define PORT 1029
+
+/* Config file location */
+#define CONFIGFILE "sample.config"
 
 #define BUFLEN 300
 #define TOLEN 40
@@ -81,6 +84,8 @@ struct user {
 
 struct config {
     int debug;
+    char *servhost;
+    char *userdb;
 };
 
 /* macros */
@@ -106,12 +111,15 @@ struct queuent dofarkle();
 struct user getuser(char *key);
 struct user open_getuser(DBM *db, char *key);
 void childmain(int s);
+void cleanconfig(void);
 void getnormtimes(int times, int *ret);
 void printqueue(void);
 void printuser(struct user u);
 void process(int s, char *cmd);
 void quit(int s);
+void readconfig(char *file);
 void reaper(void);
+void showconfig(void);
 void storeuser(DBM *db, struct user u);
 
 /* client stuff */

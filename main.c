@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.6 1997/03/24 18:47:18 dustin Exp $
+ * $Id: main.c,v 1.7 1997/03/26 00:24:41 dustin Exp $
  */
 
 #include <stdio.h>
@@ -36,6 +36,10 @@ void main(void)
     fd_set fdset, tfdset;
     struct timeval t;
 
+    readconfig(CONFIGFILE);
+    if(conf.debug>0)
+        showconfig();
+
     detach();
 
     s=initialize();
@@ -64,4 +68,6 @@ void main(void)
         }
         reaper();
     }
+
+    cleanconfig();
 }

@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 1.9 1997/03/24 18:47:49 dustin Exp $
+# $Id: Makefile.in,v 1.10 1997/03/26 00:24:40 dustin Exp $
 
 MAJOR=2
 MINOR=0
@@ -15,18 +15,19 @@ LIBS=@LIBS@
 
 LDFLAGS=-g $(LIBS)
 
-SERV_OBJS=sockets.o main.o utility.o kids.o queue.o protocol.o userdb.o
-PQ_OBJS=pqueue.o utility.o queue.o userdb.o
-PU_OBJS=parseusers.o userdb.o utility.o
-LU_OBJS=listusers.o userdb.o utility.o
+SERV_OBJS=sockets.o main.o utility.o kids.o queue.o protocol.o userdb.o \
+	readconfig.o
+PQ_OBJS=pqueue.o utility.o queue.o userdb.o readconfig.o
+PU_OBJS=parseusers.o userdb.o utility.o readconfig.o
+LU_OBJS=listusers.o userdb.o utility.o readconfig.o
 SOURCES=sockets.c main.c utility.c kids.c queue.c protocol.c pqueue.c \
-	parseusers.c userdb.c listusers.c
+	parseusers.c userdb.c listusers.c readconfig.c
 EXES=pageserv pqueue parseusers listusers
 DIRS=clients
 NAME=pageserv
 ARCHIVE=$(NAME)-$(VERSION)
 STUFF=$(SOURCES) pageserv.h configure configure.in Makefile.in clients \
-	README config.h.in
+	README config.h.in sample.config
 JUNK=$(EXES) *.o *.core core
 AUTOJUNK=config.status config.cache config.log Makefile clients/Makefile \
 	config.h

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.13 1997/03/24 18:47:25 dustin Exp $
+ * $Id: userdb.c,v 1.14 1997/03/26 00:24:46 dustin Exp $
  */
 
 #include <stdio.h>
@@ -109,9 +109,9 @@ struct user getuser(char *name)
     DBM *db;
     struct user u;
 
-    if( (db=dbm_open(USERDB, O_RDONLY, 0644)) == NULL)
+    if( (db=dbm_open(conf.userdb, O_RDONLY, 0644)) == NULL)
     {
-        perror(USERDB);
+        perror(conf.userdb);
         exit(1);
     }
 
@@ -146,7 +146,7 @@ int u_exists(char *name)
     datum d, k;
     DBM *db;
 
-    db=dbm_open(USERDB, O_RDONLY, 0644);
+    db=dbm_open(conf.userdb, O_RDONLY, 0644);
 
     k.dptr=name;
     k.dsize=strlen(name);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parseusers.c,v 1.9 1997/03/24 15:39:12 dustin Exp $
+ * $Id: parseusers.c,v 1.10 1997/03/26 00:24:43 dustin Exp $
  */
 
 #include <stdio.h>
@@ -12,6 +12,8 @@
 #include <fcntl.h>
 
 #include "pageserv.h"
+
+struct config conf;
 
 struct user parseuser(char *line)
 {
@@ -67,15 +69,15 @@ int parseusers(void)
     DBM *db;
     int i=0;
 
-    if( (f=fopen(USERDB, "r")) == NULL)
+    if( (f=fopen(conf.userdb, "r")) == NULL)
     {
-        perror(USERDB);
+        perror(conf.userdb);
         exit(1);
     }
 
-    if( (db=dbm_open(USERDB, O_CREAT|O_RDWR, 0644)) ==NULL)
+    if( (db=dbm_open(conf.userdb, O_CREAT|O_RDWR, 0644)) ==NULL)
     {
-        perror(USERDB);
+        perror(conf.userdb);
         exit(1);
     }
 
@@ -99,6 +101,12 @@ void main(void)
 {
     int users;
 
+    readconfig(CONFIGFILE);
+    if(conf.debug>0)
+	showconfig();
+
     users=parseusers();
     printf("Parsed %d users.\n", users);
+
+    cleanconfig();
 }

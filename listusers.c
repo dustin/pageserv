@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: listusers.c,v 1.4 1997/03/14 21:33:29 dustin Exp $
+ * $Id: listusers.c,v 1.5 1997/03/26 00:24:41 dustin Exp $
  */
 
 #include <stdio.h>
@@ -13,6 +13,8 @@
 
 #include "pageserv.h"
 
+struct config conf;
+
 void main(void)
 {
     char buf[BUFLEN];
@@ -20,9 +22,13 @@ void main(void)
     datum d;
     DBM *db;
 
-    if( (db=dbm_open(USERDB, O_RDONLY, 0644)) ==NULL)
+    readconfig(CONFIGFILE);
+    if(conf.debug>0)
+	showconfig();
+
+    if( (db=dbm_open(conf.userdb, O_RDONLY, 0644)) ==NULL)
     {
-        perror(USERDB);
+        perror(conf.userdb);
         exit(1);
     }
 
@@ -36,4 +42,5 @@ void main(void)
     }
 
     dbm_close(db);
+    cleanconfig();
 }
