@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * "$Id: http.h,v 1.5 1997/04/14 07:12:33 dustin Exp $"
+ * "$Id: http.h,v 1.6 1997/04/14 07:21:15 dustin Exp $"
  */
 
 #ifndef HTTP_H
@@ -15,7 +15,7 @@
 
 #define HTTP_FOOTER "<p><hr width=\"50%\" align=\"left\">\n\
 <font size=\"-2\">Copyright &copy;  1997  Dustin Sallings</font>\n\
-</body></html>"
+</body></html>\n"
 
 /* methods defs */
 #define HTTP_GET     0
