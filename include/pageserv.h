@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.77 1999/02/25 22:45:34 dustin Exp $
+ * $Id: pageserv.h,v 1.78 1999/02/25 22:47:39 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -50,7 +50,7 @@
 /* Config file location */
 
 #ifndef CONFIGFILE
-#define CONFIGFILE "/home/dustin/etc/pageserv.conf"
+#define CONFIGFILE "/usr/local/etc/pageserv.conf"
 #endif /* CONFIGFILE */
 
 #define BUFLEN 1024
