@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: moduser.c,v 1.2 1997/07/08 06:53:38 dustin Exp $
+ * $Id: moduser.c,v 1.3 1997/07/08 07:12:39 dustin Exp $
  */
 
 #include <pageserv.h>
@@ -26,8 +26,8 @@ void _http_modusererror(int s, char *message)
 void _http_moduserheader(int s)
 {
     _http_header_ok(s, 0);
-    puttext(s, "<html><head><title>Modify user</title></head>");
-    puttext(s, "<body bgcolor=\"fFfFfF\">");
+    puttext(s, "<html><head><title>Modify user</title></head>\n");
+    puttext(s, "<body bgcolor=\"fFfFfF\">\n");
 }
 
 void _http_modusersuccess(int s)
@@ -78,26 +78,26 @@ void _http_moduser_moduserpage(int s, struct http_request r)
     _http_moduserheader(s);
     sprintf(buf, "<h2>Modify user %s</h2>\n", u.name);
     puttext(s, buf);
-    puttext(s, "If you leave the password entries blank, it will not be\
-        modified");
+    puttext(s, "If you leave the password entries blank, it will not be \
+modified.<br>\n");
 
-    puttext(s, "<form method=\"POST\" action=\"/moduser\">");
+    puttext(s, "<form method=\"POST\" action=\"/moduser\">\n");
     puttext(s, "<table border=\"0\">\n");
 
     puttext(s, "<tr><td>New passwd:</td><td><input name=\"passwd1\"");
-    puttext(s, " type=\"password\"><br></td></tr>");
+    puttext(s, " type=\"password\"><br></td></tr>\n");
     puttext(s, "<tr><td>Again:</td><td><input name=\"passwd2\"");
-    puttext(s, " type=\"password\"><br></td></tr>");
+    puttext(s, " type=\"password\"><br></td></tr>\n");
 
     puttext(s, "<tr><td>Early:</td><td><select name=\"early\">\n");
     _http_moduser_timelist(s, times[0]);
-    puttext(s, "</select><br></td></tr>");
+    puttext(s, "</select><br></td></tr>\n");
 
     puttext(s, "<tr><td>Late:</td><td><select name=\"late\">\n");
     _http_moduser_timelist(s, times[1]);
-    puttext(s, "</select><br></td></tr>");
+    puttext(s, "</select><br></td></tr>\n");
 
-    puttext(s, "</table>\n<input type=\"submit\">\n</form>");
+    puttext(s, "</table>\n<input type=\"submit\">\n</form>\n");
 }
 
 void _http_moduser_process(int s, struct http_request r)
