@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: modem.c,v 2.16 1998/03/11 06:31:29 dustin Exp $
+ * $Id: modem.c,v 2.17 1998/03/11 07:18:17 dustin Exp $
  */
 
 #include <config.h>
@@ -72,10 +72,12 @@ int _waitondesc(int fd, int timeout)
     start=time(NULL);
     if( select(fd+1, &fdset, NULL, NULL, &t) > 0)
     {
+	_ndebug(5, ("_waitondesc got some, recalculating timeout\n"));
         ret=time(NULL)-start;
     }
     else
     {
+	_ndebug(5, ("_waitondesc timed out\n"));
 	ret=timeout;
     }
 
@@ -157,6 +159,9 @@ int dexpect(int s, char **what, int timeout)
             _ndebug(2, ("dexpect timed out, returning -1\n"));
             return(-1);
         }
+
+	_ndebug(5, ("Timeout is now %d\n", timeout));
+
         size=read(s, &c, 1);
         if(size>0)
         {
@@ -164,7 +169,7 @@ int dexpect(int s, char **what, int timeout)
 
             for(which=0; what[which]!=NULL; which++)
             {
-                _ndebug(4, ("Checking %s\n", what[which]));
+                _ndebug(5, ("Checking %s\n", what[which]));
                 if(c==what[which][i[which]])
                 {
                     _ndebug(4, ("dexpect found another character in %s (%d)\n",
@@ -197,13 +202,18 @@ int dexpect(int s, char **what, int timeout)
 int s_modem_connect(int s, char *number)
 {
     char buf[BUFLEN];
-    int i;
+    int i, dialtimeout;
     char *constr[]={
 	"CONNECT",
 	"BUSY",
 	"NO CARRIER",
+	"NO DIALTONE",
 	NULL
     };
+
+    dialtimeout=rcfg_lookupInt(conf.cf, "tuning.modemDialTimeout");
+    if(dialtimeout==0)
+	dialtimeout=120;
 
     i=puttext(s, "atz\r\n");
     _ndebug(3, ("Wrote %d bytes\n", i));
@@ -223,8 +233,8 @@ int s_modem_connect(int s, char *number)
     i=puttext(s, buf);
     _ndebug(3, ("Wrote %d bytes\n", i));
 
-    i=dexpect(s, constr, 30);
-    if(i<0)
+    i=dexpect(s, constr, dialtimeout);
+    if(i!=0)
     {
 	_ndebug(2, ("connect failed: %s\n", i>0?constr[i]:"timeout"));
 	return(-1);

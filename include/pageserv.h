@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.64 1998/03/11 06:31:32 dustin Exp $
+ * $Id: pageserv.h,v 1.65 1998/03/11 07:18:22 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -61,6 +61,7 @@
 #define PWLEN   14
 #define IDLEN   9
 #define STATLEN 20
+#define INITLEN 80
 
 /* Messages */
 #define MESG_QUIT "Good bye, thanks for shopping\n"
@@ -107,6 +108,9 @@
 
 /* Default delivery scan sleep */
 #define DEFAULT_DELSLEEP 60
+
+/* Default modem init string */
+#define DEF_INIT "atz"
 
 /* The protocol */
 
@@ -199,6 +203,7 @@ struct terminal {
     char number[STATLEN];
     char ts[FNSIZE];
     char predial[STATLEN];
+    char init[INITLEN];
     int  flags;
     int  port;
 };
