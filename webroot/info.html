@@ -7,32 +7,23 @@ This is just a little bit of info about my pager server.
 
 <h3>Operation</h3>
 
-The normal pager server itself runs on port 1029.  It accepts the
-following commands:
+The following protocols exist in this version of pageserv:
 
 <ul>
-    <li><a href="protocol.html#epage">epage</a></li>
-    <li><a href="protocol.html#mash">mash</a></li>
-    <li><a href="protocol.html#farkle">farkle</a> *</li>
-    <li><a href="protocol.html#depth">depth</a></li>
-    <li><a href="protocol.html#quit">quit</a></li>
+    <li>The <a href="docs/protocol.html">original</a> pageserv protocol</li>
+    <li>An <a href="docs/snpp.html">SNPP</a> server.
+    <li>A <a href="docs/http.html">Web</a> server.
 </ul>
 
-It logs via syslog and currently isn't configurable for that, so it just
-logs to whatever you have set in the logfile.  Mine is local7.info for most
-things.
+It logs via syslog and currently is configurable via the configuration
+section <code>log</code>.  Currently, the only configuration option
+supported in section <code>log</code> is <code>facility</code>.  This
+specifies the log facility in which the message will be sent to syslog.
+The default log facility is <code>local7</code>.
 
 <h3>Developer</h3>
 
 For information on developing modules for pageserv, click <a
 href="developer.html">here</a>.
-
-<p>
-
-<font size="-1">
-* Note, farkle is optional, and will hopefully always be configured out
-in the future.
-</font>
-
 
 </body></html>

@@ -1,33 +1,63 @@
 <html><head><title>Protocol Information</title></head>
 <body bgcolor="fFfFfF">
 
-<h2>Protocol information</h2>
+<h2>Original Protocol information</h2>
 
-<a name="#epage"></a>
+This is the module that includes support for the original pager protocol.
+It was more BBS like than protocol like, but I was young then, and hadn't
+read enough RFCs.  :)  This module is by default configured to run on
+port 1029.  Although this module has been mostly pulled out of the
+internals as to behave like a normal module, it's still a little tied up.
+I haven't bothered supporting it too much, and haven't cared to make
+changes to it, thus don't reccommend using it if you can avoid it.
+<p>
+This a (possibly) complete list of the command supported in this module.
+Its functionality is being mostly replaced by the <a href="http.html">
+web server</a> for general management and the <a href="snpp.html">
+SNPP server</a> for flexibility in queuing pages.
+
+<ul>
+    <li><a href="#epage">epage</a></li>
+    <li><a href="#mash">mash</a></li>
+    <li><a href="#farkle">farkle</a> *</li>
+    <li><a href="#depth">depth</a></li>
+    <li><a href="#quit">quit</a></li>
+</ul>
+
+<font size="-1">
+* Note, farkle is optional, and will hopefully always be configured out
+in the future.
+</font>
+
+<a name="epage"></a>
 
 <h3>epage</h3>
 epage is the normal method for delivering pages.  It's fairly
 self-explanatory
 
-<a name="#mash"></a>
+<a name="mash"></a>
 
 <h3>mash</h3>
 mash was added for backward compatibility.  It's a simpler form of epage,
 and will hopefully be removed someday.
 
-<a name="#farkle"></a>
+<a name="farkle"></a>
 
 <h3>farkle</h3>
 farkle is part of the old delivery system.  It can be (and is by default)
 configured out as it is somewhat destructive and doesn't provide for
 reliable page delivery.
 
-<a name="#depth"></a>
+<a name="depth"></a>
 
 <h3>depth</h3>
-The depth command, of course, returns the depth of the queue.
+The depth command, of course, returns the depth of the queue.  This
+command is unique to this protocol, and currently this is the only
+way to find out this information remotely.  There will probably be
+something integrated into the webserver to do this before too long, but
+it's not a very high priority.
 
-<a name="#quit"></a>
+<a name="quit"></a>
 
 <h3>quit</h3>
 quit simply quits.  It's useful for monitors and such as I have that hit

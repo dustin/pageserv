@@ -1,0 +1,65 @@
+<html><head><title>SNPP in pageserv</title></head>
+<body bgcolor="fFfFfF">
+
+<h2>SNPP Level 1 in the SNPP module</h2>
+
+Pageserv fully supports SNPP level 1 transactions.  For more information,
+please read <a href="rfc1861.html">RFC 1861</a>.  I will discuss only
+specifics here.
+
+<p>
+
+The PAGEr command from RFC 1861 says that the SNPP server itself can
+optionally verfiy the id sent, and I do.  A page can only be queued if
+it's to a user listed in the database.  These usernames can be made up of
+a combination any letters and/or numbers, i.e. if you wanted to send a
+page to me on my home system, it would need to be queued to the user
+``dustin'' (without the quotes obviously).
+<p>
+Another part of the RFC that was left up to the implementation was
+supporting multiple recipients per message.  This is supported in my
+pager server.  For instance, this example is what it would look like if
+someone wanted to send a single message to a lot of recipients:
+
+<pre>
+220 Dustin's SNPP gateway version 2.9.1 ready
+page randomboyx
+250 Pager ID Accepted
+page randomgirlx
+250 Pager ID Accepted
+page randomboyy
+550 No such user
+page randomboy_y
+250 Pager ID Accepted
+page randomgirl_y
+250 Pager ID Accepted
+message Hi everybody!
+250 Message OK
+send
+250 Message queued successfully
+quit
+221 Alrighty, then, goodbye
+</pre>
+
+In the previous example, user randomboyy failed because he didn't exist
+in the user database, but the rest of the users were kept up with (no
+need to RESEt).  It's possible to receive a ``554 Message failed'' if any
+one of the per-user tests failed (bad time for a normal priority page,
+etc...), however, the page will still be delivered to valid recipients.
+I will probably change this behavior in the future, so it's not a good
+idea to rely on it.
+
+<h2>SNPP Level 2 in pageserv</h2>
+
+The only level two command supported in this release is HOLDuntil.
+
+<h2>Custon SNPP commands</h2>
+
+I had to add a new command ``PRIORITY'' to be able to set priorities to
+pages being sent out.  This commands affects all page recipients (whether
+you've defined them yet is irrelevant).  An example command to set the
+priority to high, default is normal:
+
+<pre>
+priority high
+</pre>
