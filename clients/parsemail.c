@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parsemail.c,v 2.8 1998/06/03 15:47:14 dustin Exp $
+ * $Id: parsemail.c,v 2.9 1998/06/03 16:12:21 dustin Exp $
  */
 
 #include <stdio.h>
@@ -48,7 +48,7 @@ static char *getdata(int l, char *line)
 int main(int argc, char **argv)
 {
     char line[LINELEN];
-    int c, r, port=1031;
+    int c, r, port=1041;
     char *subject=NULL, *from=NULL, *to=NULL, *tag="Mail";
     char *priority=NULL, *hostname="pager";
     extern int optind;
@@ -113,10 +113,12 @@ int main(int argc, char **argv)
     if(priority)
 	snpp->rawsend2(snpp, "priority", priority);
 
-    if( snpp->sendAPage(snpp, to, line) == 0)
+    if( snpp->sendAPage(snpp, to, line) == 0) {
 	r=0;
-    else
+    } else {
+        printf("Page failed for some unknown reason, deferring...\n");
 	r=75;
+    }
 
     free(from);
     free(subject);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: client.c,v 2.6 1998/06/03 15:39:11 dustin Exp $
+ * $Id: client.c,v 2.7 1998/06/03 16:12:18 dustin Exp $
  */
 
 /*
@@ -119,7 +119,15 @@ char *_killwhitey(char *in)
 
 static int _snpp_checkrange(struct snpp_client *snpp, int bottom)
 {
-    return( snpp->status>=bottom && snpp->status<=bottom+100);
+    int r;
+    if( snpp->status>=bottom && snpp->status<=bottom+100) {
+	r=0;
+    } else {
+	r=-1;
+    }
+    _ndebug(4, ("Range check:  %d < %d > %d, returning %d\n", bottom,
+		snpp->status, bottom+100, r));
+    return(r);
 }
 
 static int _snpp_fill_buffer(struct snpp_client *snpp)
