@@ -1,4 +1,10 @@
 
+Mon Apr 13 07:45:24 PDT 1998
+
+As of version 2.12.1, notify of delivery success/failure is now available.
+
+--------------------
+
 Thu Jan 15 02:19:08 PST 1998
 
 Internal queue running is now available.
@@ -41,4 +47,4 @@ As of release_2_9_3, there are multiple developers, starting with
 spberry@iastate.edu
 
 ----------------------------------------
-$Id: HISTORY,v 2.5 1998/01/15 10:19:36 dustin Exp $
+$Id: HISTORY,v 2.6 1998/04/13 15:17:23 dustin Exp $

@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.67 1998/04/12 01:04:18 dustin Exp $
+ * $Id: pageserv.h,v 1.68 1998/04/13 15:17:27 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -59,7 +59,7 @@
 
 #define NAMELEN  15
 #define PWLEN    14
-#define IDLEN     9
+#define IDLEN    15
 #define STATLEN  20
 #define INITLEN  80
 #define EMAILLEN 80
