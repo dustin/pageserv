@@ -1,6 +1,5 @@
 Overall:
 
-    * Configuration for logging
     * Bigger queue files (connect from where, etc...)
     * hosts.access
     * Completely internal delivery stuff (no need for -bq all the time)
@@ -32,4 +31,4 @@ Technical:
 
 ----------------------------------------
 Copyright (c) 1997  Dustin Sallings
-$Id: TODO,v 2.26 1997/07/08 07:16:14 dustin Exp $
+$Id: TODO,v 2.27 1997/08/07 07:21:53 dustin Exp $
