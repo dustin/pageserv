@@ -7,6 +7,8 @@ Overall:
     * Make compliant with SNPP (RFC1861)
     * A login method into the server to allow clients to modify stuff
       about their database entry.
+      - Management login to manage crap
+      - Regular login for users
     * NIS based databases
     * support numeric pagers
 
@@ -26,4 +28,4 @@ Clients:
 
 ----------------------------------------
 Copyright (c) 1997  Dustin Sallings
-$Id: TODO,v 2.9 1997/04/04 21:27:17 dustin Exp $
+$Id: TODO,v 2.10 1997/04/09 03:32:10 dustin Exp $
