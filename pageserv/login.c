@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: login.c,v 1.3 1997/04/11 03:52:37 dustin Exp $
+ * $Id: login.c,v 1.4 1997/04/11 07:12:16 dustin Exp $
  * $State: Exp $
  */
 
@@ -42,6 +42,12 @@ void p_login(int s)
     else
     {
 	puttext(s, MESG_NOUSER);
+	exit(0);
+    }
+
+    if(strlen(u.passwd)<13)
+    {
+	puttext(s, "Password has not been setup for this account.\n");
 	exit(0);
     }
 
