@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * "$Id: http.h,v 1.6 1997/04/14 07:21:15 dustin Exp $"
+ * "$Id: http.h,v 1.7 1997/04/16 06:10:36 dustin Exp $"
  */
 
 #ifndef HTTP_H
@@ -62,7 +62,10 @@ struct http_request {
 
 /* functions */
 
+int  _http_socket(void);
 struct http_request http_parserequest(int s);
+void _http_init(void);
+void _http_main(modpass p);
 void http_error(int s, struct http_request r);
 void http_footer(int s);
 void http_header_notfound(int s, struct http_request r);

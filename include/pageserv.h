@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.23 1997/04/14 04:36:36 dustin Exp $
+ * $Id: pageserv.h,v 1.24 1997/04/16 06:10:40 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -11,7 +11,8 @@
 #include <ndbm.h>
 #include <sys/types.h>
 
-#include "config.h"
+#include <config.h>
+#include <module.h>
 
 /* Remote host for clients */
 #define REMHOST "localhost"
@@ -166,12 +167,16 @@ struct config {
     int conattemptsleep;   /* sleep between tries */
     int webserver;         /* start the webserver? */
     int webport;           /* webserver port num */
+
     char *servhost;        /* server fqdn */
     char *userdb;          /* path to user database */
     char *termdb;          /* path to terminal database */
     char *qdir;            /* path to queue directory */
     char *pidfile;         /* path to pid file */
     char *webroot;         /* path to webroot */
+
+    module *modules;       /* All of the loaded modules */
+    int    nmodules;       /* number of modules */
 };
 
 /* macros */
@@ -220,7 +225,7 @@ void eraseuserdb(void);
 void getnormtimes(int times, int *ret);
 void getoptions(int argc, char **argv);
 void getqueueinfo( struct queuent *q );
-void httpmain(int s);
+void initmodules(void);
 void logqueue(struct queuent q, int type, char *reason);
 void open_storeuser(DBM *db, struct user u);
 void p_login(int s);

@@ -1,5 +1,5 @@
 # Copyright (c) 1997   Dustin Sallings
-# $Id: Makefile.in,v 1.8 1997/04/14 03:51:50 dustin Exp $
+# $Id: Makefile.in,v 1.9 1997/04/16 06:10:47 dustin Exp $
 
 SHELL=/bin/sh
 CC=@CC@
@@ -15,10 +15,10 @@ LDELIVER=@top_srcdir@/delivery/deliver.a
 LHTTP=@top_srcdir@/http/http.a
 SERV_OBJS=sockets.o main.o utility.o kids.o queue.o protocol.o userdb.o \
 	readconfig.o termdb.o parseusers.o parseterms.o signals.o \
-	login.o
+	login.o modules.o
 SOURCES=sockets.c main.c utility.c kids.c queue.c protocol.c \
 	parseusers.c userdb.c readconfig.c termdb.c \
-	parseterms.c signals.c login.c
+	parseterms.c signals.c login.c modules.c
 EXES=pageserv
 NAME=pageserv
 ARCHIVE=$(NAME)-$(VERSION)

@@ -1,0 +1,56 @@
+<html><head><title>Welcome Pageserv Developer</title></head>
+<body bgcolor="fFfFfF">
+
+<h2>Welcome Pageserv Developer</h2>
+
+Hey, developers.  Want some of your code to run inside of my pager
+server?  No problem, there's now a (kind of) simple interface for adding
+modules to the pager server.
+
+<p>
+
+I've created what's nearly an OO interface so that each module becomes
+sort of an object that gets loaded upon initialization.  Each module
+should have an initialization function, a handler function, and a socket
+return function so that we can get stuff going and find out information
+about it.  The module typedef looks like this:
+
+<pre>
+typedef struct {
+    void (*init)(void);
+    void (*handler)(modpass in);
+
+    int (*socket)(void);
+
+    char *name;
+
+    int listening;
+    int s;
+} module;
+</pre>
+
+Upon initializing, the initmodules() routine goes through the list of
+compiled in modules and creates a copy of each module into a globally
+accessable structure element.  Realize, of course, that this means the
+<i>actual</i> data in the real module is completely inaccessible, the OO
+equivelant of private data, however, the methods involved in extracting
+or modifying that data don't move, so it's easy to keep up with the
+functions that modify the data without other random functions breaking
+the data.
+
+<p>
+
+When initializing the daemon, it loops through all of the compiled-in
+modules and calls their initialization routine, then makes a call to its
+socket() routine to see if it returns a positive value, if it does, then
+it selects on the value that it returned and calls the handler with a
+modpass p (which for now only contains the newly formed socket) when a
+connection comes in on its id.
+
+<p>
+
+This id, of course, can be any valid file descriptor, as the main server
+itself doesn't do anything with it but pass it off to the handler.
+
+</body>
+</html>

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.12 1997/04/15 21:51:04 dustin Exp $
+ * $Id: main.c,v 1.13 1997/04/16 06:10:49 dustin Exp $
  * $State: Exp $
  */
 
@@ -65,9 +65,11 @@ void detach(void)
 void daemon_main(void)
 {
     struct sockaddr_in fsin;
-    int s, ws, ns, fromlen, pid, upper;
+    int i, s, ns, fromlen, pid, upper;
     fd_set fdset, tfdset;
     struct timeval t;
+    module *m;
+    modpass p;
 
     upper=0;
 
@@ -85,16 +87,26 @@ void daemon_main(void)
     /* Tell select to listen to it */
     FD_SET(s, &tfdset);
 
-    if(conf.webserver)
+    m=conf.modules;
+    for(i=0; i<conf.nmodules; i++)
     {
-        ws=getservsocket(conf.webport);
+	if(conf.debug>2)
+	    printf("Loading module ``%s''\n", m->name);
 
-        if(ws>upper)
-	    upper=ws;
+	m->init();
 
-	/* Tell select to listen to it, too */
-        FD_SET(ws, &tfdset);
+        if(m->socket()>=0)
+	{
+	    if(conf.debug>2)
+		printf("Module is listening, fdsetting %d\n", m->socket());
 
+	    if(m->socket() >upper)
+	        upper=m->socket();
+
+            FD_SET(m->socket(), &tfdset);
+        }
+
+	m++;
     }
 
     upper++;  /* one more, just because */
@@ -133,30 +145,34 @@ void daemon_main(void)
                 }
 	    }
 
-	    if(FD_ISSET(ws, &fdset) && conf.webserver)
+	    m=conf.modules;
+	    for(i=0; i<conf.nmodules; i++)
 	    {
-		if(conf.debug>2)
-		    puts("Got a connection on the web port");
+		if(FD_ISSET(m->socket(), &fdset))
+		{
+		    if(conf.debug>2)
+			printf("Got a connection for ``%s''\n", m->name);
 
-                if( (ns=accept(ws, (struct sockaddr *)&fsin, &fromlen)) >=0 )
-                {
-                    pid=fork();
-
-                    if(pid==0)
+		    if( (p.socket=accept(m->socket(),
+			(struct sockaddr *)&fsin, &fromlen)) >=0 )
 		    {
-		        /* Run web child's main loop */
-                        httpmain(ns);
-		    }
-                    else
-		    {
-		        /* parent just closes its copy of the socket */
-                        close(ns);
+			pid=fork();
 
-		        if(conf.debug>2)
-			    printf("Spawned new child on pid %d\n", pid);
+			if(pid==0)
+			{
+			    m->handler(p);
+			}
+			else
+			{
+			    close(p.socket);
+
+			    if(conf.debug>2)
+				printf("Spawned a child, pid %d\n", pid);
+			}
 		    }
-                }
-	    } /* end of finding the selections */
+		}
+	    } /* end of module scan */
+
         } /* end of select loop */
         reaper();
     }
