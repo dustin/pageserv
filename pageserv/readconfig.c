@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: readconfig.c,v 1.14 1997/04/16 06:19:18 dustin Exp $
+ * $Id: readconfig.c,v 1.15 1997/04/16 18:23:06 dustin Exp $
  * $State: Exp $
  */
 
@@ -293,6 +293,8 @@ void showconfig(void)
     printf("\tDebug:        %d\n", conf.debug);
 
     puts("Modules:");
+
+    printf("\tNumber:       %d\n", conf.nmodules);
 
     m=conf.modules;
     for(i=0; i<conf.nmodules; i++)

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: main.c,v 1.13 1997/04/16 06:10:49 dustin Exp $
+ * $Id: main.c,v 1.14 1997/04/16 18:23:01 dustin Exp $
  * $State: Exp $
  */
 
@@ -80,13 +80,6 @@ void daemon_main(void)
 
     FD_ZERO(&tfdset);
 
-    s=getservsocket(PORT);
-    if(s>upper)
-	upper=s;
-
-    /* Tell select to listen to it */
-    FD_SET(s, &tfdset);
-
     m=conf.modules;
     for(i=0; i<conf.nmodules; i++)
     {
@@ -95,15 +88,16 @@ void daemon_main(void)
 
 	m->init();
 
-        if(m->socket()>=0)
+	s=m->socket();
+        if(s>=0)
 	{
 	    if(conf.debug>2)
-		printf("Module is listening, fdsetting %d\n", m->socket());
+		printf("Module is listening, fdsetting %d\n", s);
 
-	    if(m->socket() >upper)
-	        upper=m->socket();
+	    if(s >upper)
+	        upper=s;
 
-            FD_SET(m->socket(), &tfdset);
+            FD_SET(s, &tfdset);
         }
 
 	m++;
@@ -120,31 +114,6 @@ void daemon_main(void)
 
         if( select(upper, &fdset, NULL, NULL, &t) > 0)
         {
-	    if(FD_ISSET(s, &fdset))
-	    {
-		if(conf.debug>2)
-		    puts("Got a connection on the normal port");
-
-                if( (ns=accept(s, (struct sockaddr *)&fsin, &fromlen)) >=0 )
-                {
-                    pid=fork();
-
-                    if(pid==0)
-		    {
-		        /* Run child's main loop */
-                        childmain(ns);
-		    }
-                    else
-		    {
-		        /* parent just closes its copy of the socket */
-                        close(ns);
-
-		        if(conf.debug>2)
-			    printf("Spawned new child on pid %d\n", pid);
-		    }
-                }
-	    }
-
 	    m=conf.modules;
 	    for(i=0; i<conf.nmodules; i++)
 	    {
@@ -171,6 +140,7 @@ void daemon_main(void)
 			}
 		    }
 		}
+		m++;  /* Look at the next module */
 	    } /* end of module scan */
 
         } /* end of select loop */

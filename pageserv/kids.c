@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: kids.c,v 1.4 1997/04/13 22:01:00 dustin Exp $
+ * $Id: kids.c,v 1.5 1997/04/16 18:23:00 dustin Exp $
  * $State: Exp $
  */
 
@@ -15,13 +15,41 @@
 #include <netinet/tcp.h>
 
 #include <pageserv.h>
+#include <module.h>
 
 extern struct config conf;
+
+module mod_pageserv={
+    _pageserv_init,
+    _pageserv_main,
+    _pageserv_socket,
+    "Pageserv module",
+    0,
+    0
+};
 
 /* The reaper is called after every connection or every 120 seconds,
  * whichever is sooner.  It waits on all the children that have died
  * off.
  */
+
+int _pageserv_socket(void)
+{
+    if(mod_pageserv.listening)
+        return(mod_pageserv.s);
+    else
+	return(-1);
+}
+
+void _pageserv_init(void)
+{
+    mod_pageserv.s=getservsocket(PORT);
+
+    if(mod_pageserv.s>=0)
+    {
+	mod_pageserv.listening=1;
+    }
+}
 
 void reaper(void)
 {
@@ -52,10 +80,12 @@ void child_onalarm()
 
 /* Child's main loop.  Called immediately after parent's fork() */
 
-void childmain(int s)
+void _pageserv_main(modpass p)
 {
     char buf[BUFLEN];
-    int flag;
+    int flag, s;
+
+    s=p.socket;
 
     /* Get rid of that bastard Nagle algorithm */
     flag=1;

@@ -4,13 +4,10 @@ Overall:
     * Bigger queue files (connect from where, etc...)
     * hosts.access
     * Completely internal delivery stuff (no need for -bq all the time)
-    * Make compliant with SNPP (RFC1861)
-    * A login method into the server to allow clients to modify stuff
-      about their database entry.
-      - Management login to manage crap
+    * Make a module compliant with SNPP (RFC1861)
+    * Management login to manage crap
     * NIS based databases
     * support numeric pagers
-    * Move regular listener out of base code and make it a module
 
 Delivery:
 
@@ -27,4 +24,4 @@ Clients:
 
 ----------------------------------------
 Copyright (c) 1997  Dustin Sallings
-$Id: TODO,v 2.15 1997/04/16 06:42:55 dustin Exp $
+$Id: TODO,v 2.16 1997/04/16 18:22:51 dustin Exp $

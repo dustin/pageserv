@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: modules.c,v 1.2 1997/04/16 06:15:14 dustin Exp $
+ * $Id: modules.c,v 1.3 1997/04/16 18:23:02 dustin Exp $
  */
 
 #include <pageserv.h>
@@ -12,6 +12,7 @@
 
 extern struct config conf;
 
+extern module mod_pageserv;
 extern module mod_webserv;
 
 void initmodules(void)
@@ -19,6 +20,7 @@ void initmodules(void)
     int i;
 
     module *m[]={
+	&mod_pageserv,
         &mod_webserv,
         NULL
     };

@@ -1,7 +1,7 @@
 /*
  * Copyright 1997 Dustin Sallings
  *
- * $Id: pageserv.h,v 1.24 1997/04/16 06:10:40 dustin Exp $
+ * $Id: pageserv.h,v 1.25 1997/04/16 18:22:56 dustin Exp $
  */
 
 #ifndef PAGESERV_H   /* We don't want this to be */
@@ -191,6 +191,7 @@ char **listterms(void);
 char *fntoqid(char *fn);
 char *kw(char *in);
 char *newqfile(void);
+int _pageserv_socket(void);
 int bit_set(int bmap, int which);
 int check_time(int priority, char *whom);
 int f_exists(char *file);
@@ -214,7 +215,8 @@ struct terminal open_getterm(DBM *db, char *key);
 struct user getuser(char *key);
 struct user open_getuser(DBM *db, char *key);
 struct user setpasswd(struct user u, char *passwd);
-void childmain(int s);
+void _pageserv_init(void);
+void _pageserv_main(modpass p);
 void cleanconfig(void);
 void cleanqueuelist(struct queuent *list);
 void cleantermlist(char **list);

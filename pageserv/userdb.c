@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: userdb.c,v 1.7 1997/04/11 15:55:06 dustin Exp $
+ * $Id: userdb.c,v 1.8 1997/04/16 18:23:08 dustin Exp $
  * $State: Exp $
  */
 
@@ -48,15 +48,6 @@ void getnormtimes(int times, int *ret)
 
         for(; bit_set(times, i) && BC; i++);
         ret[1]=i;
-    }
-
-    if(allones==0)
-    {
-        /* add one to early so it'll make sense */
-        if(ret[0]<23)
-            ret[0]++;
-        else
-            ret[0]=0;
     }
 }
 
