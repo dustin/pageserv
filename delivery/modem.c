@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: modem.c,v 2.9 1997/06/22 07:43:18 dustin Exp $
+ * $Id: modem.c,v 2.10 1997/06/22 07:56:36 dustin Exp $
  * $State: Exp $
  */
 
@@ -21,11 +21,12 @@ int any_closeterm(int s, struct terminal t)
     close(s);
     sleep(5);
     p_unlock(t.ts);
+    return(0);
 }
 
 int any_openterm(struct terminal term)
 {
-    int s;
+    int s=-1;
 
     if(conf.debug>2)
 	printf("any_openterm contype is %d\n", term.contype);
@@ -58,6 +59,7 @@ int s_modem_waitforchar(int s, char what, int timeout)
 	    putchar(c);
     }
     while(c!=what);
+    return(0);
 }
 
 int s_modem_waitfor(int s, char *what, int timeout)

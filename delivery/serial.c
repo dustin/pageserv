@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: serial.c,v 2.2 1997/06/22 07:43:19 dustin Exp $
+ * $Id: serial.c,v 2.3 1997/06/22 07:56:39 dustin Exp $
  * $State: Exp $
  */
 
@@ -65,7 +65,6 @@ void checklocks(void)
 
 int p_unlock(char *dev)
 {
-    FILE *f;
     char lock[50];
     char lockfile[80];
 
@@ -82,6 +81,7 @@ int p_unlock(char *dev)
 	printf("lockfile is %s, killin' it\n", lockfile);
 
     unlink(lockfile);
+    return(0);
 }
 
 int p_lock(char *dev)
@@ -117,7 +117,7 @@ int p_lock(char *dev)
 	    return(-1);
 	}
 
-	fprintf(f, "%10ld\n", getpid());
+	fprintf(f, "%10d\n", getpid());
 
 	fclose(f);
 	return(0);
