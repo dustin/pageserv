@@ -2,27 +2,39 @@
 
 #include <pageserv.h>
 
+#ifndef HAVE_GETOPT
+#error No getopt()!!!
+#endif /* HAVE_GETOPT */
+
+void usage(char *command)
+{
+    printf("pushqueue version %s by Dustin Sallings\n", VERSION);
+    printf("Usage:  %s [-p priority]\n", command);
+    puts("priority can be either high or normal");
+}
+
 void main(int argc, char **argv)
 {
 struct queuent q;
-int s, ack, size;
+int s, c, ack, size;
 char buf[BUFLEN];
 
     memset( (char *)&q, 0x00, sizeof(q));
 
-    if(argc>2)
+    /* set default */
+    q.priority=htonl(PR_NORMAL);
+
+    while( (c=getopt(argc, argv, "p:")) != -1)
     {
-        if(strncmp(argv[1], "-p", 2) == 0)
-        {
-            if( tolower(argv[2][0])=='h')
-            {
-                q.priority=htonl(PR_HIGH);
-            }
-        }
-    }
-    else
-    {
-        q.priority=htonl(PR_NORMAL);
+	switch(c)
+	{
+	    case 'p':
+		if( tolower(argv[2][0])=='h')
+		    q.priority=htonl(PR_HIGH); break;
+	    case '?':
+		usage(argv[0]);
+		exit(1); break;
+	}
     }
 
     cgettext(q.to, TOLEN);
