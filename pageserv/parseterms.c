@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1997  Dustin Sallings
  *
- * $Id: parseterms.c,v 1.8 1998/01/22 10:40:32 dustin Exp $
+ * $Id: parseterms.c,v 1.9 1998/01/23 08:48:11 dustin Exp $
  */
 
 #include <stdio.h>
@@ -27,7 +27,7 @@ struct terminal parseterm(char *line)
 
     delim=rcfg_lookup(conf.cf, "databases.textdelim");
     if(delim==NULL)
-        delim=" ";
+        delim=" \t";
 
     tmp=strtok(line, delim);
     if(tmp==NULL)
